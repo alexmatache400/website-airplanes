@@ -1,0 +1,1165 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Semantic CSS Variables for Dropdown Components (Dark Mode Default) */
+  :root {
+    /* Dropdown control */
+    --dropdown-bg: #1e293b;           /* slate-800 */
+    --dropdown-text: #f1f5f9;         /* slate-100 */
+    --dropdown-border: #334155;       /* slate-700 */
+    --dropdown-hover-bg: #334155;     /* slate-700 */
+    --dropdown-focus-ring: #0ea5e9;   /* sky-500 */
+
+    /* Dropdown placeholder & caret */
+    --dropdown-placeholder: #94a3b8;  /* slate-400 */
+    --dropdown-caret: #cbd5e1;        /* slate-300 */
+
+    /* Dropdown menu panel */
+    --dropdown-menu-bg: #1e293b;      /* slate-800 */
+    --dropdown-menu-border: #475569;  /* slate-600 */
+    --dropdown-menu-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+
+    /* Dropdown option states */
+    --dropdown-option-default: #f1f5f9;    /* slate-100 */
+    --dropdown-option-hover-bg: #334155;   /* slate-700 */
+    --dropdown-option-hover-text: #f8fafc; /* slate-50 */
+    --dropdown-option-selected-bg: #0ea5e9; /* sky-500 */
+    --dropdown-option-selected-text: #ffffff;
+    --dropdown-option-disabled: #64748b;   /* slate-500 */
+  }
+
+  body {
+    @apply bg-dark-950 text-dark-100 font-sans;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Light mode styles */
+  .light body {
+    @apply bg-transparent text-gray-900;
+  }
+
+  code {
+    @apply font-mono;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-dark-900/60 backdrop-blur-lg border border-dark-700/50;
+  }
+
+  .glass-light {
+    @apply bg-dark-800/40 backdrop-blur-md border border-dark-600/30;
+  }
+
+  /* Light mode glass effects */
+  .light .glass {
+    @apply bg-white/80 backdrop-blur-lg border border-gray-200;
+  }
+
+  .light .glass-light {
+    @apply bg-white/60 backdrop-blur-md border border-gray-300/50;
+  }
+}
+
+/* Cinematic Air Traffic System */
+
+/* Map Parallax and Zoom */
+@keyframes map-breathing {
+  0%, 100% {
+    transform: scale(1) translateX(0);
+  }
+  50% {
+    transform: scale(1.02) translateX(-2px);
+  }
+}
+
+.air-traffic-container {
+  animation: map-breathing 30s ease-in-out infinite;
+}
+
+/* Flight Path Progressive Drawing */
+@keyframes flight-path-appear {
+  0% {
+    stroke-dasharray: 0, 2000;
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.8;
+  }
+  100% {
+    stroke-dasharray: 2000, 0;
+    opacity: 0.8;
+  }
+}
+
+@keyframes flight-path-disappear {
+  0% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Aircraft Takeoff Sequences */
+@keyframes aircraft-spawn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotate(0deg);
+  }
+  30% {
+    opacity: 0.7;
+    transform: scale(0.8) rotate(0deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* Realistic Flight Routes */
+
+/* Route 1: NYC → London (Transatlantic) */
+@keyframes flight-route-1 {
+  0% {
+    left: 30.2%;
+    top: 29.6%;
+    transform: rotate(45deg);
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  25% {
+    left: 40%;
+    top: 25%;
+    transform: rotate(35deg);
+  }
+  50% {
+    left: 50%;
+    top: 22%;
+    transform: rotate(25deg);
+  }
+  75% {
+    left: 60%;
+    top: 25%;
+    transform: rotate(15deg);
+  }
+  97% {
+    left: 67%;
+    top: 27.5%;
+    transform: rotate(10deg);
+    opacity: 1;
+  }
+  100% {
+    left: 70%;
+    top: 28%;
+    transform: rotate(10deg);
+    opacity: 0;
+  }
+}
+
+/* Route 2: London → Tokyo (Europe to Asia) */
+@keyframes flight-route-2 {
+  0% {
+    left: 67%;
+    top: 28%;
+    transform: rotate(15deg);
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  25% {
+    left: 75%;
+    top: 26%;
+    transform: rotate(10deg);
+  }
+  50% {
+    left: 83%;
+    top: 25%;
+    transform: rotate(5deg);
+  }
+  75% {
+    left: 88%;
+    top: 28%;
+    transform: rotate(0deg);
+  }
+  97% {
+    left: 90.5%;
+    top: 31.5%;
+    transform: rotate(-5deg);
+    opacity: 1;
+  }
+  100% {
+    left: 92%;
+    top: 32.5%;
+    transform: rotate(-5deg);
+    opacity: 0;
+  }
+}
+
+/* Route 3: Los Angeles → Tokyo (Transpacific) */
+@keyframes flight-route-3 {
+  0% {
+    left: 29.7%;
+    top: 35.2%;
+    transform: rotate(5deg);
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  20% {
+    left: 45%;
+    top: 38%;
+    transform: rotate(0deg);
+  }
+  40% {
+    left: 60%;
+    top: 39%;
+    transform: rotate(-5deg);
+  }
+  60% {
+    left: 75%;
+    top: 37%;
+    transform: rotate(-10deg);
+  }
+  80% {
+    left: 85%;
+    top: 34%;
+    transform: rotate(-15deg);
+  }
+  97% {
+    left: 90.5%;
+    top: 31.5%;
+    transform: rotate(-20deg);
+    opacity: 1;
+  }
+  100% {
+    left: 92%;
+    top: 30%;
+    transform: rotate(-20deg);
+    opacity: 0;
+  }
+}
+
+/* Route 4: London → Cairo (Europe to Africa) */
+@keyframes flight-route-4 {
+  0% {
+    left: 65%;
+    top: 31%;
+    transform: rotate(120deg);
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  50% {
+    left: 68%;
+    top: 40%;
+    transform: rotate(125deg);
+  }
+  97% {
+    left: 70%;
+    top: 44.5%;
+    transform: rotate(130deg);
+    opacity: 1;
+  }
+  100% {
+    left: 71%;
+    top: 46%;
+    transform: rotate(130deg);
+    opacity: 0;
+  }
+}
+
+/* Route 5: Singapore → Sydney (Asia to Australia) */
+@keyframes flight-route-5 {
+  0% {
+    left: 83%;
+    top: 33.3%;
+    transform: rotate(140deg);
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  30% {
+    left: 85%;
+    top: 45%;
+    transform: rotate(145deg);
+  }
+  70% {
+    left: 87%;
+    top: 55%;
+    transform: rotate(150deg);
+  }
+  97% {
+    left: 88.5%;
+    top: 60.2%;
+    transform: rotate(155deg);
+    opacity: 1;
+  }
+  100% {
+    left: 89%;
+    top: 62%;
+    transform: rotate(155deg);
+    opacity: 0;
+  }
+}
+
+/* Route 6: Chicago → Miami (North America Internal) */
+@keyframes flight-route-6 {
+  0% {
+    left: 25%;
+    top: 32.4%;
+    transform: rotate(125deg);
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  97% {
+    left: 32%;
+    top: 41.5%;
+    transform: rotate(130deg);
+    opacity: 1;
+  }
+  100% {
+    left: 33%;
+    top: 42.5%;
+    transform: rotate(130deg);
+    opacity: 0;
+  }
+}
+
+/* Route 7: Amsterdam → Berlin (European Internal) */
+@keyframes flight-route-7 {
+  0% {
+    left: 62%;
+    top: 25.2%;
+    transform: rotate(60deg);
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  97% {
+    left: 68%;
+    top: 26.9%;
+    transform: rotate(65deg);
+    opacity: 1;
+  }
+  100% {
+    left: 69%;
+    top: 27.5%;
+    transform: rotate(65deg);
+    opacity: 0;
+  }
+}
+
+/* Route 8: Additional density flight */
+@keyframes flight-route-8 {
+  0% {
+    left: 70%;
+    top: 28.5%;
+    transform: rotate(20deg);
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  97% {
+    left: 83%;
+    top: 31.5%;
+    transform: rotate(25deg);
+    opacity: 1;
+  }
+  100% {
+    left: 85%;
+    top: 32.5%;
+    transform: rotate(25deg);
+    opacity: 0;
+  }
+}
+
+/* Route 9: Sydney → Hong Kong (Australia to Asia) */
+@keyframes flight-route-9 {
+  0% {
+    left: 89%;
+    top: 61%;
+    transform: rotate(-45deg);
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  25% {
+    left: 86%;
+    top: 55%;
+    transform: rotate(-35deg);
+  }
+  50% {
+    left: 84%;
+    top: 50%;
+    transform: rotate(-25deg);
+  }
+  75% {
+    left: 82%;
+    top: 44%;
+    transform: rotate(-15deg);
+  }
+  97% {
+    left: 80.5%;
+    top: 38%;
+    transform: rotate(-5deg);
+    opacity: 1;
+  }
+  100% {
+    left: 80%;
+    top: 37%;
+    transform: rotate(-5deg);
+    opacity: 0;
+  }
+}
+
+/* Route 10: Paris → Moscow (Europe Internal) */
+@keyframes flight-route-10 {
+  0% {
+    left: 60%;
+    top: 27%;
+    transform: rotate(30deg);
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  50% {
+    left: 70%;
+    top: 25%;
+    transform: rotate(25deg);
+  }
+  97% {
+    left: 77%;
+    top: 23%;
+    transform: rotate(20deg);
+    opacity: 1;
+  }
+  100% {
+    left: 79%;
+    top: 22.5%;
+    transform: rotate(20deg);
+    opacity: 0;
+  }
+}
+
+/* Route 11: Denver → Seattle (North America Internal) */
+@keyframes flight-route-11 {
+  0% {
+    left: 24%;
+    top: 35%;
+    transform: rotate(-15deg);
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  97% {
+    left: 22%;
+    top: 26%;
+    transform: rotate(-20deg);
+    opacity: 1;
+  }
+  100% {
+    left: 21.5%;
+    top: 25%;
+    transform: rotate(-20deg);
+    opacity: 0;
+  }
+}
+
+/* Route 12: Mumbai → Dubai (Asia to Middle East) */
+@keyframes flight-route-12 {
+  0% {
+    left: 77%;
+    top: 38%;
+    transform: rotate(-60deg);
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  97% {
+    left: 72%;
+    top: 42%;
+    transform: rotate(-65deg);
+    opacity: 1;
+  }
+  100% {
+    left: 71%;
+    top: 43%;
+    transform: rotate(-65deg);
+    opacity: 0;
+  }
+}
+
+/* Route 13: São Paulo → Buenos Aires (South America) */
+@keyframes flight-route-13 {
+  0% {
+    left: 38%;
+    top: 58%;
+    transform: rotate(120deg);
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  97% {
+    left: 40%;
+    top: 66%;
+    transform: rotate(125deg);
+    opacity: 1;
+  }
+  100% {
+    left: 40.5%;
+    top: 67.5%;
+    transform: rotate(125deg);
+    opacity: 0;
+  }
+}
+
+/* Route 14: Cairo → Istanbul (Middle East to Europe) */
+@keyframes flight-route-14 {
+  0% {
+    left: 71%;
+    top: 45%;
+    transform: rotate(-30deg);
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  97% {
+    left: 66%;
+    top: 36%;
+    transform: rotate(-35deg);
+    opacity: 1;
+  }
+  100% {
+    left: 65%;
+    top: 35%;
+    transform: rotate(-35deg);
+    opacity: 0;
+  }
+}
+
+/* Route 15: Vancouver → London (North Pacific) */
+@keyframes flight-route-15 {
+  0% {
+    left: 21%;
+    top: 25%;
+    transform: rotate(25deg);
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  25% {
+    left: 35%;
+    top: 20%;
+    transform: rotate(20deg);
+  }
+  50% {
+    left: 50%;
+    top: 18%;
+    transform: rotate(15deg);
+  }
+  75% {
+    left: 60%;
+    top: 22%;
+    transform: rotate(10deg);
+  }
+  97% {
+    left: 67%;
+    top: 27%;
+    transform: rotate(5deg);
+    opacity: 1;
+  }
+  100% {
+    left: 69%;
+    top: 28%;
+    transform: rotate(5deg);
+    opacity: 0;
+  }
+}
+
+/* Route 16: Bangkok → Tokyo (Southeast Asia to East Asia) */
+@keyframes flight-route-16 {
+  0% {
+    left: 81%;
+    top: 42%;
+    transform: rotate(35deg);
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  50% {
+    left: 86%;
+    top: 38%;
+    transform: rotate(30deg);
+  }
+  97% {
+    left: 90%;
+    top: 33%;
+    transform: rotate(25deg);
+    opacity: 1;
+  }
+  100% {
+    left: 91.5%;
+    top: 32%;
+    transform: rotate(25deg);
+    opacity: 0;
+  }
+}
+
+/* Route 17: Rome → Barcelona (Europe Internal) */
+@keyframes flight-route-17 {
+  0% {
+    left: 66%;
+    top: 34%;
+    transform: rotate(-110deg);
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  97% {
+    left: 58%;
+    top: 36%;
+    transform: rotate(-115deg);
+    opacity: 1;
+  }
+  100% {
+    left: 57%;
+    top: 36.5%;
+    transform: rotate(-115deg);
+    opacity: 0;
+  }
+}
+
+/* Route 18: Tel Aviv → Frankfurt (Middle East to Europe) */
+@keyframes flight-route-18 {
+  0% {
+    left: 73%;
+    top: 41%;
+    transform: rotate(-35deg);
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  50% {
+    left: 68%;
+    top: 35%;
+    transform: rotate(-30deg);
+  }
+  97% {
+    left: 64%;
+    top: 30%;
+    transform: rotate(-25deg);
+    opacity: 1;
+  }
+  100% {
+    left: 63%;
+    top: 29%;
+    transform: rotate(-25deg);
+    opacity: 0;
+  }
+}
+
+/* Route 19: Mexico City → New York (North America) */
+@keyframes flight-route-19 {
+  0% {
+    left: 24%;
+    top: 42%;
+    transform: rotate(45deg);
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  50% {
+    left: 27%;
+    top: 36%;
+    transform: rotate(40deg);
+  }
+  97% {
+    left: 30%;
+    top: 30%;
+    transform: rotate(35deg);
+    opacity: 1;
+  }
+  100% {
+    left: 30.5%;
+    top: 29.5%;
+    transform: rotate(35deg);
+    opacity: 0;
+  }
+}
+
+/* Route 20: Perth → Singapore (Australia to Southeast Asia) */
+@keyframes flight-route-20 {
+  0% {
+    left: 85%;
+    top: 65%;
+    transform: rotate(-45deg);
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  30% {
+    left: 84%;
+    top: 58%;
+    transform: rotate(-40deg);
+  }
+  60% {
+    left: 83%;
+    top: 50%;
+    transform: rotate(-35deg);
+  }
+  97% {
+    left: 82%;
+    top: 44%;
+    transform: rotate(-30deg);
+    opacity: 1;
+  }
+  100% {
+    left: 81.5%;
+    top: 43%;
+    transform: rotate(-30deg);
+    opacity: 0;
+  }
+}
+
+/* Navigation Light Blinking */
+@keyframes nav-light-blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0.3;
+  }
+}
+
+/* Radar Sweep Effect */
+@keyframes radar-sweep {
+  0% {
+    box-shadow: 0 0 0 0 rgba(232, 244, 248, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(232, 244, 248, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(232, 244, 248, 0);
+  }
+}
+
+/* Flight Path Classes - Disabled */
+.flight-path {
+  display: none;
+}
+
+/* Aircraft Classes */
+.aircraft {
+  position: absolute;
+  opacity: 0;
+  z-index: 10;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.aircraft-1 {
+  animation: aircraft-spawn 2s ease-out forwards, flight-route-1 12s ease-in-out infinite;
+  animation-delay: 2s, 3s;
+}
+
+.aircraft-2 {
+  animation: aircraft-spawn 2s ease-out forwards, flight-route-2 11s ease-in-out infinite;
+  animation-delay: 4s, 5s;
+}
+
+.aircraft-3 {
+  animation: aircraft-spawn 2s ease-out forwards, flight-route-3 15s ease-in-out infinite;
+  animation-delay: 6s, 7s;
+}
+
+.aircraft-4 {
+  animation: aircraft-spawn 2s ease-out forwards, flight-route-4 9s ease-in-out infinite;
+  animation-delay: 8s, 9s;
+}
+
+.aircraft-5 {
+  animation: aircraft-spawn 2s ease-out forwards, flight-route-5 12s ease-in-out infinite;
+  animation-delay: 10s, 11s;
+}
+
+.aircraft-6 {
+  animation: aircraft-spawn 2s ease-out forwards, flight-route-6 8s ease-in-out infinite;
+  animation-delay: 3s, 4s;
+}
+
+.aircraft-7 {
+  animation: aircraft-spawn 2s ease-out forwards, flight-route-7 7s ease-in-out infinite;
+  animation-delay: 5s, 6s;
+}
+
+.aircraft-8 {
+  animation: aircraft-spawn 2s ease-out forwards, flight-route-8 10s ease-in-out infinite;
+  animation-delay: 7s, 8s;
+}
+
+.aircraft-9 {
+  animation: aircraft-spawn 2s ease-out forwards, flight-route-9 14s ease-in-out infinite;
+  animation-delay: 1s, 2s;
+}
+
+.aircraft-10 {
+  animation: aircraft-spawn 2s ease-out forwards, flight-route-10 9s ease-in-out infinite;
+  animation-delay: 9s, 10s;
+}
+
+.aircraft-11 {
+  animation: aircraft-spawn 2s ease-out forwards, flight-route-11 8s ease-in-out infinite;
+  animation-delay: 4s, 5s;
+}
+
+.aircraft-12 {
+  animation: aircraft-spawn 2s ease-out forwards, flight-route-12 7s ease-in-out infinite;
+  animation-delay: 6s, 7s;
+}
+
+.aircraft-13 {
+  animation: aircraft-spawn 2s ease-out forwards, flight-route-13 10s ease-in-out infinite;
+  animation-delay: 8s, 9s;
+}
+
+.aircraft-14 {
+  animation: aircraft-spawn 2s ease-out forwards, flight-route-14 8s ease-in-out infinite;
+  animation-delay: 2s, 3s;
+}
+
+.aircraft-15 {
+  animation: aircraft-spawn 2s ease-out forwards, flight-route-15 16s ease-in-out infinite;
+  animation-delay: 5s, 6s;
+}
+
+.aircraft-16 {
+  animation: aircraft-spawn 2s ease-out forwards, flight-route-16 11s ease-in-out infinite;
+  animation-delay: 7s, 8s;
+}
+
+.aircraft-17 {
+  animation: aircraft-spawn 2s ease-out forwards, flight-route-17 6s ease-in-out infinite;
+  animation-delay: 3s, 4s;
+}
+
+.aircraft-18 {
+  animation: aircraft-spawn 2s ease-out forwards, flight-route-18 12s ease-in-out infinite;
+  animation-delay: 9s, 10s;
+}
+
+.aircraft-19 {
+  animation: aircraft-spawn 2s ease-out forwards, flight-route-19 10s ease-in-out infinite;
+  animation-delay: 1s, 2s;
+}
+
+.aircraft-20 {
+  animation: aircraft-spawn 2s ease-out forwards, flight-route-20 13s ease-in-out infinite;
+  animation-delay: 6s, 7s;
+}
+
+/* Navigation Light Effects */
+.aircraft svg circle[fill="#ffd700"] {
+  animation: nav-light-blink 2s infinite;
+}
+
+.aircraft svg circle[fill="#ff4444"] {
+  animation: nav-light-blink 1.5s infinite;
+}
+
+.aircraft svg circle[fill="#44ff44"] {
+  animation: nav-light-blink 1.8s infinite;
+}
+
+/* Hover Radar Effect */
+.aircraft:hover {
+  animation-name: radar-sweep;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+
+/* Flight Tracker Panel Counter Animation */
+.counter {
+  transition: all 0.3s ease;
+}
+
+/* Glass Panel Enhancement */
+.flight-tracker-panel {
+  background: rgba(20, 30, 48, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive Parallax for Page Scroll */
+.air-traffic-container {
+  transform-style: preserve-3d;
+}
+
+@media (max-width: 768px) {
+  .aircraft {
+    transform: scale(0.8);
+  }
+
+  .flight-tracker-panel {
+    min-width: auto;
+    width: 240px;
+  }
+}
+
+/* Product Pulse Animation for Search Highlight */
+@keyframes productPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.45);
+  }
+  40% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 12px rgba(56, 189, 248, 0);
+  }
+  60% {
+    transform: scale(1.015);
+    box-shadow: 0 0 0 6px rgba(56, 189, 248, 0.15);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(56, 189, 248, 0);
+  }
+}
+
+.pulse-5s {
+  animation: productPulse 5s ease-in-out 1;
+}
+
+/* Light Mode Theme Overrides */
+.light {
+  /* CSS Variables for Light Mode */
+  --bg: #ffffff;
+  --bg-muted: #f8fafc;
+  --card: #ffffff;
+  --card-muted: #f9fafb;
+  --border: #e5e7eb;
+  --shadow: 0 1px 2px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.06);
+
+  --text: #0f172a;
+  --text-muted: #475569;
+  --text-subtle: #64748b;
+
+  --primary: #0a84ff;
+  --primary-fore: #ffffff;
+  --accent: #111827;
+  --link: #1d4ed8;
+  --link-hover: #1e40af;
+
+  --focus: #2563eb;
+
+  /* Text colors */
+  --tw-prose-body: #374151;
+  --tw-prose-headings: #111827;
+  --tw-prose-links: #3b82f6;
+
+  /* Dropdown components (Light Mode - WCAG AA Compliant) */
+  --dropdown-bg: #ffffff;
+  --dropdown-text: #0f172a;           /* slate-900 - 16.37:1 contrast */
+  --dropdown-border: #9ca3af;         /* gray-400 - visible but subtle */
+  --dropdown-hover-bg: #f3f4f6;       /* gray-100 */
+  --dropdown-focus-ring: #2563eb;     /* blue-600 */
+
+  --dropdown-placeholder: #6b7280;    /* gray-500 - 4.61:1 contrast */
+  --dropdown-caret: #374151;          /* gray-700 */
+
+  --dropdown-menu-bg: #ffffff;
+  --dropdown-menu-border: #d1d5db;    /* gray-300 */
+  --dropdown-menu-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+
+  --dropdown-option-default: #0f172a;        /* slate-900 */
+  --dropdown-option-hover-bg: #f3f4f6;       /* gray-100 */
+  --dropdown-option-hover-text: #0f172a;     /* slate-900 */
+  --dropdown-option-selected-bg: #2563eb;    /* blue-600 */
+  --dropdown-option-selected-text: #ffffff;
+  --dropdown-option-disabled: #9ca3af;       /* gray-400 */
+}
+
+/* Light mode text color overrides - High contrast for readability */
+.light .text-dark-100 {
+  color: #0f172a !important;
+}
+
+.light .text-dark-200 {
+  color: #1e293b !important;
+}
+
+.light .text-dark-300 {
+  color: #334155 !important;
+}
+
+.light .text-dark-400 {
+  color: #475569 !important;
+}
+
+.light .text-white {
+  color: #0f172a !important;
+}
+
+.light .text-slate-400 {
+  color: #475569 !important;
+}
+
+/* Light mode background overrides */
+.light .bg-dark-950 {
+  background-color: #f9fafb !important;
+}
+
+.light .bg-dark-900 {
+  background-color: #ffffff !important;
+}
+
+.light .bg-dark-800 {
+  background-color: #f3f4f6 !important;
+}
+
+.light .bg-dark-700 {
+  background-color: #e5e7eb !important;
+}
+
+.light .bg-slate-800 {
+  background-color: #ffffff !important;
+  border-width: 2px !important;
+}
+
+.light .bg-slate-700 {
+  background-color: #f3f4f6 !important;
+}
+
+/* Light mode border overrides */
+.light .border-dark-700 {
+  border-color: #d1d5db !important;
+}
+
+.light .border-dark-600 {
+  border-color: #9ca3af !important;
+}
+
+.light .border-slate-700 {
+  border-color: #d1d5db !important;
+}
+
+/* Light mode hover states */
+.light .hover\:bg-dark-700:hover {
+  background-color: #e5e7eb !important;
+}
+
+.light .hover\:bg-dark-800:hover {
+  background-color: #f3f4f6 !important;
+}
+
+.light .hover\:bg-slate-700\/70:hover {
+  background-color: #f3f4f6 !important;
+}
+
+.light .hover\:text-accent-400:hover {
+  color: #1d4ed8 !important;
+}
+
+.light .hover\:text-accent-300:hover {
+  color: #1e3a8a !important;
+}
+
+.light .hover\:text-dark-100:hover {
+  color: #0f172a !important;
+}
+
+/* Light mode backgrounds with opacity - Higher opacity for readability */
+.light [class*="bg-dark-900/"] {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  box-shadow: var(--shadow);
+}
+
+.light [class*="bg-dark-800/"] {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow);
+}
+
+.light [class*="bg-dark-700/"] {
+  background-color: rgba(243, 244, 246, 0.9) !important;
+}
+
+.light [class*="bg-slate-800/"] {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.light [class*="bg-slate-700/"] {
+  background-color: rgba(243, 244, 246, 0.9) !important;
+}
+
+/* Light mode gradient overlays */
+.light .bg-dark-950\/85 {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.4)) !important;
+}
+
+/* Light mode focus rings */
+.light .focus\:ring-sky-500:focus {
+  --tw-ring-color: #2563eb !important;
+}
+
+.light .focus\:ring-accent-500:focus {
+  --tw-ring-color: #2563eb !important;
+}
+
+/* Light mode buttons */
+.light .bg-accent-500 {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+}
+
+.light .hover\:bg-accent-600:hover {
+  background-color: #1d4ed8 !important;
+}
+
+/* Light mode selected states */
+.light .bg-sky-500 {
+  background-color: #0f172a !important;
+  color: #ffffff !important;
+}
+
+.light .shadow-sky-500\/50 {
+  box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.3), 0 4px 6px -4px rgba(15, 23, 42, 0.2);
+}
+
+/* Light mode link colors */
+.light a {
+  color: var(--link);
+}
+
+.light a:hover {
+  color: var(--link-hover);
+}

@@ -1,0 +1,199 @@
+import React, { useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
+
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onBack?: () => void;
+  title: string;
+  children: React.ReactNode;
+  className?: string;
+}
+
+const Modal: React.FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  onBack,
+  title,
+  children,
+  className = '',
+}) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Handle ESC key
+  const handleEscape = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    },
+    [onClose]
+  );
+
+  // Focus trap implementation
+  const handleTab = useCallback((e: KeyboardEvent) => {
+    if (e.key !== 'Tab' || !modalRef.current) return;
+
+    const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    if (e.shiftKey) {
+      // Shift + Tab
+      if (document.activeElement === firstElement) {
+        e.preventDefault();
+        lastElement?.focus();
+      }
+    } else {
+      // Tab
+      if (document.activeElement === lastElement) {
+        e.preventDefault();
+        firstElement?.focus();
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    // Store the element that had focus before modal opened
+    previousFocusRef.current = document.activeElement as HTMLElement;
+
+    // Lock body scroll
+    const originalOverflow = document.body.style.overflow;
+    const originalPaddingRight = document.body.style.paddingRight;
+
+    // Calculate scrollbar width to prevent layout shift
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+    document.body.style.overflow = 'hidden';
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
+
+    // Add event listeners
+    document.addEventListener('keydown', handleEscape);
+    document.addEventListener('keydown', handleTab);
+
+    // Focus the close button when modal opens
+    setTimeout(() => {
+      closeButtonRef.current?.focus();
+    }, 100);
+
+    return () => {
+      // Restore body scroll - explicitly remove or restore to original
+      if (originalOverflow) {
+        document.body.style.overflow = originalOverflow;
+      } else {
+        document.body.style.removeProperty('overflow');
+      }
+
+      if (originalPaddingRight) {
+        document.body.style.paddingRight = originalPaddingRight;
+      } else {
+        document.body.style.removeProperty('padding-right');
+      }
+
+      // Remove event listeners
+      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener('keydown', handleTab);
+
+      // Return focus to the element that opened the modal
+      if (previousFocusRef.current) {
+        previousFocusRef.current.focus();
+      }
+    };
+  }, [isOpen, handleEscape, handleTab]);
+
+  if (!isOpen) return null;
+
+  const modalContent = (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-black/70 backdrop-blur-sm"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+    >
+      <div
+        ref={modalRef}
+        className={`bg-dark-800 rounded-2xl max-w-3xl w-full shadow-2xl border border-dark-700 relative flex flex-col max-h-[85vh] ${className}`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Modal Header */}
+        <div className="bg-dark-800 border-b border-dark-700 p-6 rounded-t-2xl flex-shrink-0">
+          <div className="flex items-start justify-between gap-4">
+            <h2
+              id="modal-title"
+              className="text-2xl font-bold text-dark-100 flex-1"
+            >
+              {title}
+            </h2>
+
+            <div className="flex items-center gap-2">
+              {/* Back Button (if onBack is provided) */}
+              {onBack && (
+                <button
+                  onClick={onBack}
+                  className="text-dark-400 hover:text-dark-100 transition-colors p-2 rounded-lg hover:bg-dark-700 focus:outline-none focus:ring-2 focus:ring-accent-500"
+                  aria-label="Go back"
+                  title="Go back"
+                >
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                    />
+                  </svg>
+                </button>
+              )}
+
+              {/* Close Button */}
+              <button
+                ref={closeButtonRef}
+                onClick={onClose}
+                className="text-dark-400 hover:text-dark-100 transition-colors p-2 rounded-lg hover:bg-dark-700 focus:outline-none focus:ring-2 focus:ring-accent-500"
+                aria-label="Close modal"
+                title="Close (ESC)"
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Modal Body */}
+        <div className="p-6 overflow-y-auto flex-1 rounded-b-2xl">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+
+  // Use portal to render modal at document body level
+  return createPortal(modalContent, document.body);
+};
+
+export default Modal;

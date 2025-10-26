@@ -1,0 +1,782 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Semantic CSS Variables for Dropdown Components (Dark Mode Default) */
+  :root {
+    /* Dropdown control */
+    --dropdown-bg: #1e293b;           /* slate-800 */
+    --dropdown-text: #f1f5f9;         /* slate-100 */
+    --dropdown-border: #334155;       /* slate-700 */
+    --dropdown-hover-bg: #334155;     /* slate-700 */
+    --dropdown-focus-ring: #0ea5e9;   /* sky-500 */
+
+    /* Dropdown placeholder & caret */
+    --dropdown-placeholder: #94a3b8;  /* slate-400 */
+    --dropdown-caret: #cbd5e1;        /* slate-300 */
+
+    /* Dropdown menu panel */
+    --dropdown-menu-bg: #1e293b;      /* slate-800 */
+    --dropdown-menu-border: #475569;  /* slate-600 */
+    --dropdown-menu-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+
+    /* Dropdown option states */
+    --dropdown-option-default: #f1f5f9;    /* slate-100 */
+    --dropdown-option-hover-bg: #334155;   /* slate-700 */
+    --dropdown-option-hover-text: #f8fafc; /* slate-50 */
+    --dropdown-option-selected-bg: #0ea5e9; /* sky-500 */
+    --dropdown-option-selected-text: #ffffff;
+    --dropdown-option-disabled: #64748b;   /* slate-500 */
+  }
+
+  body {
+    @apply bg-dark-950 text-dark-100 font-sans;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Light mode styles */
+  .light body {
+    @apply bg-transparent text-gray-900;
+  }
+
+  code {
+    @apply font-mono;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-dark-900/60 backdrop-blur-lg border border-dark-700/50;
+  }
+
+  .glass-light {
+    @apply bg-dark-800/40 backdrop-blur-md border border-dark-600/30;
+  }
+
+  /* Light mode glass effects */
+  .light .glass {
+    @apply bg-white/80 backdrop-blur-lg border border-gray-200;
+  }
+
+  .light .glass-light {
+    @apply bg-white/60 backdrop-blur-md border border-gray-300/50;
+  }
+}
+
+/*!* Hero Planes Animation - Enhanced system with upward AND inverted (downward) arcs *!*/
+/*!* All planes start OUTSIDE screen (-10vw) and end OUTSIDE screen (110vw) *!*/
+/*!* Mix of upward arcs (normal) and inverted arcs (downward curves) for variety *!*/
+
+/*!* ========== UPWARD ARCS (fly UP in middle) ========== *!*/
+
+/*!* Path 0: Very low, shallow upward arc - Near bottom, gentle rise *!*/
+/*!* Uses CSS variable --plane-offset-y for dynamic vertical positioning *!*/
+/*@keyframes fly-path-0 {*/
+/*  0% { transform: translate(-10vw, calc(78vh + var(--plane-offset-y, 0vh))) rotate(87deg); }*/
+/*  25% { transform: translate(20vw, calc(75vh + var(--plane-offset-y, 0vh))) rotate(89deg); }*/
+/*  50% { transform: translate(50vw, calc(73vh + var(--plane-offset-y, 0vh))) rotate(90deg); }*/
+/*  75% { transform: translate(80vw, calc(75vh + var(--plane-offset-y, 0vh))) rotate(91deg); }*/
+/*  100% { transform: translate(110vw, calc(78vh + var(--plane-offset-y, 0vh))) rotate(93deg); }*/
+/*}*/
+
+/*!* Path 1: Low arc with moderate upward rise *!*/
+/*@keyframes fly-path-1 {*/
+/*  0% { transform: translate(-10vw, calc(68vh + var(--plane-offset-y, 0vh))) rotate(84deg); }*/
+/*  25% { transform: translate(20vw, calc(62vh + var(--plane-offset-y, 0vh))) rotate(88deg); }*/
+/*  50% { transform: translate(50vw, calc(58vh + var(--plane-offset-y, 0vh))) rotate(90deg); }*/
+/*  75% { transform: translate(80vw, calc(62vh + var(--plane-offset-y, 0vh))) rotate(92deg); }*/
+/*  100% { transform: translate(110vw, calc(68vh + var(--plane-offset-y, 0vh))) rotate(96deg); }*/
+/*}*/
+
+/*!* Path 2: Mid-low arc with BIG upward rise *!*/
+/*@keyframes fly-path-2 {*/
+/*  0% { transform: translate(-10vw, calc(58vh + var(--plane-offset-y, 0vh))) rotate(80deg); }*/
+/*  25% { transform: translate(20vw, calc(50vh + var(--plane-offset-y, 0vh))) rotate(86deg); }*/
+/*  50% { transform: translate(50vw, calc(42vh + var(--plane-offset-y, 0vh))) rotate(90deg); }*/
+/*  75% { transform: translate(80vw, calc(50vh + var(--plane-offset-y, 0vh))) rotate(94deg); }*/
+/*  100% { transform: translate(110vw, calc(58vh + var(--plane-offset-y, 0vh))) rotate(100deg); }*/
+/*}*/
+
+/*!* Path 3: Middle arc with LARGE upward rise *!*/
+/*@keyframes fly-path-3 {*/
+/*  0% { transform: translate(-10vw, calc(45vh + var(--plane-offset-y, 0vh))) rotate(77deg); }*/
+/*  25% { transform: translate(20vw, calc(34vh + var(--plane-offset-y, 0vh))) rotate(84deg); }*/
+/*  50% { transform: translate(50vw, calc(22vh + var(--plane-offset-y, 0vh))) rotate(90deg); }*/
+/*  75% { transform: translate(80vw, calc(34vh + var(--plane-offset-y, 0vh))) rotate(96deg); }*/
+/*  100% { transform: translate(110vw, calc(45vh + var(--plane-offset-y, 0vh))) rotate(103deg); }*/
+/*}*/
+
+/*!* Path 4: Very high gentle upward arc *!*/
+/*@keyframes fly-path-4 {*/
+/*  0% { transform: translate(-10vw, calc(18vh + var(--plane-offset-y, 0vh))) rotate(88deg); }*/
+/*  25% { transform: translate(20vw, calc(14vh + var(--plane-offset-y, 0vh))) rotate(89deg); }*/
+/*  50% { transform: translate(50vw, calc(10vh + var(--plane-offset-y, 0vh))) rotate(90deg); }*/
+/*  75% { transform: translate(80vw, calc(14vh + var(--plane-offset-y, 0vh))) rotate(91deg); }*/
+/*  100% { transform: translate(110vw, calc(18vh + var(--plane-offset-y, 0vh))) rotate(92deg); }*/
+/*}*/
+
+/*!* ========== INVERTED ARCS (dip DOWN in middle) ========== *!*/
+
+/*!* Path 5: Mid inverted arc - Starts mid, dips down, rises back *!*/
+/*@keyframes fly-path-5 {*/
+/*  0% { transform: translate(-10vw, calc(35vh + var(--plane-offset-y, 0vh))) rotate(92deg); }*/
+/*  25% { transform: translate(20vw, calc(42vh + var(--plane-offset-y, 0vh))) rotate(88deg); }*/
+/*  50% { transform: translate(50vw, calc(48vh + var(--plane-offset-y, 0vh))) rotate(90deg); }*/
+/*  75% { transform: translate(80vw, calc(42vh + var(--plane-offset-y, 0vh))) rotate(92deg); }*/
+/*  100% { transform: translate(110vw, calc(35vh + var(--plane-offset-y, 0vh))) rotate(88deg); }*/
+/*}*/
+
+/*!* Path 6: Mid-high inverted arc - Higher start, gentle dip *!*/
+/*@keyframes fly-path-6 {*/
+/*  0% { transform: translate(-10vw, calc(25vh + var(--plane-offset-y, 0vh))) rotate(93deg); }*/
+/*  25% { transform: translate(20vw, calc(30vh + var(--plane-offset-y, 0vh))) rotate(88deg); }*/
+/*  50% { transform: translate(50vw, calc(35vh + var(--plane-offset-y, 0vh))) rotate(90deg); }*/
+/*  75% { transform: translate(80vw, calc(30vh + var(--plane-offset-y, 0vh))) rotate(92deg); }*/
+/*  100% { transform: translate(110vw, calc(25vh + var(--plane-offset-y, 0vh))) rotate(87deg); }*/
+/*}*/
+
+/*!* Path 7: Low inverted arc - Low start, dips lower *!*/
+/*@keyframes fly-path-7 {*/
+/*  0% { transform: translate(-10vw, calc(52vh + var(--plane-offset-y, 0vh))) rotate(94deg); }*/
+/*  25% { transform: translate(20vw, calc(58vh + var(--plane-offset-y, 0vh))) rotate(87deg); }*/
+/*  50% { transform: translate(50vw, calc(64vh + var(--plane-offset-y, 0vh))) rotate(90deg); }*/
+/*  75% { transform: translate(80vw, calc(58vh + var(--plane-offset-y, 0vh))) rotate(93deg); }*/
+/*  100% { transform: translate(110vw, calc(52vh + var(--plane-offset-y, 0vh))) rotate(86deg); }*/
+/*}*/
+
+/*!* Path 8: Very low inverted arc - Bottom area, shallow dip *!*/
+/*@keyframes fly-path-8 {*/
+/*  0% { transform: translate(-10vw, calc(65vh + var(--plane-offset-y, 0vh))) rotate(93deg); }*/
+/*  25% { transform: translate(20vw, calc(69vh + var(--plane-offset-y, 0vh))) rotate(88deg); }*/
+/*  50% { transform: translate(50vw, calc(72vh + var(--plane-offset-y, 0vh))) rotate(90deg); }*/
+/*  75% { transform: translate(80vw, calc(69vh + var(--plane-offset-y, 0vh))) rotate(92deg); }*/
+/*  100% { transform: translate(110vw, calc(65vh + var(--plane-offset-y, 0vh))) rotate(87deg); }*/
+/*}*/
+
+/*!* Path 9: High inverted arc - Top area, pronounced dip *!*/
+/*@keyframes fly-path-9 {*/
+/*  0% { transform: translate(-10vw, calc(15vh + var(--plane-offset-y, 0vh))) rotate(95deg); }*/
+/*  25% { transform: translate(20vw, calc(22vh + var(--plane-offset-y, 0vh))) rotate(86deg); }*/
+/*  50% { transform: translate(50vw, calc(28vh + var(--plane-offset-y, 0vh))) rotate(90deg); }*/
+/*  75% { transform: translate(80vw, calc(22vh + var(--plane-offset-y, 0vh))) rotate(94deg); }*/
+/*  100% { transform: translate(110vw, calc(15vh + var(--plane-offset-y, 0vh))) rotate(85deg); }*/
+/*}*/
+
+/*!* RTL (Right-to-Left) Paths - Nose points LEFT, moves RIGHT→LEFT *!*/
+/*!* Mirror of LTR paths, starting from 110vw (outside right) to -10vw (outside left) *!*/
+
+/*!* ========== UPWARD ARCS RTL ========== *!*/
+
+/*!* Path 0 RTL: Very low, shallow upward arc *!*/
+/*@keyframes fly-path-0-rtl {*/
+/*  0% { transform: translate(110vw, calc(78vh + var(--plane-offset-y, 0vh))) rotate(267deg); }*/
+/*  25% { transform: translate(80vw, calc(75vh + var(--plane-offset-y, 0vh))) rotate(269deg); }*/
+/*  50% { transform: translate(50vw, calc(73vh + var(--plane-offset-y, 0vh))) rotate(270deg); }*/
+/*  75% { transform: translate(20vw, calc(75vh + var(--plane-offset-y, 0vh))) rotate(271deg); }*/
+/*  100% { transform: translate(-10vw, calc(78vh + var(--plane-offset-y, 0vh))) rotate(273deg); }*/
+/*}*/
+
+/*!* Path 1 RTL: Low arc with moderate upward rise *!*/
+/*@keyframes fly-path-1-rtl {*/
+/*  0% { transform: translate(110vw, calc(68vh + var(--plane-offset-y, 0vh))) rotate(264deg); }*/
+/*  25% { transform: translate(80vw, calc(62vh + var(--plane-offset-y, 0vh))) rotate(268deg); }*/
+/*  50% { transform: translate(50vw, calc(58vh + var(--plane-offset-y, 0vh))) rotate(270deg); }*/
+/*  75% { transform: translate(20vw, calc(62vh + var(--plane-offset-y, 0vh))) rotate(272deg); }*/
+/*  100% { transform: translate(-10vw, calc(68vh + var(--plane-offset-y, 0vh))) rotate(276deg); }*/
+/*}*/
+
+/*!* Path 2 RTL: Mid-low arc with BIG upward rise *!*/
+/*@keyframes fly-path-2-rtl {*/
+/*  0% { transform: translate(110vw, calc(58vh + var(--plane-offset-y, 0vh))) rotate(260deg); }*/
+/*  25% { transform: translate(80vw, calc(50vh + var(--plane-offset-y, 0vh))) rotate(266deg); }*/
+/*  50% { transform: translate(50vw, calc(42vh + var(--plane-offset-y, 0vh))) rotate(270deg); }*/
+/*  75% { transform: translate(20vw, calc(50vh + var(--plane-offset-y, 0vh))) rotate(274deg); }*/
+/*  100% { transform: translate(-10vw, calc(58vh + var(--plane-offset-y, 0vh))) rotate(280deg); }*/
+/*}*/
+
+/*!* Path 3 RTL: Middle arc with LARGE upward rise *!*/
+/*@keyframes fly-path-3-rtl {*/
+/*  0% { transform: translate(110vw, calc(45vh + var(--plane-offset-y, 0vh))) rotate(257deg); }*/
+/*  25% { transform: translate(80vw, calc(34vh + var(--plane-offset-y, 0vh))) rotate(264deg); }*/
+/*  50% { transform: translate(50vw, calc(22vh + var(--plane-offset-y, 0vh))) rotate(270deg); }*/
+/*  75% { transform: translate(20vw, calc(34vh + var(--plane-offset-y, 0vh))) rotate(276deg); }*/
+/*  100% { transform: translate(-10vw, calc(45vh + var(--plane-offset-y, 0vh))) rotate(283deg); }*/
+/*}*/
+
+/*!* Path 4 RTL: Very high gentle upward arc *!*/
+/*@keyframes fly-path-4-rtl {*/
+/*  0% { transform: translate(110vw, calc(18vh + var(--plane-offset-y, 0vh))) rotate(268deg); }*/
+/*  25% { transform: translate(80vw, calc(14vh + var(--plane-offset-y, 0vh))) rotate(269deg); }*/
+/*  50% { transform: translate(50vw, calc(10vh + var(--plane-offset-y, 0vh))) rotate(270deg); }*/
+/*  75% { transform: translate(20vw, calc(14vh + var(--plane-offset-y, 0vh))) rotate(271deg); }*/
+/*  100% { transform: translate(-10vw, calc(18vh + var(--plane-offset-y, 0vh))) rotate(272deg); }*/
+/*}*/
+
+/*!* ========== INVERTED ARCS RTL ========== *!*/
+
+/*!* Path 5 RTL: Mid inverted arc *!*/
+/*@keyframes fly-path-5-rtl {*/
+/*  0% { transform: translate(110vw, calc(35vh + var(--plane-offset-y, 0vh))) rotate(272deg); }*/
+/*  25% { transform: translate(80vw, calc(42vh + var(--plane-offset-y, 0vh))) rotate(272deg); }*/
+/*  50% { transform: translate(50vw, calc(48vh + var(--plane-offset-y, 0vh))) rotate(270deg); }*/
+/*  75% { transform: translate(20vw, calc(42vh + var(--plane-offset-y, 0vh))) rotate(268deg); }*/
+/*  100% { transform: translate(-10vw, calc(35vh + var(--plane-offset-y, 0vh))) rotate(268deg); }*/
+/*}*/
+
+/*!* Path 6 RTL: Mid-high inverted arc *!*/
+/*@keyframes fly-path-6-rtl {*/
+/*  0% { transform: translate(110vw, calc(25vh + var(--plane-offset-y, 0vh))) rotate(273deg); }*/
+/*  25% { transform: translate(80vw, calc(30vh + var(--plane-offset-y, 0vh))) rotate(272deg); }*/
+/*  50% { transform: translate(50vw, calc(35vh + var(--plane-offset-y, 0vh))) rotate(270deg); }*/
+/*  75% { transform: translate(20vw, calc(30vh + var(--plane-offset-y, 0vh))) rotate(268deg); }*/
+/*  100% { transform: translate(-10vw, calc(25vh + var(--plane-offset-y, 0vh))) rotate(267deg); }*/
+/*}*/
+
+/*!* Path 7 RTL: Low inverted arc *!*/
+/*@keyframes fly-path-7-rtl {*/
+/*  0% { transform: translate(110vw, calc(52vh + var(--plane-offset-y, 0vh))) rotate(274deg); }*/
+/*  25% { transform: translate(80vw, calc(58vh + var(--plane-offset-y, 0vh))) rotate(273deg); }*/
+/*  50% { transform: translate(50vw, calc(64vh + var(--plane-offset-y, 0vh))) rotate(270deg); }*/
+/*  75% { transform: translate(20vw, calc(58vh + var(--plane-offset-y, 0vh))) rotate(267deg); }*/
+/*  100% { transform: translate(-10vw, calc(52vh + var(--plane-offset-y, 0vh))) rotate(266deg); }*/
+/*}*/
+
+/*!* Path 8 RTL: Very low inverted arc *!*/
+/*@keyframes fly-path-8-rtl {*/
+/*  0% { transform: translate(110vw, calc(65vh + var(--plane-offset-y, 0vh))) rotate(273deg); }*/
+/*  25% { transform: translate(80vw, calc(69vh + var(--plane-offset-y, 0vh))) rotate(272deg); }*/
+/*  50% { transform: translate(50vw, calc(72vh + var(--plane-offset-y, 0vh))) rotate(270deg); }*/
+/*  75% { transform: translate(20vw, calc(69vh + var(--plane-offset-y, 0vh))) rotate(268deg); }*/
+/*  100% { transform: translate(-10vw, calc(65vh + var(--plane-offset-y, 0vh))) rotate(267deg); }*/
+/*}*/
+
+/*!* Path 9 RTL: High inverted arc *!*/
+/*@keyframes fly-path-9-rtl {*/
+/*  0% { transform: translate(110vw, calc(15vh + var(--plane-offset-y, 0vh))) rotate(275deg); }*/
+/*  25% { transform: translate(80vw, calc(22vh + var(--plane-offset-y, 0vh))) rotate(274deg); }*/
+/*  50% { transform: translate(50vw, calc(28vh + var(--plane-offset-y, 0vh))) rotate(270deg); }*/
+/*  75% { transform: translate(20vw, calc(22vh + var(--plane-offset-y, 0vh))) rotate(266deg); }*/
+/*  100% { transform: translate(-10vw, calc(15vh + var(--plane-offset-y, 0vh))) rotate(265deg); }*/
+/*}*/
+
+/* =========================================================
+   Hero Planes Animation — LTR + RTL
+   - Arce distincte (sus/inversate), fără intersecții de benzi
+   - Unghiuri calibrate: 90° = înainte (dreapta LTR / stânga RTL)
+     * LTR urcare:   82–88°  | LTR coborâre:   92–98°
+     * RTL urcare:  262–268° | RTL coborâre:  272–278°
+   - Toate pleacă OFF-screen (-12vw / 112vw) și ies OFF-screen
+   - Offset Y ajustabil: var(--plane-offset-y, 0vh)
+   - Durate recomandate (viteze diferite) la final
+   ========================================================= */
+
+/* ========== UPWARD ARCS (fly UP in middle) — LTR ========== */
+/* Benzile sunt distanțate vertical ca să NU se intersecteze cu cele inversate */
+/* Path 0: foarte jos, arc ușor în sus */
+@keyframes fly-path-0 {
+    0%   { transform: translate(-12vw, calc(80vh + var(--plane-offset-y, 0vh))) rotate(84deg); }
+    25%  { transform: translate(20vw,  calc(76vh + var(--plane-offset-y, 0vh))) rotate(88deg); }
+    50%  { transform: translate(50vw,  calc(74vh + var(--plane-offset-y, 0vh))) rotate(90deg); }
+    75%  { transform: translate(80vw,  calc(76vh + var(--plane-offset-y, 0vh))) rotate(92deg); }
+    100% { transform: translate(112vw, calc(80vh + var(--plane-offset-y, 0vh))) rotate(96deg); }
+}
+
+/* Path 1: jos-moderat, urcare vizibilă */
+@keyframes fly-path-1 {
+    0%   { transform: translate(-12vw, calc(68vh + var(--plane-offset-y, 0vh))) rotate(83deg); }
+    25%  { transform: translate(20vw,  calc(62vh + var(--plane-offset-y, 0vh))) rotate(87deg); }
+    50%  { transform: translate(50vw,  calc(58vh + var(--plane-offset-y, 0vh))) rotate(90deg); }
+    75%  { transform: translate(80vw,  calc(62vh + var(--plane-offset-y, 0vh))) rotate(93deg); }
+    100% { transform: translate(112vw, calc(68vh + var(--plane-offset-y, 0vh))) rotate(97deg); }
+}
+
+/* Path 2: mediu-jos, urcare mare */
+@keyframes fly-path-2 {
+    0%   { transform: translate(-12vw, calc(56vh + var(--plane-offset-y, 0vh))) rotate(82deg); }
+    25%  { transform: translate(20vw,  calc(48vh + var(--plane-offset-y, 0vh))) rotate(86deg); }
+    50%  { transform: translate(50vw,  calc(40vh + var(--plane-offset-y, 0vh))) rotate(90deg); }
+    75%  { transform: translate(80vw,  calc(48vh + var(--plane-offset-y, 0vh))) rotate(94deg); }
+    100% { transform: translate(112vw, calc(56vh + var(--plane-offset-y, 0vh))) rotate(98deg); }
+}
+
+/* Path 3: mediu, urcare foarte mare */
+@keyframes fly-path-3 {
+    0%   { transform: translate(-12vw, calc(44vh + var(--plane-offset-y, 0vh))) rotate(81deg); }
+    25%  { transform: translate(20vw,  calc(32vh + var(--plane-offset-y, 0vh))) rotate(86deg); }
+    50%  { transform: translate(50vw,  calc(24vh + var(--plane-offset-y, 0vh))) rotate(90deg); }
+    75%  { transform: translate(80vw,  calc(32vh + var(--plane-offset-y, 0vh))) rotate(94deg); }
+    100% { transform: translate(112vw, calc(44vh + var(--plane-offset-y, 0vh))) rotate(99deg); }
+}
+
+/* Path 4: sus, arc blând în sus */
+@keyframes fly-path-4 {
+    0%   { transform: translate(-12vw, calc(24vh + var(--plane-offset-y, 0vh))) rotate(86deg); }
+    25%  { transform: translate(20vw,  calc(20vh + var(--plane-offset-y, 0vh))) rotate(88deg); }
+    50%  { transform: translate(50vw,  calc(16vh + var(--plane-offset-y, 0vh))) rotate(90deg); }
+    75%  { transform: translate(80vw,  calc(20vh + var(--plane-offset-y, 0vh))) rotate(92deg); }
+    100% { transform: translate(112vw, calc(24vh + var(--plane-offset-y, 0vh))) rotate(94deg); }
+}
+
+/* ========== INVERTED ARCS (dip DOWN in middle) — LTR ========== */
+/* Path 5: mediu, arc inversat clar */
+@keyframes fly-path-5 {
+    0%   { transform: translate(-12vw, calc(38vh + var(--plane-offset-y, 0vh))) rotate(96deg); }
+    25%  { transform: translate(20vw,  calc(44vh + var(--plane-offset-y, 0vh))) rotate(92deg); }
+    50%  { transform: translate(50vw,  calc(50vh + var(--plane-offset-y, 0vh))) rotate(90deg); }
+    75%  { transform: translate(80vw,  calc(44vh + var(--plane-offset-y, 0vh))) rotate(88deg); }
+    100% { transform: translate(112vw, calc(38vh + var(--plane-offset-y, 0vh))) rotate(84deg); }
+}
+
+/* Path 6: mediu-sus, arc inversat moderat */
+@keyframes fly-path-6 {
+    0%   { transform: translate(-12vw, calc(28vh + var(--plane-offset-y, 0vh))) rotate(97deg); }
+    25%  { transform: translate(20vw,  calc(32vh + var(--plane-offset-y, 0vh))) rotate(93deg); }
+    50%  { transform: translate(50vw,  calc(36vh + var(--plane-offset-y, 0vh))) rotate(90deg); }
+    75%  { transform: translate(80vw,  calc(32vh + var(--plane-offset-y, 0vh))) rotate(87deg); }
+    100% { transform: translate(112vw, calc(28vh + var(--plane-offset-y, 0vh))) rotate(83deg); }
+}
+
+/* Path 7: jos, arc inversat pronunțat */
+@keyframes fly-path-7 {
+    0%   { transform: translate(-12vw, calc(50vh + var(--plane-offset-y, 0vh))) rotate(98deg); }
+    25%  { transform: translate(20vw,  calc(56vh + var(--plane-offset-y, 0vh))) rotate(93deg); }
+    50%  { transform: translate(50vw,  calc(62vh + var(--plane-offset-y, 0vh))) rotate(90deg); }
+    75%  { transform: translate(80vw,  calc(56vh + var(--plane-offset-y, 0vh))) rotate(87deg); }
+    100% { transform: translate(112vw, calc(50vh + var(--plane-offset-y, 0vh))) rotate(82deg); }
+}
+
+/* Path 8: foarte jos, arc inversat mic */
+@keyframes fly-path-8 {
+    0%   { transform: translate(-12vw, calc(62vh + var(--plane-offset-y, 0vh))) rotate(97deg); }
+    25%  { transform: translate(20vw,  calc(66vh + var(--plane-offset-y, 0vh))) rotate(93deg); }
+    50%  { transform: translate(50vw,  calc(70vh + var(--plane-offset-y, 0vh))) rotate(90deg); }
+    75%  { transform: translate(80vw,  calc(66vh + var(--plane-offset-y, 0vh))) rotate(87deg); }
+    100% { transform: translate(112vw, calc(62vh + var(--plane-offset-y, 0vh))) rotate(83deg); }
+}
+
+/* Path 9: foarte sus, arc inversat puternic */
+@keyframes fly-path-9 {
+    0%   { transform: translate(-12vw, calc(18vh + var(--plane-offset-y, 0vh))) rotate(98deg); }
+    25%  { transform: translate(20vw,  calc(24vh + var(--plane-offset-y, 0vh))) rotate(94deg); }
+    50%  { transform: translate(50vw,  calc(30vh + var(--plane-offset-y, 0vh))) rotate(90deg); }
+    75%  { transform: translate(80vw,  calc(24vh + var(--plane-offset-y, 0vh))) rotate(86deg); }
+    100% { transform: translate(112vw, calc(18vh + var(--plane-offset-y, 0vh))) rotate(82deg); }
+}
+
+/* =========================================================
+   RTL (Right-to-Left) — oglinzi cu unghiuri corecte spre stânga
+   270° = înainte spre stânga; +/- 8° pentru urcare/coborâre
+   ========================================================= */
+
+/* ========== UPWARD ARCS — RTL ========== */
+/* Path 0 RTL */
+@keyframes fly-path-0-rtl {
+    0%   { transform: translate(112vw, calc(80vh + var(--plane-offset-y, 0vh))) rotate(276deg); }
+    25%  { transform: translate(80vw,  calc(76vh + var(--plane-offset-y, 0vh))) rotate(272deg); }
+    50%  { transform: translate(50vw,  calc(74vh + var(--plane-offset-y, 0vh))) rotate(270deg); }
+    75%  { transform: translate(20vw,  calc(76vh + var(--plane-offset-y, 0vh))) rotate(268deg); }
+    100% { transform: translate(-12vw, calc(80vh + var(--plane-offset-y, 0vh))) rotate(264deg); }
+}
+
+/* Path 1 RTL */
+@keyframes fly-path-1-rtl {
+    0%   { transform: translate(112vw, calc(68vh + var(--plane-offset-y, 0vh))) rotate(277deg); }
+    25%  { transform: translate(80vw,  calc(62vh + var(--plane-offset-y, 0vh))) rotate(273deg); }
+    50%  { transform: translate(50vw,  calc(58vh + var(--plane-offset-y, 0vh))) rotate(270deg); }
+    75%  { transform: translate(20vw,  calc(62vh + var(--plane-offset-y, 0vh))) rotate(267deg); }
+    100% { transform: translate(-12vw, calc(68vh + var(--plane-offset-y, 0vh))) rotate(263deg); }
+}
+
+/* Path 2 RTL */
+@keyframes fly-path-2-rtl {
+    0%   { transform: translate(112vw, calc(56vh + var(--plane-offset-y, 0vh))) rotate(278deg); }
+    25%  { transform: translate(80vw,  calc(48vh + var(--plane-offset-y, 0vh))) rotate(274deg); }
+    50%  { transform: translate(50vw,  calc(40vh + var(--plane-offset-y, 0vh))) rotate(270deg); }
+    75%  { transform: translate(20vw,  calc(48vh + var(--plane-offset-y, 0vh))) rotate(266deg); }
+    100% { transform: translate(-12vw, calc(56vh + var(--plane-offset-y, 0vh))) rotate(262deg); }
+}
+
+/* Path 3 RTL */
+@keyframes fly-path-3-rtl {
+    0%   { transform: translate(112vw, calc(44vh + var(--plane-offset-y, 0vh))) rotate(279deg); }
+    25%  { transform: translate(80vw,  calc(32vh + var(--plane-offset-y, 0vh))) rotate(274deg); }
+    50%  { transform: translate(50vw,  calc(24vh + var(--plane-offset-y, 0vh))) rotate(270deg); }
+    75%  { transform: translate(20vw,  calc(32vh + var(--plane-offset-y, 0vh))) rotate(266deg); }
+    100% { transform: translate(-12vw, calc(44vh + var(--plane-offset-y, 0vh))) rotate(261deg); }
+}
+
+/* Path 4 RTL */
+@keyframes fly-path-4-rtl {
+    0%   { transform: translate(112vw, calc(24vh + var(--plane-offset-y, 0vh))) rotate(274deg); }
+    25%  { transform: translate(80vw,  calc(20vh + var(--plane-offset-y, 0vh))) rotate(272deg); }
+    50%  { transform: translate(50vw,  calc(16vh + var(--plane-offset-y, 0vh))) rotate(270deg); }
+    75%  { transform: translate(20vw,  calc(20vh + var(--plane-offset-y, 0vh))) rotate(268deg); }
+    100% { transform: translate(-12vw, calc(24vh + var(--plane-offset-y, 0vh))) rotate(266deg); }
+}
+
+/* ========== INVERTED ARCS — RTL ========== */
+/* Path 5 RTL */
+@keyframes fly-path-5-rtl {
+    0%   { transform: translate(112vw, calc(38vh + var(--plane-offset-y, 0vh))) rotate(264deg); }
+    25%  { transform: translate(80vw,  calc(44vh + var(--plane-offset-y, 0vh))) rotate(268deg); }
+    50%  { transform: translate(50vw,  calc(50vh + var(--plane-offset-y, 0vh))) rotate(270deg); }
+    75%  { transform: translate(20vw,  calc(44vh + var(--plane-offset-y, 0vh))) rotate(272deg); }
+    100% { transform: translate(-12vw, calc(38vh + var(--plane-offset-y, 0vh))) rotate(276deg); }
+}
+
+/* Path 6 RTL */
+@keyframes fly-path-6-rtl {
+    0%   { transform: translate(112vw, calc(28vh + var(--plane-offset-y, 0vh))) rotate(263deg); }
+    25%  { transform: translate(80vw,  calc(32vh + var(--plane-offset-y, 0vh))) rotate(267deg); }
+    50%  { transform: translate(50vw,  calc(36vh + var(--plane-offset-y, 0vh))) rotate(270deg); }
+    75%  { transform: translate(20vw,  calc(32vh + var(--plane-offset-y, 0vh))) rotate(273deg); }
+    100% { transform: translate(-12vw, calc(28vh + var(--plane-offset-y, 0vh))) rotate(277deg); }
+}
+
+/* Path 7 RTL */
+@keyframes fly-path-7-rtl {
+    0%   { transform: translate(112vw, calc(50vh + var(--plane-offset-y, 0vh))) rotate(262deg); }
+    25%  { transform: translate(80vw,  calc(56vh + var(--plane-offset-y, 0vh))) rotate(267deg); }
+    50%  { transform: translate(50vw,  calc(62vh + var(--plane-offset-y, 0vh))) rotate(270deg); }
+    75%  { transform: translate(20vw,  calc(56vh + var(--plane-offset-y, 0vh))) rotate(273deg); }
+    100% { transform: translate(-12vw, calc(50vh + var(--plane-offset-y, 0vh))) rotate(278deg); }
+}
+
+/* Path 8 RTL */
+@keyframes fly-path-8-rtl {
+    0%   { transform: translate(112vw, calc(62vh + var(--plane-offset-y, 0vh))) rotate(263deg); }
+    25%  { transform: translate(80vw,  calc(66vh + var(--plane-offset-y, 0vh))) rotate(267deg); }
+    50%  { transform: translate(50vw,  calc(70vh + var(--plane-offset-y, 0vh))) rotate(270deg); }
+    75%  { transform: translate(20vw,  calc(66vh + var(--plane-offset-y, 0vh))) rotate(273deg); }
+    100% { transform: translate(-12vw, calc(62vh + var(--plane-offset-y, 0vh))) rotate(277deg); }
+}
+
+/* Path 9 RTL */
+@keyframes fly-path-9-rtl {
+    0%   { transform: translate(112vw, calc(18vh + var(--plane-offset-y, 0vh))) rotate(262deg); }
+    25%  { transform: translate(80vw,  calc(24vh + var(--plane-offset-y, 0vh))) rotate(266deg); }
+    50%  { transform: translate(50vw,  calc(30vh + var(--plane-offset-y, 0vh))) rotate(270deg); }
+    75%  { transform: translate(20vw,  calc(24vh + var(--plane-offset-y, 0vh))) rotate(274deg); }
+    100% { transform: translate(-12vw, calc(18vh + var(--plane-offset-y, 0vh))) rotate(278deg); }
+}
+
+/* =========================================================
+   Durate recomandate (viteze diferite) — opțional
+   Aplicați pe elementele care folosesc keyframe-urile de mai sus.
+   Ideea: căi mai lungi => durate mai mari. Niciun path nu se intersectează
+   datorită benzilor verticale alese (16–80vh cu “goluri” între grupe).
+   ========================================================= */
+/* Exemple:
+.plane--path-0 { animation: fly-path-0  24s linear infinite; }
+.plane--path-1 { animation: fly-path-1  23s linear infinite; }
+.plane--path-2 { animation: fly-path-2  22s linear infinite; }
+.plane--path-3 { animation: fly-path-3  21s linear infinite; }
+.plane--path-4 { animation: fly-path-4  20s linear infinite; }
+
+.plane--path-5 { animation: fly-path-5  22s linear infinite; }
+.plane--path-6 { animation: fly-path-6  21s linear infinite; }
+.plane--path-7 { animation: fly-path-7  23s linear infinite; }
+.plane--path-8 { animation: fly-path-8  24s linear infinite; }
+.plane--path-9 { animation: fly-path-9  20s linear infinite; }
+
+.plane--path-0-rtl { animation: fly-path-0-rtl  24s linear infinite; }
+...
+*/
+
+/* Tips:
+   - Pentru densitate mai mică pe mobil: scădeți dimensiunea iconului și creșteți ușor duratele.
+   - Respectați prefers-reduced-motion: dezactivați animația la nevoie.
+   - Dacă doriți “perfect constant speed”, setați duratele după lățimea secțiunii:
+     dur ≈ (dist_hor_px / v_px_s) * factor_arc (1.00–1.15), unde factor_arc compensează curburile.
+*/
+
+
+/* Hero plane base styling */
+.hero-plane {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 32px;
+  opacity: 0.4;
+  will-change: transform;
+  contain: layout paint style; /* Paint containment for performance */
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.3)) brightness(0) invert(1); /* White in dark mode */
+}
+
+/* Smaller planes on mobile for less visual noise */
+@media (max-width: 640px) {
+  .hero-plane {
+    width: 24px;
+    height: 24px;
+    opacity: 0.35;
+  }
+}
+
+/* Static positioning for reduced motion */
+.hero-plane-static {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  opacity: 0.4;
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.3)) brightness(0) invert(1); /* White in dark mode */
+}
+
+@media (max-width: 640px) {
+  .hero-plane-static {
+    width: 24px;
+    height: 24px;
+    opacity: 0.35;
+  }
+}
+
+/* Light mode: black planes */
+.light .hero-plane {
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.15)) brightness(0); /* Black in light mode */
+}
+
+.light .hero-plane-static {
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.15)) brightness(0); /* Black in light mode */
+}
+
+/* Reduced motion: disable all plane animations */
+@media (prefers-reduced-motion: reduce) {
+  .hero-plane {
+    animation: none !important;
+  }
+}
+
+
+/* Product Pulse Animation for Search Highlight */
+@keyframes productPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.45);
+  }
+  40% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 12px rgba(56, 189, 248, 0);
+  }
+  60% {
+    transform: scale(1.015);
+    box-shadow: 0 0 0 6px rgba(56, 189, 248, 0.15);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(56, 189, 248, 0);
+  }
+}
+
+.pulse-5s {
+  animation: productPulse 5s ease-in-out 1;
+}
+
+/* Light Mode Theme Overrides */
+.light {
+  /* CSS Variables for Light Mode */
+  --bg: #ffffff;
+  --bg-muted: #f8fafc;
+  --card: #ffffff;
+  --card-muted: #f9fafb;
+  --border: #e5e7eb;
+  --shadow: 0 1px 2px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.06);
+
+  --text: #0f172a;
+  --text-muted: #475569;
+  --text-subtle: #64748b;
+
+  --primary: #0a84ff;
+  --primary-fore: #ffffff;
+  --accent: #111827;
+  --link: #1d4ed8;
+  --link-hover: #1e40af;
+
+  --focus: #2563eb;
+
+  /* Text colors */
+  --tw-prose-body: #374151;
+  --tw-prose-headings: #111827;
+  --tw-prose-links: #3b82f6;
+
+  /* Dropdown components (Light Mode - WCAG AA Compliant) */
+  --dropdown-bg: #ffffff;
+  --dropdown-text: #0f172a;           /* slate-900 - 16.37:1 contrast */
+  --dropdown-border: #9ca3af;         /* gray-400 - visible but subtle */
+  --dropdown-hover-bg: #f3f4f6;       /* gray-100 */
+  --dropdown-focus-ring: #2563eb;     /* blue-600 */
+
+  --dropdown-placeholder: #6b7280;    /* gray-500 - 4.61:1 contrast */
+  --dropdown-caret: #374151;          /* gray-700 */
+
+  --dropdown-menu-bg: #ffffff;
+  --dropdown-menu-border: #d1d5db;    /* gray-300 */
+  --dropdown-menu-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+
+  --dropdown-option-default: #0f172a;        /* slate-900 */
+  --dropdown-option-hover-bg: #f3f4f6;       /* gray-100 */
+  --dropdown-option-hover-text: #0f172a;     /* slate-900 */
+  --dropdown-option-selected-bg: #2563eb;    /* blue-600 */
+  --dropdown-option-selected-text: #ffffff;
+  --dropdown-option-disabled: #9ca3af;       /* gray-400 */
+}
+
+/* Light mode text color overrides - High contrast for readability */
+.light .text-dark-100 {
+  color: #0f172a !important;
+}
+
+.light .text-dark-200 {
+  color: #1e293b !important;
+}
+
+.light .text-dark-300 {
+  color: #334155 !important;
+}
+
+.light .text-dark-400 {
+  color: #475569 !important;
+}
+
+.light .text-white {
+  color: #0f172a !important;
+}
+
+.light .text-slate-400 {
+  color: #475569 !important;
+}
+
+/* Light mode background overrides */
+.light .bg-dark-950 {
+  background-color: #f9fafb !important;
+}
+
+.light .bg-dark-900 {
+  background-color: #ffffff !important;
+}
+
+.light .bg-dark-800 {
+  background-color: #f3f4f6 !important;
+}
+
+.light .bg-dark-700 {
+  background-color: #e5e7eb !important;
+}
+
+.light .bg-slate-800 {
+  background-color: #ffffff !important;
+  border-width: 2px !important;
+}
+
+.light .bg-slate-700 {
+  background-color: #f3f4f6 !important;
+}
+
+/* Light mode border overrides */
+.light .border-dark-700 {
+  border-color: #d1d5db !important;
+}
+
+.light .border-dark-600 {
+  border-color: #9ca3af !important;
+}
+
+.light .border-slate-700 {
+  border-color: #d1d5db !important;
+}
+
+/* Light mode hover states */
+.light .hover\:bg-dark-700:hover {
+  background-color: #e5e7eb !important;
+}
+
+.light .hover\:bg-dark-800:hover {
+  background-color: #f3f4f6 !important;
+}
+
+.light .hover\:bg-slate-700\/70:hover {
+  background-color: #f3f4f6 !important;
+}
+
+.light .hover\:text-accent-400:hover {
+  color: #1d4ed8 !important;
+}
+
+.light .hover\:text-accent-300:hover {
+  color: #1e3a8a !important;
+}
+
+.light .hover\:text-dark-100:hover {
+  color: #0f172a !important;
+}
+
+/* Light mode backgrounds with opacity - Higher opacity for readability */
+.light [class*="bg-dark-900/"] {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  box-shadow: var(--shadow);
+}
+
+.light [class*="bg-dark-800/"] {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow);
+}
+
+.light [class*="bg-dark-700/"] {
+  background-color: rgba(243, 244, 246, 0.9) !important;
+}
+
+.light [class*="bg-slate-800/"] {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.light [class*="bg-slate-700/"] {
+  background-color: rgba(243, 244, 246, 0.9) !important;
+}
+
+/* Light mode gradient overlays */
+.light .bg-dark-950\/85 {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.4)) !important;
+}
+
+/* Light mode focus rings */
+.light .focus\:ring-sky-500:focus {
+  --tw-ring-color: #2563eb !important;
+}
+
+.light .focus\:ring-accent-500:focus {
+  --tw-ring-color: #2563eb !important;
+}
+
+/* Light mode buttons */
+.light .bg-accent-500 {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+}
+
+.light .hover\:bg-accent-600:hover {
+  background-color: #1d4ed8 !important;
+}
+
+/* Light mode selected states */
+.light .bg-sky-500 {
+  background-color: #0f172a !important;
+  color: #ffffff !important;
+}
+
+.light .shadow-sky-500\/50 {
+  box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.3), 0 4px 6px -4px rgba(15, 23, 42, 0.2);
+}
+
+/* Light mode link colors */
+.light a {
+  color: var(--link);
+}
+
+.light a:hover {
+  color: var(--link-hover);
+}

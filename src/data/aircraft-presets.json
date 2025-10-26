@@ -1,0 +1,182 @@
+[
+  {
+    "id": "airbus-a32f",
+    "name": "Airbus A32F",
+    "slug": "airbus-a32f",
+    "tiers": {
+      "First": {
+        "needs": [
+          { "category": "Panel", "count": 1 },
+          { "category": "Joystick", "count": 1 },
+          { "category": "Throttle", "count": 1 },
+          { "category": "Pedals", "count": 1 }
+        ],
+        "preferredProducts": [
+          "wingflex-mcdu-a32f",
+          "wingflex-fcu-airbus",
+          "winwing-glareshield-3x0",
+          "winwing-mcdu-fullsize",
+          "winwing-ursa-minor-joystick-l",
+          "ursa-minor-32-throttle-metal",
+          "orion-metal-rudder-pedals",
+          "tm-tca-captain-pack-airbus"
+        ]
+      },
+      "Business": {
+        "needs": [
+          { "category": "Panel", "count": 1 },
+          { "category": "Joystick", "count": 1 },
+          { "category": "Throttle", "count": 1 },
+          { "category": "Pedals", "count": 1 }
+        ],
+        "preferredProducts": [
+          "tm-tfrp-rudder-pedals",
+          "winwing-ursa-minor-joystick-l",
+          "ursa-minor-32-throttle-metal",
+          "winwing-mcdu-fullsize",
+          "wingflex-mcdu-a32f",
+          "tm-tca-captain-pack-airbus"
+        ]
+      },
+      "Economy": {
+        "needs": [
+          { "category": "HOTAS", "count": 1 },
+          { "category": "Pedals", "count": 1 }
+        ],
+        "preferredProducts": [
+          "tm-tfrp-rudder-pedals",
+          "winwing-ursa-minor-joystick-l",
+          "ursa-minor-32-throttle-metal",
+          "tm-tca-captain-pack-airbus"
+        ]
+      }
+    },
+    "notes": "Airbus A320 family configuration with sidestick control. First class includes premium glareshield, Business focuses on mid-tier panels, Economy uses the TCA bundle."
+  },
+  {
+    "id": "boeing-737",
+    "name": "Boeing 737",
+    "slug": "boeing-737",
+    "tiers": {
+      "First": {
+        "needs": [
+          { "category": "Panel", "count": 2 },
+          { "category": "Throttle", "count": 1 },
+          { "category": "Pedals", "count": 1 }
+        ],
+        "preferredProducts": [
+          "3m-pdc-panel",
+          "efis-r",
+          "tm-hotas-warthog-dual-throttle",
+          "orion-metal-rudder-pedals"
+        ]
+      },
+      "Business": {
+        "needs": [
+          { "category": "Panel", "count": 1 },
+          { "category": "Throttle", "count": 1 },
+          { "category": "Pedals", "count": 1 }
+        ],
+        "preferredProducts": [
+          "3m-pdc-panel",
+          "ursa-minor-32-throttle-metal",
+          "logi-flight-rudder-pedals"
+        ]
+      },
+      "Economy": {
+        "needs": [
+          { "category": "Throttle", "count": 1 },
+          { "category": "Pedals", "count": 1 }
+        ],
+        "preferredProducts": [
+          "ursa-minor-32-throttle-metal",
+          "tm-tfrp-rudder-pedals"
+        ]
+      }
+    },
+    "notes": "Boeing 737 yoke-style configuration. Focuses on throttle quadrant and overhead panels rather than joystick."
+  },
+  {
+    "id": "f16-viper",
+    "name": "F-16 Viper",
+    "slug": "f16-viper",
+    "tiers": {
+      "First": {
+        "needs": [
+          { "category": "HOTAS", "count": 1 },
+          { "category": "Pedals", "count": 1 },
+          { "category": "Panel", "count": 1 }
+        ],
+        "preferredProducts": [
+          "orion2-hotas-viperace",
+          "orion-metal-rudder-pedals",
+          "3m-pdc-panel"
+        ]
+      },
+      "Business": {
+        "needs": [
+          { "category": "HOTAS", "count": 1 },
+          { "category": "Pedals", "count": 1 }
+        ],
+        "preferredProducts": [
+          "orion2-hotas-viperace",
+          "logi-flight-rudder-pedals"
+        ]
+      },
+      "Economy": {
+        "needs": [
+          { "category": "HOTAS", "count": 1 },
+          { "category": "Pedals", "count": 1 }
+        ],
+        "preferredProducts": [
+          "orion2-hotas-viperace",
+          "tm-tfrp-rudder-pedals"
+        ]
+      }
+    },
+    "notes": "F-16 Viper replica setup centered around the ViperAce HOTAS system."
+  },
+  {
+    "id": "fa18-hornet",
+    "name": "F/A-18 Hornet",
+    "slug": "fa18-hornet",
+    "tiers": {
+      "First": {
+        "needs": [
+          { "category": "HOTAS", "count": 1 },
+          { "category": "Pedals", "count": 1 },
+          { "category": "Panel", "count": 2 }
+        ],
+        "preferredProducts": [
+          "orion2-hotas-strikeace",
+          "orion-metal-rudder-pedals",
+          "3m-pdc-panel",
+          "efis-r"
+        ]
+      },
+      "Business": {
+        "needs": [
+          { "category": "HOTAS", "count": 1 },
+          { "category": "Pedals", "count": 1 },
+          { "category": "Panel", "count": 1 }
+        ],
+        "preferredProducts": [
+          "orion2-hotas-strikeace",
+          "logi-flight-rudder-pedals",
+          "3m-pdc-panel"
+        ]
+      },
+      "Economy": {
+        "needs": [
+          { "category": "HOTAS", "count": 1 },
+          { "category": "Pedals", "count": 1 }
+        ],
+        "preferredProducts": [
+          "orion2-hotas-strikeace",
+          "tm-tfrp-rudder-pedals"
+        ]
+      }
+    },
+    "notes": "F/A-18 Hornet replica setup centered around the StrikeAce HOTAS system with dual throttles."
+  }
+]
