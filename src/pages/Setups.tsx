@@ -56,28 +56,7 @@ const Setups: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Legacy fighter/GA setups (non-tiered)
-  const legacySetupMappings: SetupMapping = {
-    'F-16 Viper': {
-      productIds: ['1', '6', '3'], // ViperAce HOTAS, ViperAce Joystick Combo, Pedals
-      description: 'Complete F-16 Viper combat setup with high-precision HOTAS and metal pedals.',
-    },
-    'F/A-18 Hornet': {
-      productIds: ['2', '3', '4', '5'], // StrikeAce HOTAS, Pedals, 3M PDC, EFIS R
-      description: 'F/A-18 Super Hornet setup with dual throttle, panels, and rudder pedals.',
-    },
-    'Boeing 737': {
-      productIds: ['9', '10', '4'], // Warthog Dual Throttle, Logitech Pedals, 3M PDC
-      description: 'Airliner setup for Boeing 737 with dual throttles, rudder pedals, and multi-panel display.',
-    },
-    'General Aviation': {
-      productIds: ['10', '7'], // Logitech Pedals, Orion2 MFSSB
-      description: 'Starter general aviation setup with basic rudder pedals and joystick.',
-    },
-  };
-
-  const airbusSetups = setupsData as AirbusSetup[];
-  const isAirbusAircraft = ['A318', 'A319', 'A319neo', 'A320', 'A320neo', 'A321', 'A321neo'].includes(selectedAircraft);
+  const setup = setupsData as AirbusSetup[];
 
   const handleAircraftChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedAircraft(e.target.value as AircraftModel);
@@ -92,13 +71,7 @@ const Setups: React.FC = () => {
   const getCurrentSetup = () => {
     if (!selectedAircraft) return null;
 
-    // Check if it's an Airbus aircraft
-    if (isAirbusAircraft) {
-      return airbusSetups.find(setup => setup.aircraft === selectedAircraft);
-    }
-
-    // Legacy setup
-    return legacySetupMappings[selectedAircraft];
+    return setup.find(setup => setup.aircraft === selectedAircraft);
   };
 
   const currentSetup = getCurrentSetup();
@@ -175,8 +148,7 @@ const Setups: React.FC = () => {
           </select>
         </div>
 
-        {/* Tier Filter (Airbus only) */}
-        {isAirbusAircraft && currentSetup && (
+        {currentSetup && (
           <div className="mb-8 max-w-2xl mx-auto">
             <label className="block text-lg font-medium text-dropdown-text mb-3">
               Equipment Tier
@@ -243,7 +215,7 @@ const Setups: React.FC = () => {
         )}
 
         {/* Product Cards - Airbus (Tiered) */}
-        {isAirbusAircraft && currentSetup && 'tiers' in currentSetup && (
+        {currentSetup && 'tiers' in currentSetup && (
           <>
             {selectedTier === 'All' ? (
               // Show all tiers as separate sections
@@ -307,14 +279,14 @@ const Setups: React.FC = () => {
           </>
         )}
 
-        {/* Product Cards - Legacy (Non-Tiered) */}
-        {!isAirbusAircraft && selectedAircraft && currentSetup && 'productIds' in currentSetup && (
+        {/* Product Cards - Legacy (Non-Tiered)
+        {!setups && selectedAircraft && currentSetup && 'productIds' in currentSetup && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {getProductsByIds(currentSetup.productIds).map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
-        )}
+        )} */}
 
         {/* Empty State */}
         {!selectedAircraft && (

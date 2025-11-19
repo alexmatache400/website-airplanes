@@ -5,10 +5,10 @@
     "name": "WINWING Orion2 HOTAS ViperAce",
     "slug": "orion2-hotas-viperace",
     "category": "HOTAS",
-    "sim_support": ["MSFS2020", "MSFS2024", "XPL11", "XPL12"],
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
     "tier": "First",
     "price_eur": 489,
-    "images": ["/photoForProductPage/orion2-viperace.jpg"],
+    "images": [ "/photoForProductPage/1.png" ],
     "affiliate_urls": {
       "eu": "https://eu.winwingsim.com/view/goods-details.html?id=340&sku_id=36",
       "us": "https://www.amazon.com/s?k=winwing+orion2+viperace"
@@ -27,10 +27,10 @@
     "name": "WINWING Orion2 HOTAS StrikeAce E/EX",
     "slug": "orion2-hotas-strikeace",
     "category": "HOTAS",
-    "sim_support": ["MSFS2020", "MSFS2024", "XPL11", "XPL12"],
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
     "tier": "First",
     "price_eur": 529,
-    "images": ["/photoForProductPage/orion2-strikeace.jpg"],
+    "images": [ "/photoForProductPage/2.png" ],
     "affiliate_urls": {
       "eu": "https://eu.winwingsim.com/view/goods-details.html?id=303&sku_id=47",
       "us": "https://www.amazon.com/s?k=winwing+orion2+strikeace"
@@ -46,79 +46,13 @@
   {
     "id": "3",
     "brand": "Winwing",
-    "name": "WINWING Orion Metal Flight Rudder Pedals (Damper Kit)",
-    "slug": "orion-metal-rudder-pedals",
-    "category": "Pedals",
-    "sim_support": ["MSFS2020", "MSFS2024", "XPL11", "XPL12"],
-    "tier": "Business",
-    "price_eur": 299,
-    "images": ["/photoForProductPage/orion-metal-pedals.jpg"],
-    "affiliate_urls": {
-      "eu": "https://eu.winwingsim.com/mobileview/goods-details.html?id=785",
-      "us": "https://www.amazon.com/s?k=winwing+rudder+pedals"
-    },
-    "description": "Full metal construction rudder pedals with integrated damper system, adjustable tension, and realistic toe brake action.",
-    "key_specs": {
-      "Material": "Aluminum Alloy",
-      "Weight": "4.2kg",
-      "Brake Type": "Hall Sensor",
-      "Connection": "USB"
-    }
-  },
-  {
-    "id": "4",
-    "brand": "Winwing",
-    "name": "WINWING 3M PDC (Multi-Panel)",
-    "slug": "3m-pdc-panel",
-    "category": "Panel",
-    "sim_support": ["MSFS2020", "MSFS2024"],
-    "tier": "Business",
-    "price_eur": 189,
-    "images": ["/photoForProductPage/3m-pdc.jpg"],
-    "affiliate_urls": {
-      "eu": "https://eu.winwingsim.com/mobileview/goods-details.html?id=1245",
-      "us": "https://www.amazon.com/s?k=winwing+3m+pdc"
-    },
-    "description": "Three-module programmable display controller with customizable screens, rotary encoders, and tactile switches for complete cockpit integration.",
-    "key_specs": {
-      "Displays": 3,
-      "Encoders": 6,
-      "Buttons": 24,
-      "Connection": "USB"
-    }
-  },
-  {
-    "id": "5",
-    "brand": "Winwing",
-    "name": "WINWING EFIS R",
-    "slug": "efis-r",
-    "category": "Panel",
-    "sim_support": ["MSFS2020", "MSFS2024"],
-    "tier": "Business",
-    "price_eur": 149,
-    "images": ["/photoForProductPage/efis-r.jpg"],
-    "affiliate_urls": {
-      "eu": "https://eu.winwingsim.com/mobileview/goods-details.html?id=865",
-      "us": "https://www.amazon.com/s?k=winwing+efis"
-    },
-    "description": "Electronic Flight Instrument System panel with realistic rotary knobs, push buttons, and direct aircraft system control for maximum immersion.",
-    "key_specs": {
-      "Knobs": 5,
-      "Buttons": 12,
-      "Material": "ABS + Metal",
-      "Connection": "USB"
-    }
-  },
-  {
-    "id": "6",
-    "brand": "Winwing",
     "name": "WINWING Orion2 ViperAce (EX) Joystick Combo",
     "slug": "orion2-viperace-joystick-combo",
     "category": "Joystick",
-    "sim_support": ["MSFS2020", "MSFS2024", "XPL11", "XPL12"],
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
     "tier": "First",
     "price_eur": null,
-    "images": ["/photoForProductPage/orion2-viperace-combo.jpg"],
+    "images": [ "/photoForProductPage/6.png" ],
     "affiliate_urls": {
       "eu": "https://eu.winwingsim.com/view/goods-details.html?id=374&sku_id=21"
     },
@@ -130,15 +64,15 @@
     }
   },
   {
-    "id": "7",
+    "id": "4",
     "brand": "Winwing",
     "name": "WINWING Orion2 MFSSB (Pre-install)",
     "slug": "orion2-mfssb",
     "category": "Joystick",
-    "sim_support": ["MSFS2020", "MSFS2024", "XPL11", "XPL12"],
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
     "tier": "First",
     "price_eur": null,
-    "images": ["/photoForProductPage/orion2-mfssb.jpg"],
+    "images": [ "/photoForProductPage/7.png" ],
     "affiliate_urls": {
       "eu": "https://eu.winwingsim.com/mobileview/goods-details.html?id=373"
     },
@@ -149,15 +83,15 @@
     }
   },
   {
-    "id": "8",
+    "id": "5",
     "brand": "Thrustmaster",
     "name": "Thrustmaster HOTAS WARTHOG (Set)",
     "slug": "tm-hotas-warthog",
     "category": "HOTAS",
-    "sim_support": ["MSFS2020", "MSFS2024", "XPL11", "XPL12"],
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
     "tier": "First",
     "price_eur": null,
-    "images": ["/photoForProductPage/tm-warthog.jpg"],
+    "images": [ "/photoForProductPage/8.png" ],
     "affiliate_urls": {
       "us": "https://www.thrustmaster.com/en-us/products/hotas-warthog/"
     },
@@ -169,15 +103,15 @@
     }
   },
   {
-    "id": "9",
+    "id": "6",
     "brand": "Thrustmaster",
     "name": "Thrustmaster HOTAS WARTHOG Dual Throttle",
     "slug": "tm-hotas-warthog-dual-throttle",
     "category": "Throttle",
-    "sim_support": ["MSFS2020", "MSFS2024", "XPL11", "XPL12"],
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
     "tier": "First",
     "price_eur": null,
-    "images": ["/photoForProductPage/tm-warthog-throttle.jpg"],
+    "images": [ "/photoForProductPage/9.png" ],
     "affiliate_urls": {
       "us": "https://www.thrustmaster.com/en-us/products/hotas-warthog-dual-throttle/"
     },
@@ -189,15 +123,15 @@
     }
   },
   {
-    "id": "10",
+    "id": "7",
     "brand": "Logitech",
     "name": "Logitech G Flight Rudder Pedals",
     "slug": "logi-flight-rudder-pedals",
     "category": "Pedals",
-    "sim_support": ["MSFS2020", "MSFS2024", "XPL11", "XPL12"],
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
     "tier": "Economy",
     "price_eur": 119.99,
-    "images": ["/photoForProductPage/logi-rudder-pedals.jpg"],
+    "images": [ "/photoForProductPage/10.png" ],
     "affiliate_urls": {
       "eu": "https://www.logitechg.com/en-eu/products/flight/flight-simulator-rudder-pedals.html"
     },
@@ -209,104 +143,15 @@
     }
   },
   {
-    "id": "11",
-    "brand": "Winwing",
-    "name": "WINWING URSA MINOR Airline Joystick L",
-    "slug": "winwing-ursa-minor-joystick-l",
-    "category": "Joystick",
-    "sim_support": ["MSFS2020", "MSFS2024", "XPL11", "XPL12"],
-    "tier": "Economy",
-    "price_label": "~$82",
-    "images": ["/photoForProductPage/winwing-ursa-minor-joystick-l.jpg"],
-    "affiliate_urls": {
-      "winwingsim": "https://winwingsim.com/view/goods-details.html?id=559",
-      "us": "https://www.amazon.com/WINWING-URSA-MINOR-Airline-Joystick-PC/dp/B0DCYCR4TV"
-    },
-    "description": "Entry-level Airbus-style sidestick with ABS pincer gimbal and data-driven haptic vibration motor for immersive feedback.",
-    "key_specs": {
-      "Series": "Ursa Minor",
-      "Gimbal": "ABS engineering pincer",
-      "Haptics": "Data-driven vibration motor",
-      "Connection": "USB"
-    },
-    "source_url": "https://winwingsim.com/view/goods-details.html?id=559"
-  },
-  {
-    "id": "12",
-    "brand": "Winwing",
-    "name": "URSA MINOR 32 Throttle Metal",
-    "slug": "ursa-minor-32-throttle-metal",
-    "category": "Throttle",
-    "sim_support": ["MSFS2020", "MSFS2024", "XPL11", "XPL12"],
-    "tier": "Business",
-    "price_label": "Mid-tier metal throttle",
-    "images": ["/photoForProductPage/winwing-ursa-minor-throttle-32.jpg"],
-    "affiliate_urls": {
-      "winwingsim": "https://winwingsim.com/view/goods-details.html?id=1665"
-    },
-    "description": "Compact full-metal throttle unit with metal core, frame, and detents. Die-cast aluminum baseplate ensures professional-grade durability.",
-    "key_specs": {
-      "Construction": "Full-metal",
-      "Detents": "Metal mechanism",
-      "Weight": "1.3 kg",
-      "Baseplate": "Die-cast aluminum"
-    },
-    "source_url": "https://winwingsim.com/view/goods-details.html?id=1665"
-  },
-  {
-    "id": "13",
-    "brand": "Winwing",
-    "name": "WINWING 3X0 GLARESHIELD (GLAREWING)",
-    "slug": "winwing-glareshield-3x0",
-    "category": "Panel",
-    "sim_support": ["MSFS2020", "MSFS2024"],
-    "tier": "First",
-    "price_label": "Premium 1:1 FCU/EFIS",
-    "images": ["/photoForProductPage/winwing-glareshield-3x0.jpg"],
-    "affiliate_urls": {
-      "winwingsim": "https://winwingsim.com/mobileview/goods-details.html?id=925"
-    },
-    "description": "1:1 scale Airbus glareshield with authentic segment displays and high-precision encoders. Full FCU and EFIS controls for maximum realism.",
-    "key_specs": {
-      "Scale": "1:1 authentic size",
-      "Display": "Segment displays",
-      "Sensors": "Hall sensors + encoders",
-      "Controls": "FCU + EFIS"
-    },
-    "source_url": "https://winwingsim.com/mobileview/goods-details.html?id=925"
-  },
-  {
-    "id": "14",
-    "brand": "Winwing",
-    "name": "WINWING MCDU (Full-size)",
-    "slug": "winwing-mcdu-fullsize",
-    "category": "Panel",
-    "sim_support": ["MSFS2020", "MSFS2024"],
-    "tier": "First",
-    "price_label": "Premium full-size MCDU",
-    "images": ["/photoForProductPage/winwing-mcdu.jpg"],
-    "affiliate_urls": {
-      "winwingsim": "https://us.winwingsim.com/view/goods-details.html?id=945"
-    },
-    "description": "Full-size MCDU module with multiple mounting options including desktop and profile seat. Dedicated mounting holes for seamless cockpit integration.",
-    "key_specs": {
-      "Size": "Full-size",
-      "Mounting": "Desktop / Profile seat",
-      "Holes": "Dedicated mounting",
-      "Display": "High-resolution"
-    },
-    "source_url": "https://us.winwingsim.com/view/goods-details.html?id=945"
-  },
-  {
-    "id": "15",
+    "id": "8",
     "brand": "Thrustmaster",
     "name": "Thrustmaster T.Flight Rudder Pedals (TFRP)",
     "slug": "tm-tfrp-rudder-pedals",
     "category": "Pedals",
-    "sim_support": ["MSFS2020", "MSFS2024", "XPL11", "XPL12"],
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
     "tier": "Economy",
     "price_eur": 99.99,
-    "images": ["/photoForProductPage/tm-tfrp-rudder-pedals.jpg"],
+    "images": [ "/photoForProductPage/15.png" ],
     "affiliate_urls": {
       "us": "https://www.thrustmaster.com/en-us/products/t-flight-rudder-pedals/",
       "eu": "https://www.amazon.com/ThrustMaster-2960764-Thrustmaster-TFRP-Rudder/dp/B015PII6YI"
@@ -321,15 +166,15 @@
     "source_url": "https://www.thrustmaster.com/en-us/products/t-flight-rudder-pedals/"
   },
   {
-    "id": "16",
+    "id": "9",
     "brand": "WingFlex",
     "name": "WingFlex Full-Size Airbus A32F MCDU",
     "slug": "wingflex-mcdu-a32f",
     "category": "Panel",
-    "sim_support": ["MSFS2020", "MSFS2024"],
+    "sim_support": [ "MSFS2020", "MSFS2024" ],
     "tier": "Business",
     "price_label": "Mid-tier full-size MCDU",
-    "images": ["/photoForProductPage/wingflex-mcdu-a32f.jpg"],
+    "images": [ "/photoForProductPage/16.png" ],
     "affiliate_urls": {
       "us": "https://www.amazon.com/WINGFLEX-Full-Size-MCDU-Brightness-A32WX/dp/B0DT3SLPHB"
     },
@@ -343,15 +188,15 @@
     "source_url": "https://www.amazon.com/WINGFLEX-Full-Size-MCDU-Brightness-A32WX/dp/B0DT3SLPHB"
   },
   {
-    "id": "17",
+    "id": "10",
     "brand": "WingFlex",
     "name": "WingFlex Flight Simulator FCU (Airbus)",
     "slug": "wingflex-fcu-airbus",
     "category": "Panel",
-    "sim_support": ["MSFS2020", "MSFS2024"],
+    "sim_support": [ "MSFS2020", "MSFS2024" ],
     "tier": "Business",
     "price_label": "Mid-tier aluminum FCU",
-    "images": ["/photoForProductPage/wingflex-fcu-airbus.jpg"],
+    "images": [ "/photoForProductPage/17.png" ],
     "affiliate_urls": {
       "us": "https://www.amazon.com/WINGFLEX-A320-FCU-Plug-Play-Compatibility/dp/B0F8H5D8N5"
     },
@@ -365,15 +210,15 @@
     "source_url": "https://www.amazon.com/WINGFLEX-A320-FCU-Plug-Play-Compatibility/dp/B0F8H5D8N5"
   },
   {
-    "id": "18",
+    "id": "11",
     "brand": "Thrustmaster",
     "name": "Thrustmaster TCA Captain Pack X - Airbus Edition",
     "slug": "tm-tca-captain-pack-airbus",
     "category": "Bundle",
-    "sim_support": ["MSFS2020", "MSFS2024", "XPL11", "XPL12"],
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
     "tier": "Business",
     "price_label": "Licensed Airbus bundle",
-    "images": ["/photoForProductPage/tm-tca-captain-pack-airbus.jpg"],
+    "images": [ "/photoForProductPage/18.png" ],
     "affiliate_urls": {
       "us": "https://www.thrustmaster.com/en-us/products/tca-captain-pack-x-airbus-edition/",
       "eu": "https://www.amazon.com/Thrustmaster-Captains-Pack-Airbus-XBOX-PC/dp/B0BG3DQLDD"
@@ -388,18 +233,18 @@
     "source_url": "https://www.thrustmaster.com/en-us/products/tca-captain-pack-x-airbus-edition/"
   },
   {
-    "id": "19",
+    "id": "12",
     "brand": "Thrustmaster",
     "name": "Thrustmaster TCA Yoke Pack - Boeing",
     "slug": "tm-tca-yoke-pack-boeing",
     "category": "Bundle",
-    "sim_support": ["MSFS2020", "MSFS2020", "XPL11", "XPL12"],
+    "sim_support": [ "MSFS2020", "MSFS2020", "XPL11", "XPL12" ],
     "tier": "Economy",
     "price_label": "Licensed Boeing bundle",
-    "images": ["/photoForProductPage/tm-tca-yoke-pack-boeing.jpg"],
+    "images": [ "/photoForProductPage/19.png" ],
     "affiliate_urls": {
       "us": "https://www.thrustmaster.com/products/tca-yoke-pack-boeing-edition",
-      "uk": "https://www.amazon.co.uk/Thrustmaster-TCA-Yoke-Pack-Boeing-black/dp/B09GRLDWV2/ref=pd_rhf_se_s_ci_mcx_mr_hp_d_d_sccl_2_9/521-1212737-4101808?pd_rd_w=BqgOs&content-id=amzn1.sym.a9750e23-15f2-4034-9ecc-e6dd38907891:amzn1.symc.206c6295-3b43-4a2b-9d15-273ba17f7025&pf_rd_p=a9750e23-15f2-4034-9ecc-e6dd38907891&pf_rd_r=2JB3MGCWWQCCATF5CABG&pd_rd_wg=ifEiS&pd_rd_r=586b5999-8b6a-498e-8184-506127993462&pd_rd_i=B09GRLDWV2&psc=1" 
+      "uk": "https://www.amazon.co.uk/Thrustmaster-TCA-Yoke-Pack-Boeing-black/dp/B09GRLDWV2/ref=pd_rhf_se_s_ci_mcx_mr_hp_d_d_sccl_2_9/521-1212737-4101808?pd_rd_w=BqgOs&content-id=amzn1.sym.a9750e23-15f2-4034-9ecc-e6dd38907891:amzn1.symc.206c6295-3b43-4a2b-9d15-273ba17f7025&pf_rd_p=a9750e23-15f2-4034-9ecc-e6dd38907891&pf_rd_r=2JB3MGCWWQCCATF5CABG&pd_rd_wg=ifEiS&pd_rd_r=586b5999-8b6a-498e-8184-506127993462&pd_rd_i=B09GRLDWV2&psc=1"
     },
     "description": "Thrustmaster TCA Yoke Pack - High-Precision Flight Controller and Throttle Quadrant with Official Boeing License for PC and Xbox Series X|S",
     "key_specs": {
@@ -410,38 +255,17 @@
     },
     "source_url": "https://www.thrustmaster.com/products/tca-yoke-pack-boeing-edition"
   },
+
   {
-    "id": "20",
-    "brand": "Winwing",
-    "name": "WINWING 3 GLARESHIELD MAG",
-    "slug": "winwing-3-glareshield-mag",
-    "category": "Bundle",
-    "sim_support": ["MSFS2020", "MSFS2020", "XPL11", "XPL12"],
-    "tier": "Panel",
-    "price_label": "Premium",
-    "images": ["/photoForProductPage/winwing-3-glareshield-mag.jpg"],
-    "affiliate_urls": {
-      "eu": "https://eu.winwingsim.com/view/goods-details.html?id=1485" 
-    },
-    "description": "1:1 full-structure molded design, 3D surface detailing.",
-    "key_specs": {
-      "Scale": "1:1 replica",
-      "License": "Premium",
-      "Components": "Glareshield",
-      "Platform": "PC"
-    },
-    "source_url": "https://eu.winwingsim.com/view/goods-details.html?id=1485"
-  },
-  {
-    "id": "21",
+    "id": "13",
     "brand": "Winwing",
     "name": "WINWING PFP 3N",
     "slug": "winwing-pfp-3n",
     "category": "MCDU",
-    "sim_support": ["MSFS2020", "MSFS2024", "XPL11", "XPL12"],
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
     "tier": "Business",
     "price_label": "Premium",
-    "images": ["/photoForProductPage/winwing-pfp-3n.jpg"],
+    "images": [ "/photoForProductPage/21.png" ],
     "affiliate_urls": {
       "eu": "https://eu.winwingsim.com/view/goods-details.html?id=965"
     },
@@ -455,15 +279,15 @@
     "source_url": "https://eu.winwingsim.com/view/goods-details.html?id=965"
   },
   {
-    "id": "22",
+    "id": "14",
     "brand": "Benshuuk",
     "name": "Flight Simulator Controls Panel PMDG 737 ZIBO- CM 737NG MCP",
     "slug": "fscp-pmdg-737-zibo",
     "category": "MCDU",
-    "sim_support": ["MSFS2020", "MSFS2024"],
+    "sim_support": [ "MSFS2020", "MSFS2024" ],
     "tier": "Business",
     "price_label": "Premium",
-    "images": ["/photoForProductPage/winwing-pfp-3n.jpg"],
+    "images": [ "/photoForProductPage/22.png" ],
     "affiliate_urls": {
       "uk": "https://www.amazon.co.uk/Simulator-Controls-simulator-Operation-Compatibl/dp/B0DPM612X3/ref=sr_1_202?crid=UM2U8UZEBE0M&dib=eyJ2IjoiMSJ9.B7IIoIMdnJOGfBckI7-2dnrefxtaDneWM5bvTA5lnMBzeIttQKSgw8GX8zsGUTTKgD5q3PtnFx1GiXsBKIuVRqgad2T0l_53ytHshKDu_hUD7UDsA_2ue0pbn7-zk2HK5PVWhukVg9UxPtxUGHXZJwwhE5KrC5PBkPhYCI97wRPwF1lh02uei__AcJ1VTzCvU3nadPUG8YJbz8ylDNJ21qGdEQgyFkD5OiQW2Ncv9sxucB8bahmvRAa4TtMyhlZKGpIKZ8Hjg36UqBIYzT4X4ZjQLdi3KQjkvTG0ZpSMZh4.ALF8lEyucQcGAZZF2J8YCOC29A9TkJwENSbX4rLNNGI&dib_tag=se&keywords=boeing&qid=1761496935&sprefix=boein%2Caps%2C102&sr=8-202&xpid=pmZfs0fQmIwub"
     },
@@ -475,5 +299,603 @@
       "Platform": "PC"
     },
     "source_url": "https://www.amazon.co.uk/Simulator-Controls-simulator-Operation-Compatibl/dp/B0DPM612X3/ref=sr_1_202?crid=UM2U8UZEBE0M&dib=eyJ2IjoiMSJ9.B7IIoIMdnJOGfBckI7-2dnrefxtaDneWM5bvTA5lnMBzeIttQKSgw8GX8zsGUTTKgD5q3PtnFx1GiXsBKIuVRqgad2T0l_53ytHshKDu_hUD7UDsA_2ue0pbn7-zk2HK5PVWhukVg9UxPtxUGHXZJwwhE5KrC5PBkPhYCI97wRPwF1lh02uei__AcJ1VTzCvU3nadPUG8YJbz8ylDNJ21qGdEQgyFkD5OiQW2Ncv9sxucB8bahmvRAa4TtMyhlZKGpIKZ8Hjg36UqBIYzT4X4ZjQLdi3KQjkvTG0ZpSMZh4.ALF8lEyucQcGAZZF2J8YCOC29A9TkJwENSbX4rLNNGI&dib_tag=se&keywords=boeing&qid=1761496935&sprefix=boein%2Caps%2C102&sr=8-202&xpid=pmZfs0fQmIwub"
+  },
+
+  {
+    "id": "15",
+    "brand": "Winwing",
+    "name": "WINWING URSA MINOR Airline Joystick L",
+    "slug": "winwing-ursa-minor-joystick-l",
+    "category": "Joystick",
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
+    "tier": "Economy",
+    "price_label": "~$82",
+    "images": [ "/photoForProductPage/11.png" ],
+    "affiliate_urls": {
+      "winwingsim": "https://winwingsim.com/view/goods-details.html?id=559",
+      "us": "https://www.amazon.com/WINWING-URSA-MINOR-Airline-Joystick-PC/dp/B0DCYCR4TV"
+    },
+    "description": "Entry-level Airbus-style sidestick with ABS pincer gimbal and data-driven haptic vibration motor for immersive feedback.",
+    "key_specs": {
+      "Series": "Ursa Minor",
+      "Gimbal": "ABS engineering pincer",
+      "Haptics": "Data-driven vibration motor",
+      "Connection": "USB"
+    },
+    "source_url": "https://winwingsim.com/view/goods-details.html?id=559"
+  },
+  {
+    "id": "16",
+    "brand": "Winwing",
+    "name": "WINWING URSA MINOR Airline Joystick R",
+    "slug": "winwing-ursa-minor-joystick-r",
+    "category": "Joystick",
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
+    "tier": "Economy",
+    "price_label": "~$82",
+    "images": [ "/photoForProductPage/23.png" ],
+    "affiliate_urls": {
+      "winwingsim": "https://winwingsim.com/view/goods-details.html?id=555"
+    },
+    "description": "Entry-level Airbus-style sidestick with ABS pincer gimbal and data-driven haptic vibration motor for immersive feedback.",
+    "key_specs": {
+      "Series": "Ursa Minor",
+      "Gimbal": "ABS engineering pincer",
+      "Haptics": "Data-driven vibration motor",
+      "Connection": "USB"
+    },
+    "source_url": "https://winwingsim.com/view/goods-details.html?id=555"
+  },
+
+  {
+    "id": "17",
+    "brand": "Winwing",
+    "name": "URSA MINOR 32 Throttle Metal",
+    "slug": "ursa-minor-32-throttle-metal",
+    "category": "Throttle",
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
+    "tier": "Business",
+    "price_label": "Mid-tier metal throttle",
+    "images": [ "/photoForProductPage/24.png" ],
+    "affiliate_urls": {
+      "winwingsim": "https://winwingsim.com/view/goods-details.html?id=1385"
+    },
+    "description": "Compact full-metal throttle unit with metal core, frame, and detents. Die-cast aluminum baseplate ensures professional-grade durability.",
+    "key_specs": {
+      "Construction": "Full-metal",
+      "Detents": "Metal mechanism",
+      "Weight": "1.3 kg",
+      "Baseplate": "Die-cast aluminum"
+    },
+    "source_url": "https://winwingsim.com/view/goods-details.html?id=1385"
+  },
+
+  {
+    "id": "18",
+    "brand": "Winwing",
+    "name": "URSA MINOR 32 Throttle Metal / 32 PAC Metal",
+    "slug": "ursa-minor-32-throttle-metal-32-pac-metal",
+    "category": "Throttle",
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
+    "tier": "Business",
+    "price_label": "Mid-tier metal throttle",
+    "images": [ "/photoForProductPage/12.png" ],
+    "affiliate_urls": {
+      "winwingsim": "https://winwingsim.com/view/goods-details.html?id=1665"
+    },
+    "description": "Compact full-metal throttle unit with metal core, frame, and detents. Die-cast aluminum baseplate ensures professional-grade durability.",
+    "key_specs": {
+      "Construction": "Full-metal",
+      "Detents": "Metal mechanism",
+      "Weight": "1.3 kg",
+      "Baseplate": "Die-cast aluminum"
+    },
+    "source_url": "https://winwingsim.com/view/goods-details.html?id=1665"
+  },
+
+  {
+    "id": "19",
+    "brand": "Winwing",
+    "name": "WINWING Orion Metal Flight Rudder Pedals (Damper Kit)",
+    "slug": "orion-metal-rudder-pedals",
+    "category": "Rudder",
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
+    "tier": "Business",
+    "price_eur": 325,
+    "images": [ "/photoForProductPage/3.png" ],
+    "affiliate_urls": {
+      "eu": "https://eu.winwingsim.com/mobileview/goods-details.html?id=785",
+      "us": "https://www.amazon.com/s?k=winwing+rudder+pedals"
+    },
+    "description": "Full metal construction rudder pedals with integrated damper system, adjustable tension, and realistic toe brake action.",
+    "key_specs": {
+      "Material": "Aluminum Alloy",
+      "Weight": "4.2kg",
+      "Brake Type": "Hall Sensor",
+      "Connection": "USB"
+    }
+  },
+  {
+    "id": "20",
+    "brand": "Winwing",
+    "name": "WINWING Orion Metal Flight Rudder Pedals (Standard Edition)",
+    "slug": "orion-metal-rudder-pedals-standard",
+    "category": "Rudder",
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
+    "tier": "Business",
+    "price_eur": 286,
+    "images": [ "/photoForProductPage/26.png" ],
+    "affiliate_urls": {
+      "eu": "https://eu.winwingsim.com/mobileview/goods-details.html?id=605",
+      "us": "https://www.amazon.com/s?k=winwing+rudder+pedals"
+    },
+    "description": "Full metal construction rudder pedals with integrated damper system, adjustable tension, and realistic toe brake action.",
+    "key_specs": {
+      "Material": "Aluminum Alloy",
+      "Weight": "4.2kg",
+      "Brake Type": "Hall Sensor",
+      "Connection": "USB"
+    }
+  },
+
+  {
+    "id": "21",
+    "brand": "Winwing",
+    "name": "WINWING Orion2 Joystick Base",
+    "slug": "orion2-joystick-base",
+    "category": "Base",
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
+    "tier": "Business",
+    "price_eur": 220,
+    "images": [ "/photoForProductPage/27.png" ],
+    "affiliate_urls": {
+      "eu": "https://eu.winwingsim.com/mobileview/goods-details.html?id=685"
+    },
+    "description": "All-metal flight control base featuring smooth cam-driven movement and precise Hall sensor tracking. With adjustable tension and broad simulator compatibility.",
+    "key_specs": {
+      "Material": "ALuminium & steel",
+      "Weight": "2.8kg",
+      "Sensors": "Hall effect",
+      "Connection": "USB"
+    }
+  },
+
+  {
+    "id": "22",
+    "brand": "Winwing",
+    "name": "Throttle Desk Mount5 with Profile Bar 1",
+    "slug": "throttle-desk-mount5-pb1",
+    "category": "Accessories",
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
+    "tier": "Business",
+    "price_eur": 35,
+    "images": [ "/photoForProductPage/28.png" ],
+    "affiliate_urls": {
+      "eu": "https://eu.winwingsim.com/mobileview/goods-details.html?id=1205"
+    },
+    "description": "Throttle Desk Mount with Profile Bar 1.",
+    "key_specs": {
+      "Weight": "1kg"
+    }
+  },
+
+  {
+    "id": "22",
+    "brand": "Winwing",
+    "name": "Throttle Desk Mount2 with Profile Bar 1",
+    "slug": "throttle-desk-mount2-pb1",
+    "category": "Accessories",
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
+    "tier": "Business",
+    "price_eur": 35,
+    "images": [ "/photoForProductPage/29.png" ],
+    "affiliate_urls": {
+      "eu": "https://eu.winwingsim.com/mobileview/goods-details.html?id=1165"
+    },
+    "description": "Throttle Desk Mount with Profile Bar 1.",
+    "key_specs": {
+      "Weight": "1kg"
+    }
+  },
+
+  {
+    "id": "23",
+    "brand": "Winwing",
+    "name": "WINWING Orion Metal Flight Rudder Pedals (Damper Kit)",
+    "slug": "orion-metal-flight-rudder-pedals",
+    "category": "Accessories",
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
+    "tier": "Business",
+    "price_eur": 40,
+    "images": [ "/photoForProductPage/30.png" ],
+    "affiliate_urls": {
+      "eu": "https://eu.winwingsim.com/mobileview/goods-details.html?id=625",
+      "us": "https://www.amazon.com/s?k=winwing+rudder+pedals"
+    },
+    "description": "Full metal construction rudder pedals with integrated damper system, adjustable tension, and realistic toe brake action.",
+    "key_specs": {
+      "Material": "Aluminum Alloy",
+      "Weight": "4.2kg",
+      "Brake Type": "Hall Sensor",
+      "Connection": "USB"
+    }
+  },
+
+  {
+    "id": "24",
+    "brand": "Winwing",
+    "name": "WINWING 3M PDC (Multi-Panel)",
+    "slug": "3m-pdc-panel",
+    "category": "Panel",
+    "sim_support": [ "MSFS2020", "MSFS2024" ],
+    "tier": "Business",
+    "price_eur": 189,
+    "images": [ "/photoForProductPage/4.png" ],
+    "affiliate_urls": {
+      "eu": "https://eu.winwingsim.com/mobileview/goods-details.html?id=1245",
+      "us": "https://www.amazon.com/s?k=winwing+3m+pdc"
+    },
+    "description": "Three-module programmable display controller with customizable screens, rotary encoders, and tactile switches for complete cockpit integration.",
+    "key_specs": {
+      "Displays": 3,
+      "Encoders": 6,
+      "Buttons": 24,
+      "Connection": "USB"
+    }
+  },
+
+  {
+    "id": "25",
+    "brand": "Winwing",
+    "name": "WINWING 3 GLARESHIELD MAG",
+    "slug": "winwing-3-glareshield-mag",
+    "category": "Bundle",
+    "sim_support": [ "MSFS2020", "MSFS2020", "XPL11", "XPL12" ],
+    "tier": "Panel",
+    "price_label": "Premium",
+    "images": [ "/photoForProductPage/20.png" ],
+    "affiliate_urls": {
+      "eu": "https://eu.winwingsim.com/view/goods-details.html?id=1485"
+    },
+    "description": "1:1 full-structure molded design, 3D surface detailing.",
+    "key_specs": {
+      "Scale": "1:1 replica",
+      "License": "Premium",
+      "Components": "Glareshield",
+      "Platform": "PC"
+    },
+    "source_url": "https://eu.winwingsim.com/view/goods-details.html?id=1485"
+  },
+
+  {
+    "id": "26",
+    "brand": "Winwing",
+    "name": "WINWING EFIS Combo",
+    "slug": "efis-combo",
+    "category": "Panel",
+    "sim_support": [ "XPL11", "XPL12", "MSFS2020", "MSFS2024" ],
+    "tier": "First",
+    "images": [ "/photoForProductPage/31.png" ],
+    "affiliate_urls": {
+      "winwingsim": "https://winwingsim.com/view/goods-details.html?id=885"
+    },
+    "description": "Electronic Flight Instrument System panel with realistic rotary knobs, push buttons, and direct aircraft system control for maximum immersion.",
+    "key_specs": {
+      "Knobs": 5,
+      "Buttons": 12,
+      "Material": "ABS + Metal",
+      "Connection": "USB"
+    },
+    "source_url": "https://winwingsim.com/view/goods-details.html?id=885"
+  },
+
+  {
+    "id": "27",
+    "brand": "Winwing",
+    "name": "WINWING 3X0 GLARESHIELD (GLAREWING)",
+    "slug": "winwing-glareshield-3x0",
+    "category": "Panel",
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
+    "tier": "First",
+    "price_label": "Premium 1:1 FCU/EFIS",
+    "images": [ "/photoForProductPage/13.png" ],
+    "affiliate_urls": {
+      "winwingsim": "https://winwingsim.com/mobileview/goods-details.html?id=925"
+    },
+    "description": "1:1 scale Airbus glareshield with authentic segment displays and high-precision encoders. Full FCU and EFIS controls for maximum realism.",
+    "key_specs": {
+      "Scale": "1:1 authentic size",
+      "Display": "Segment displays",
+      "Sensors": "Hall sensors + encoders",
+      "Controls": "FCU + EFIS"
+    },
+    "source_url": "https://winwingsim.com/mobileview/goods-details.html?id=925"
+  },
+
+  {
+    "id": "29",
+    "brand": "Winwing",
+    "name": "WINWING EFIS R",
+    "slug": "efis-r",
+    "category": "Panel",
+    "sim_support": [ "MSFS2020", "MSFS2024" ],
+    "tier": "Business",
+    "price_eur": 80,
+    "images": [ "/photoForProductPage/5.png" ],
+    "affiliate_urls": {
+      "eu": "https://eu.winwingsim.com/mobileview/goods-details.html?id=865",
+      "us": "https://www.amazon.com/s?k=winwing+efis"
+    },
+    "description": "Electronic Flight Instrument System panel with realistic rotary knobs, push buttons, and direct aircraft system control for maximum immersion.",
+    "key_specs": {
+      "Knobs": 5,
+      "Buttons": 12,
+      "Material": "ABS + Metal",
+      "Connection": "USB"
+    }
+  },
+
+  {
+    "id": "30",
+    "brand": "Winwing",
+    "name": "WINWING EFIS L",
+    "slug": "efis-r",
+    "category": "Panel",
+    "sim_support": [ "MSFS2020", "MSFS2024" ],
+    "tier": "Business",
+    "price_eur": 80,
+    "images": [ "/photoForProductPage/32.png" ],
+    "affiliate_urls": {
+      "eu": "https://eu.winwingsim.com/mobileview/goods-details.html?id=845",
+      "us": "https://www.amazon.com/s?k=winwing+efis"
+    },
+    "description": "Electronic Flight Instrument System panel with realistic rotary knobs, push buttons, and direct aircraft system control for maximum immersion.",
+    "key_specs": {
+      "Knobs": 5,
+      "Buttons": 12,
+      "Material": "ABS + Metal",
+      "Connection": "USB"
+    }
+  },
+
+  {
+    "id": "31",
+    "brand": "Winwing",
+    "name": "URSA MINOR 32 PAC Metal",
+    "slug": "ursa-minor-32-pac-metal",
+    "category": "Panel",
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
+    "tier": "Business",
+    "price_label": "Mid-tier metal throttle",
+    "images": [ "/photoForProductPage/25.png" ],
+    "affiliate_urls": {
+      "winwingsim": "https://winwingsim.com/view/goods-details.html?id=1405"
+    },
+    "description": "Compact full-metal throttle unit with metal core, frame, and detents. Die-cast aluminum baseplate ensures professional-grade durability.",
+    "key_specs": {
+      "Construction": "Full-metal",
+      "Detents": "Metal mechanism",
+      "Weight": "1.3 kg",
+      "Baseplate": "Die-cast aluminum"
+    },
+    "source_url": "https://winwingsim.com/view/goods-details.html?id=1405"
+  },
+
+  {
+    "id": "32",
+    "brand": "Winwing",
+    "name": "WINWING 3N PDC",
+    "slug": "3n-pdc",
+    "category": "Panel",
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
+    "tier": "Business",
+    "price_label": 84,
+    "images": [ "/photoForProductPage/33.png" ],
+    "affiliate_urls": {
+      "winwingsim": "https://winwingsim.com/view/goods-details.html?id=1265"
+    },
+    "description": "Boeing-style EFIS control panel modeled after the 737 NG. It offers authentic detented rotary selectors, realistic push-buttons.",
+    "key_specs": {
+      "Buttons": "BARO STD, MINS RESET, CTR, TFC",
+      "Weight": "1 kg",
+      "Connection": "USB"
+    },
+    "source_url": "https://winwingsim.com/view/goods-details.html?id=1265"
+  },
+
+  {
+    "id": "33",
+    "brand": "Winwing",
+    "name": "WINWING 3M PDC",
+    "slug": "3m-pdc",
+    "category": "Panel",
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
+    "tier": "Business",
+    "price_label": 84,
+    "images": [ "/photoForProductPage/34.png" ],
+    "affiliate_urls": {
+      "winwingsim": "https://winwingsim.com/view/goods-details.html?id=1245"
+    },
+    "description": "Boeing-style EFIS control panel modeled after the 737 NG. It offers authentic detented rotary selectors, realistic push-buttons.",
+    "key_specs": {
+      "Buttons": "BARO STD, MINS RESET, CTR, TFC",
+      "Weight": "1 kg",
+      "Connection": "USB"
+    },
+    "source_url": "https://winwingsim.com/view/goods-details.html?id=1245"
+  },
+
+  {
+    "id": "34",
+    "brand": "Winwing",
+    "name": "WINWING 32 AGP Metal",
+    "slug": "32-agp-metal",
+    "category": "Panel",
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
+    "tier": "Business",
+    "price_label": 130,
+    "images": [ "/photoForProductPage/35.png" ],
+    "affiliate_urls": {
+      "winwingsim": "https://winwingsim.com/view/goods-details.html?id=1585"
+    },
+    "description": "A premium Airbus-style landing gear and autobrake module built for realism and durability. It features a full-metal gear lever with pull-to-unlock action, backlit indicators, and switches for gear, brake fan, A/SKID, and auto-brake.",
+    "key_specs": {
+      "Weight": "1.6 kg",
+      "Connection": "USB"
+    },
+    "source_url": "https://winwingsim.com/view/goods-details.html?id=1585"
+  },
+
+  {
+    "id": "35",
+    "brand": "Winwing",
+    "name": "WINWING 32 ECAM",
+    "slug": "32-ecam",
+    "category": "Panel",
+    "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
+    "tier": "Business",
+    "price_label": 130,
+    "images": [ "/photoForProductPage/36.png" ],
+    "affiliate_urls": {
+      "winwingsim": "https://winwingsim.com/view/goods-details.html?id=1565"
+    },
+    "description": "A 1:1 scale Airbus-style ECAM (Electronic Centralized Aircraft Monitor) module, designed for flight-sim cockpit realism.",
+    "key_specs": {
+      "Weight": "0.9 kg",
+      "Connection": "USB"
+    },
+    "source_url": "https://winwingsim.com/view/goods-details.html?id=1565"
+  },
+
+  {
+    "id": "36",
+    "brand": "Winwing",
+    "name": "WINWING MCDU (Full-size)",
+    "slug": "winwing-mcdu-fullsize",
+    "category": "Panel",
+    "sim_support": [ "MSFS2020", "MSFS2024" ],
+    "tier": "First",
+    "price_label": "Premium full-size MCDU",
+    "images": [ "/photoForProductPage/14.png" ],
+    "affiliate_urls": {
+      "winwingsim": "https://us.winwingsim.com/view/goods-details.html?id=945"
+    },
+    "description": "Full-size MCDU module with multiple mounting options including desktop and profile seat. Dedicated mounting holes for seamless cockpit integration.",
+    "key_specs": {
+      "Size": "Full-size",
+      "Mounting": "Desktop / Profile seat",
+      "Holes": "Dedicated mounting",
+      "Display": "High-resolution"
+    },
+    "source_url": "https://us.winwingsim.com/view/goods-details.html?id=945"
+  },
+
+  {
+    "id": "37",
+    "brand": "Winwing",
+    "name": "WINWING PFP 4 (Panel of Flight Plan)",
+    "slug": "pfp-4",
+    "category": "Panel",
+    "sim_support": [ "MSFS2020", "MSFS2024" ],
+    "tier": "First",
+    "price_label": 130,
+    "images": [ "/photoForProductPage/37.png" ],
+    "affiliate_urls": {
+      "winwingsim": "https://us.winwingsim.com/view/goods-details.html?id=1005"
+    },
+    "description": "A Boeing-style flight plan (FMS) panel designed to replicate the layout used in the 747-8.",
+    "key_specs": {
+      "Size": "Full-size",
+      "Mounting": "Desktop / Profile seat",
+      "Holes": "Dedicated mounting",
+      "Display": "High-resolution"
+    },
+    "source_url": "https://us.winwingsim.com/view/goods-details.html?id=1005"
+  },
+
+  {
+    "id": "38",
+    "brand": "Winwing",
+    "name": "WINWING PFP 7 (Panel of Flight Plan)",
+    "slug": "pfp-4",
+    "category": "Panel",
+    "sim_support": [ "MSFS2020", "MSFS2024" ],
+    "tier": "First",
+    "price_label": 130,
+    "images": [ "/photoForProductPage/38.png" ],
+    "affiliate_urls": {
+      "winwingsim": "https://us.winwingsim.com/view/goods-details.html?id=985"
+    },
+    "description": "A Boeing-style flight plan (FMS) panel designed to replicate the layout used in the 777-300/200ER.",
+    "key_specs": {
+      "Size": "Full-size",
+      "Mounting": "Desktop / Profile seat",
+      "Holes": "Dedicated mounting",
+      "Display": "High-resolution"
+    },
+    "source_url": "https://us.winwingsim.com/view/goods-details.html?id=985"
+  },
+
+  {
+    "id": "39",
+    "brand": "Winwing",
+    "name": "WINWING PFP 3N (Panel of Flight Plan)",
+    "slug": "pfp-3n",
+    "category": "Panel",
+    "sim_support": [ "MSFS2020", "MSFS2024" ],
+    "tier": "First",
+    "price_label": 130,
+    "images": [ "/photoForProductPage/39.png" ],
+    "affiliate_urls": {
+      "winwingsim": "https://us.winwingsim.com/view/goods-details.html?id=965"
+    },
+    "description": "A Boeing-style flight plan (FMS) panel designed to replicate the layout used in the 737 family.",
+    "key_specs": {
+      "Size": "Full-size",
+      "Mounting": "Desktop / Profile seat",
+      "Holes": "Dedicated mounting",
+      "Display": "High-resolution"
+    },
+    "source_url": "https://us.winwingsim.com/view/goods-details.html?id=965"
+  },
+
+  {
+    "id": "40",
+    "brand": "Winwing",
+    "name": "WINWING Panel Mount1",
+    "slug": "panel-mount1",
+    "category": "Accessories",
+    "sim_support": [ "MSFS2020", "MSFS2024" ],
+    "tier": "First",
+    "price_label": 25,
+    "images": [ "/photoForProductPage/40.png" ],
+    "affiliate_urls": {
+      "winwingsim": "https://us.winwingsim.com/view/goods-details.html?id=645"
+    },
+    "description": "A panel mounter for every product!",
+    "key_specs": {
+      "Weight": "0.2 kg"
+    },
+    "source_url": "https://us.winwingsim.com/view/goods-details.html?id=645"
+  },
+
+  {
+    "id": "41",
+    "brand": "Winwing",
+    "name": "WINWING MAG Switch1 TS",
+    "slug": "mag-switch1-ts",
+    "category": "Accessories",
+    "sim_support": [ "MSFS2020", "MSFS2024" ],
+    "tier": "First",
+    "price_label": 50,
+    "images": [ "/photoForProductPage/41.png" ],
+    "affiliate_urls": {
+      "winwingsim": "https://us.winwingsim.com/view/goods-details.html?id=1105"
+    },
+    "description": "A realistic magneto-style rotary switch module designed for flight sim use, particularly for the Boeing-style MIP (Main Instrument Panel).",
+    "key_specs": {
+      "Weight": "0.8 kg"
+    },
+    "source_url": "https://us.winwingsim.com/view/goods-details.html?id=1105"
   }
 ]

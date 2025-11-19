@@ -3,8 +3,8 @@
     "aircraft": "A318",
     "description": "Compact Airbus for short-haul operations. Perfect starter setup for single-aisle cockpit training.",
     "tiers": {
-      "First": ["4", "5", "11", "12", "13", "14", "15", "16", "17", "18"],
-      "Business": ["10", "11", "12", "14", "15", "16"],
+      "First": [ "11", "12", "13", "14", "3"],
+      "Business": ["11", "12", "5", "14", "15"],
       "Economy": ["10", "5", "4", "11", "18"]
     }
   },
@@ -63,12 +63,12 @@
     }
   },
   {
-    "aircraft": "boeing-737",
+    "aircraft": "Boeing 737",
     "description": "A popular narrow-body, twin-engine jet airliner designed for short to medium-haul flights.",
     "tiers": {
-      "First": ["19", "20", "21", "22", "23"],
-      "Business": ["19", "20", "21"],
-      "Economy": ["19", "21"]
+      "First": [ "19", "20", "21", "22", "23" ],
+      "Business": [ "19", "20", "21" ],
+      "Economy": [ "19", "21" ]
     }
   }
 ]
