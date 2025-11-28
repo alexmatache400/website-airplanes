@@ -24,6 +24,7 @@ const Lightbox: React.FC<LightboxProps> = ({
   const imageRef = useRef<HTMLImageElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const wheelListenerRef = useRef<((e: WheelEvent) => void) | null>(null);
 
   const MIN_SCALE = 1;
   const MAX_SCALE = 5;
@@ -192,10 +193,14 @@ const Lightbox: React.FC<LightboxProps> = ({
     // opened from within the modal, which already has scroll lock active.
     // Managing scroll lock here would conflict with the modal's scroll management.
 
+    // Store the current handleWheel for cleanup
+    const currentWheelHandler = handleWheel;
+    wheelListenerRef.current = currentWheelHandler;
+
     // Add event listeners
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('keydown', handleTab);
-    document.addEventListener('wheel', handleWheel, { passive: false });
+    document.addEventListener('wheel', currentWheelHandler, { passive: false });
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
 
@@ -205,12 +210,15 @@ const Lightbox: React.FC<LightboxProps> = ({
     }, 100);
 
     return () => {
-      // Remove event listeners
+      // Remove event listeners with the captured function references
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('keydown', handleTab);
-      document.removeEventListener('wheel', handleWheel);
+      document.removeEventListener('wheel', currentWheelHandler);
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
+
+      // Clear the ref
+      wheelListenerRef.current = null;
 
       // Return focus
       if (previousFocusRef.current) {
@@ -218,6 +226,17 @@ const Lightbox: React.FC<LightboxProps> = ({
       }
     };
   }, [isOpen, handleKeyDown, handleTab, handleWheel, handleMouseMove, handleMouseUp]);
+
+  // Safety cleanup: Force remove any lingering wheel listeners on unmount
+  useEffect(() => {
+    return () => {
+      // Try to remove with both the ref and a direct removal attempt
+      if (wheelListenerRef.current) {
+        document.removeEventListener('wheel', wheelListenerRef.current);
+        wheelListenerRef.current = null;
+      }
+    };
+  }, []);
 
   if (!isOpen) return null;
 
@@ -242,7 +261,7 @@ const Lightbox: React.FC<LightboxProps> = ({
                 e.stopPropagation();
                 onBack();
               }}
-              className="p-2 rounded-lg bg-dark-800/80 hover:bg-dark-700 text-dark-100 transition-colors focus:outline-none focus:ring-2 focus:ring-accent-500"
+              className="p-2 rounded-lg bg-dark-800/80 hover:bg-dark-700 text-dark-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
               aria-label="Go back"
               title="Go back"
             >
@@ -270,7 +289,7 @@ const Lightbox: React.FC<LightboxProps> = ({
             e.stopPropagation();
             onClose();
           }}
-          className="p-2 rounded-lg bg-dark-800/80 hover:bg-dark-700 text-dark-100 transition-colors focus:outline-none focus:ring-2 focus:ring-accent-500"
+          className="p-2 rounded-lg bg-dark-800/80 hover:bg-dark-700 text-dark-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
           aria-label="Close lightbox"
           title="Close (ESC)"
         >
@@ -325,7 +344,7 @@ const Lightbox: React.FC<LightboxProps> = ({
             zoomIn();
           }}
           disabled={scale >= MAX_SCALE}
-          className="p-2 rounded-md bg-dark-700 hover:bg-dark-600 text-dark-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent-500"
+          className="p-2 rounded-md bg-dark-700 hover:bg-dark-600 text-dark-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
           aria-label="Zoom in"
           title="Zoom in (+)"
         >
@@ -356,7 +375,7 @@ const Lightbox: React.FC<LightboxProps> = ({
             zoomOut();
           }}
           disabled={scale <= MIN_SCALE}
-          className="p-2 rounded-md bg-dark-700 hover:bg-dark-600 text-dark-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent-500"
+          className="p-2 rounded-md bg-dark-700 hover:bg-dark-600 text-dark-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
           aria-label="Zoom out"
           title="Zoom out (-)"
         >
@@ -382,7 +401,7 @@ const Lightbox: React.FC<LightboxProps> = ({
               e.stopPropagation();
               resetZoom();
             }}
-            className="p-2 rounded-md bg-accent-600 hover:bg-accent-500 text-white transition-colors focus:outline-none focus:ring-2 focus:ring-accent-500"
+            className="p-2 rounded-md bg-accent-600 hover:bg-accent-500 text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
             aria-label="Reset zoom"
             title="Reset zoom (0)"
           >

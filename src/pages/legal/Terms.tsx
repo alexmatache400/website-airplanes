@@ -137,7 +137,7 @@ const Terms: React.FC = () => {
             <p>
               These Terms are governed by the laws of <strong>{COMPLIANCE.site.regCountry}</strong>, without
               regard to conflict of law principles. Any disputes shall be resolved in the competent courts of{' '}
-              {COMPLIANCE.site.address.city}, {COMPLIANCE.site.regCountry}.
+              {COMPLIANCE.site.regCountry}.
             </p>
           </section>
 
@@ -166,10 +166,6 @@ const Terms: React.FC = () => {
                 >
                   {COMPLIANCE.site.contactEmail}
                 </a>
-              </p>
-              <p className="text-sm mt-1">
-                Address: {COMPLIANCE.site.address.line}, {COMPLIANCE.site.address.city},{' '}
-                {COMPLIANCE.site.address.postcode}, {COMPLIANCE.site.address.country}
               </p>
             </div>
           </section>

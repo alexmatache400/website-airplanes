@@ -21,6 +21,15 @@ const Modal: React.FC<ModalProps> = ({
   const modalRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const scrollLockRef = useRef<{
+    originalOverflow: string;
+    originalPaddingRight: string;
+    isLocked: boolean;
+  }>({
+    originalOverflow: '',
+    originalPaddingRight: '',
+    isLocked: false,
+  });
 
   // Handle ESC key
   const handleEscape = useCallback(
@@ -58,21 +67,47 @@ const Modal: React.FC<ModalProps> = ({
     }
   }, []);
 
+  // Lock/unlock body scroll when modal opens/closes
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      // Unlock scroll when modal closes - use setTimeout to ensure this happens after all event handlers
+      setTimeout(() => {
+        if (scrollLockRef.current.isLocked) {
+          // Force restore scroll - be aggressive to fix any stuck state
+          if (scrollLockRef.current.originalOverflow) {
+            document.body.style.overflow = scrollLockRef.current.originalOverflow;
+          } else {
+            document.body.style.removeProperty('overflow');
+          }
+
+          if (scrollLockRef.current.originalPaddingRight) {
+            document.body.style.paddingRight = scrollLockRef.current.originalPaddingRight;
+          } else {
+            document.body.style.removeProperty('padding-right');
+          }
+
+          scrollLockRef.current.isLocked = false;
+        }
+      }, 0);
+      return;
+    }
 
     // Store the element that had focus before modal opened
     previousFocusRef.current = document.activeElement as HTMLElement;
 
-    // Lock body scroll
-    const originalOverflow = document.body.style.overflow;
-    const originalPaddingRight = document.body.style.paddingRight;
+    // Lock body scroll (only if not already locked)
+    if (!scrollLockRef.current.isLocked) {
+      scrollLockRef.current.originalOverflow = document.body.style.overflow || '';
+      scrollLockRef.current.originalPaddingRight = document.body.style.paddingRight || '';
 
-    // Calculate scrollbar width to prevent layout shift
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      // Calculate scrollbar width to prevent layout shift
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
 
-    document.body.style.overflow = 'hidden';
-    document.body.style.paddingRight = `${scrollbarWidth}px`;
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+
+      scrollLockRef.current.isLocked = true;
+    }
 
     // Add event listeners
     document.addEventListener('keydown', handleEscape);
@@ -84,19 +119,6 @@ const Modal: React.FC<ModalProps> = ({
     }, 100);
 
     return () => {
-      // Restore body scroll - explicitly remove or restore to original
-      if (originalOverflow) {
-        document.body.style.overflow = originalOverflow;
-      } else {
-        document.body.style.removeProperty('overflow');
-      }
-
-      if (originalPaddingRight) {
-        document.body.style.paddingRight = originalPaddingRight;
-      } else {
-        document.body.style.removeProperty('padding-right');
-      }
-
       // Remove event listeners
       document.removeEventListener('keydown', handleEscape);
       document.removeEventListener('keydown', handleTab);
@@ -107,6 +129,37 @@ const Modal: React.FC<ModalProps> = ({
       }
     };
   }, [isOpen, handleEscape, handleTab]);
+
+  // Safety cleanup: Ensure scroll is unlocked when component unmounts
+  useEffect(() => {
+    return () => {
+      // Force unlock scroll on unmount - be very aggressive
+      setTimeout(() => {
+        if (scrollLockRef.current.isLocked) {
+          if (scrollLockRef.current.originalOverflow) {
+            document.body.style.overflow = scrollLockRef.current.originalOverflow;
+          } else {
+            document.body.style.removeProperty('overflow');
+          }
+
+          if (scrollLockRef.current.originalPaddingRight) {
+            document.body.style.paddingRight = scrollLockRef.current.originalPaddingRight;
+          } else {
+            document.body.style.removeProperty('padding-right');
+          }
+
+          scrollLockRef.current.isLocked = false;
+        } else {
+          // Even if we think it's not locked, force remove overflow: hidden just in case
+          const currentOverflow = document.body.style.overflow;
+          if (currentOverflow === 'hidden') {
+            document.body.style.removeProperty('overflow');
+            document.body.style.removeProperty('padding-right');
+          }
+        }
+      }, 0);
+    };
+  }, []);
 
   if (!isOpen) return null;
 
@@ -134,35 +187,11 @@ const Modal: React.FC<ModalProps> = ({
             </h2>
 
             <div className="flex items-center gap-2">
-              {/* Back Button (if onBack is provided) */}
-              {onBack && (
-                <button
-                  onClick={onBack}
-                  className="text-dark-400 hover:text-dark-100 transition-colors p-2 rounded-lg hover:bg-dark-700 focus:outline-none focus:ring-2 focus:ring-accent-500"
-                  aria-label="Go back"
-                  title="Go back"
-                >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                    />
-                  </svg>
-                </button>
-              )}
-
               {/* Close Button */}
               <button
                 ref={closeButtonRef}
                 onClick={onClose}
-                className="text-dark-400 hover:text-dark-100 transition-colors p-2 rounded-lg hover:bg-dark-700 focus:outline-none focus:ring-2 focus:ring-accent-500"
+                className="text-dark-400 hover:text-dark-100 transition-colors p-2 rounded-lg hover:bg-dark-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
                 aria-label="Close modal"
                 title="Close (ESC)"
               >

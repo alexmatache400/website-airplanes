@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { listProducts, type Product } from '../lib/products';
+import { listProducts, searchProducts, highlightMatch, type Product } from '../lib/products';
 
 const HeaderNav: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -56,23 +56,18 @@ const HeaderNav: React.FC = () => {
     setSearchQuery(value);
     setSelectedIndex(-1);
 
-    if (value.trim().length === 0) {
+    if (value.trim().length < 2) {
       setSuggestions([]);
       setShowSuggestions(false);
       return;
     }
 
-    // Filter products (case-insensitive)
+    // Use smart search function with prioritization
     const allProducts = listProducts();
-    const filtered = allProducts.filter(
-      (product) =>
-        product.name.toLowerCase().includes(value.toLowerCase()) ||
-        product.brand.toLowerCase().includes(value.toLowerCase()) ||
-        product.description.toLowerCase().includes(value.toLowerCase())
-    );
+    const results = searchProducts(allProducts, value);
 
-    setSuggestions(filtered.slice(0, 5)); // Limit to 5 suggestions
-    setShowSuggestions(filtered.length > 0);
+    setSuggestions(results); // Already limited to 10 by searchProducts
+    setShowSuggestions(results.length > 0);
   };
 
   // Handle keyboard navigation
@@ -166,7 +161,7 @@ const HeaderNav: React.FC = () => {
                     <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
                   </svg>
                 </div>
-                <span className="text-lg font-semibold text-dark-100">Flight Sim Setups</span>
+                <span className="text-lg font-semibold text-dark-100">Pilot Setups</span>
               </Link>
             </div>
           </div>
@@ -202,7 +197,7 @@ const HeaderNav: React.FC = () => {
                 value={searchQuery}
                 onChange={(e) => handleSearchChange(e.target.value)}
                 onKeyDown={handleKeyDown}
-                onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
+                onFocus={() => searchQuery.length >= 2 && suggestions.length > 0 && setShowSuggestions(true)}
                 className="glass-light pl-10 pr-4 py-2 w-64 text-sm text-dark-100 placeholder-dark-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent"
               />
 
@@ -210,20 +205,20 @@ const HeaderNav: React.FC = () => {
               {showSuggestions && suggestions.length > 0 && (
                 <div
                   ref={suggestionsRef}
-                  className="absolute top-full mt-2 w-full bg-slate-800 border border-slate-700 rounded-lg shadow-lg overflow-hidden z-50"
+                  className="absolute top-full mt-2 w-full bg-slate-800 border border-slate-700 rounded-lg shadow-lg max-h-[280px] overflow-y-auto z-50"
                 >
                   {suggestions.map((product, index) => (
                     <button
                       key={product.id}
                       type="button"
                       onClick={() => handleSuggestionClick(product)}
-                      className={`w-full text-left px-4 py-3 text-sm transition-colors ${
+                      className={`w-full text-left px-4 py-3 text-sm transition-colors border-b border-slate-700/50 last:border-0 ${
                         index === selectedIndex
                           ? 'bg-slate-700 text-slate-100'
                           : 'text-slate-300 hover:bg-slate-700/70'
                       }`}
                     >
-                      <div className="font-medium">{product.name}</div>
+                      <div className="font-medium">{highlightMatch(product.name, searchQuery)}</div>
                       <div className="text-xs text-slate-500 mt-1">
                         {product.brand} · {product.category}
                       </div>
@@ -288,13 +283,13 @@ const HeaderNav: React.FC = () => {
                   value={searchQuery}
                   onChange={(e) => handleSearchChange(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
+                  onFocus={() => searchQuery.length >= 2 && suggestions.length > 0 && setShowSuggestions(true)}
                   className="glass-light pl-10 pr-4 py-2 w-full text-sm text-dark-100 placeholder-dark-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent"
                 />
 
                 {/* Mobile Suggestions Dropdown */}
                 {showSuggestions && suggestions.length > 0 && (
-                  <div className="absolute top-full mt-2 w-full bg-slate-800 border border-slate-700 rounded-lg shadow-lg overflow-hidden z-50">
+                  <div className="absolute top-full mt-2 w-full bg-slate-800 border border-slate-700 rounded-lg shadow-lg max-h-[280px] overflow-y-auto z-50">
                     {suggestions.map((product, index) => (
                       <button
                         key={product.id}
@@ -303,13 +298,13 @@ const HeaderNav: React.FC = () => {
                           handleSuggestionClick(product);
                           setIsMenuOpen(false);
                         }}
-                        className={`w-full text-left px-4 py-3 text-sm transition-colors ${
+                        className={`w-full text-left px-4 py-3 text-sm transition-colors border-b border-slate-700/50 last:border-0 ${
                           index === selectedIndex
                             ? 'bg-slate-700 text-slate-100'
                             : 'text-slate-300 hover:bg-slate-700/70'
                         }`}
                       >
-                        <div className="font-medium">{product.name}</div>
+                        <div className="font-medium">{highlightMatch(product.name, searchQuery)}</div>
                         <div className="text-xs text-slate-500 mt-1">
                           {product.brand} · {product.category}
                         </div>

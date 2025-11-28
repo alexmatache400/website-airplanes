@@ -1,16 +1,21 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Search, X, Dice5, Lock, Unlock, Shuffle } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
-import { listProducts, type Product, type Tier } from '../lib/products';
+import { listProducts, searchProducts, highlightMatch, type Product, type Tier } from '../lib/products';
 import { listAircraft, type AircraftPreset } from '../lib/aircraft';
 import { generateSuggestions, replaceSuggestion, type SuggestionResult } from '../lib/suggestions';
+import { CustomDropdown, type DropdownOption } from '../components/CustomDropdown';
+
+type RoleType = '' | 'Pilot' | 'Copilot';
 
 const CompleteSetup: React.FC = () => {
   // State management
   const [selectedAircraft, setSelectedAircraft] = useState<AircraftPreset | null>(null);
+  const [selectedRole, setSelectedRole] = useState<RoleType>('');
   const [selectedTier, setSelectedTier] = useState<Tier>('Business');
   const [ownedGear, setOwnedGear] = useState<Product[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchSuggestions, setSearchSuggestions] = useState<Product[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [result, setResult] = useState<SuggestionResult | null>(null);
   const [lockedProducts, setLockedProducts] = useState<Map<string, Product>>(new Map());
@@ -24,10 +29,20 @@ const CompleteSetup: React.FC = () => {
   const allAircraft = listAircraft();
   const allProducts = listProducts();
 
-  // Search suggestions
-  const searchSuggestions = searchQuery.length >= 2
-    ? listProducts({ q: searchQuery }).slice(0, 5)
-    : [];
+  // Load role from localStorage on mount
+  useEffect(() => {
+    const savedRole = localStorage.getItem('completesetup_selectedRole');
+    if (savedRole && (savedRole === '' || savedRole === 'Pilot' || savedRole === 'Copilot')) {
+      setSelectedRole(savedRole as RoleType);
+    }
+  }, []);
+
+  // Role change handler
+  const handleRoleChange = (value: string) => {
+    const roleValue = value as RoleType;
+    setSelectedRole(roleValue);
+    localStorage.setItem('completesetup_selectedRole', roleValue);
+  };
 
   // Close suggestions when clicking outside
   useEffect(() => {
@@ -51,7 +66,9 @@ const CompleteSetup: React.FC = () => {
     if (!ownedGear.find(g => g.id === product.id)) {
       setOwnedGear([...ownedGear, product]);
     }
+    // Clear search state and close dropdown
     setSearchQuery('');
+    setSearchSuggestions([]);
     setShowSuggestions(false);
     searchInputRef.current?.focus();
   };
@@ -73,6 +90,7 @@ const CompleteSetup: React.FC = () => {
       allProducts,
       seed: newSeed,
       lockedSuggestions: lockedProducts,
+      roleType: selectedRole || undefined,
     });
 
     setResult(generatedResult);
@@ -92,6 +110,7 @@ const CompleteSetup: React.FC = () => {
       allProducts,
       seed: newSeed,
       lockedSuggestions: lockedProducts,
+      roleType: selectedRole || undefined,
     });
 
     setResult(generatedResult);
@@ -114,6 +133,7 @@ const CompleteSetup: React.FC = () => {
         owned: ownedGear,
         allProducts,
         seed: seed + product.id + Date.now(),
+        roleType: selectedRole || undefined,
       },
       excludeIds
     );
@@ -169,6 +189,42 @@ const CompleteSetup: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
+  // Role dropdown options with icons
+  const roleOptions: DropdownOption[] = useMemo(() => [
+    { value: '', label: '-- Select a role --' },
+    { value: 'Pilot', label: 'Pilot', icon: 'pilot' },
+    { value: 'Copilot', label: 'Copilot', icon: 'copilot' },
+  ], []);
+
+  // Tier dropdown options with icons
+  const tierOptions: DropdownOption[] = useMemo(() => [
+    { value: 'First', label: 'First class (Premium)', icon: 'first' },
+    { value: 'Business', label: 'Business class (Mid-tier)', icon: 'business' },
+    { value: 'Economy', label: 'Economy (Budget-friendly)', icon: 'economy' },
+  ], []);
+
+  // Aircraft dropdown options (dynamic from allAircraft)
+  const aircraftOptions: DropdownOption[] = useMemo(() => [
+    { value: '', label: '-- Select an aircraft --' },
+    ...allAircraft.map(aircraft => ({
+      value: aircraft.id,
+      label: aircraft.name
+    }))
+  ], [allAircraft]);
+
+  // Aircraft change handler
+  const handleAircraftChange = (value: string) => {
+    const aircraft = allAircraft.find(a => a.id === value);
+    setSelectedAircraft(aircraft || null);
+    setResult(null); // Reset results when aircraft changes
+  };
+
+  // Tier change handler
+  const handleTierChange = (value: string) => {
+    setSelectedTier(value as Tier);
+    setResult(null); // Reset results when tier changes
+  };
+
   return (
     <div className="relative min-h-screen">
       {/* Background */}
@@ -195,7 +251,7 @@ const CompleteSetup: React.FC = () => {
               Complete your setup
             </h1>
             <p className="text-lg text-dark-300 max-w-3xl mx-auto">
-              Pick your aircraft, add the gear you already own, select a class, then we'll fill
+              Pick your aircraft, select a role, add the gear you already own, select a class, then we'll fill
               the gaps with smart suggestions.
             </p>
           </div>
@@ -205,37 +261,46 @@ const CompleteSetup: React.FC = () => {
             {/* Row A: Aircraft Selector */}
             <div className="mb-6">
               <label
+                id="aircraft-select-label"
                 htmlFor="aircraft-select"
                 className="block text-sm font-medium text-dark-200 mb-2"
               >
                 1. Choose your aircraft
               </label>
-              <select
+              <CustomDropdown
                 id="aircraft-select"
                 value={selectedAircraft?.id || ''}
-                onChange={(e) => {
-                  const aircraft = allAircraft.find(a => a.id === e.target.value);
-                  setSelectedAircraft(aircraft || null);
-                  setResult(null); // Reset results when aircraft changes
-                }}
-                className="w-full bg-dark-700/60 border border-dark-600/50 rounded-lg px-4 py-3 text-dark-100 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition-all"
-              >
-                <option value="">Select an aircraft...</option>
-                {allAircraft.map((aircraft) => (
-                  <option key={aircraft.id} value={aircraft.id}>
-                    {aircraft.name}
-                  </option>
-                ))}
-              </select>
+                onChange={handleAircraftChange}
+                options={aircraftOptions}
+                placeholder="-- Select an aircraft --"
+              />
             </div>
 
-            {/* Row B: Add Current Gear */}
+            {/* Row B: Role Selector */}
+            <div className="mb-6">
+              <label
+                id="role-select-label"
+                htmlFor="role-select"
+                className="block text-sm font-medium text-dark-200 mb-2"
+              >
+                2. Select your role
+              </label>
+              <CustomDropdown
+                id="role-select"
+                value={selectedRole}
+                onChange={handleRoleChange}
+                options={roleOptions}
+                placeholder="-- Select a role --"
+              />
+            </div>
+
+            {/* Row C: Add Current Gear */}
             <div className="mb-6">
               <label
                 htmlFor="gear-search"
                 className="block text-sm font-medium text-dark-200 mb-2"
               >
-                2. Add your current gear
+                3. Add your current gear
               </label>
 
               {/* Search Input */}
@@ -247,10 +312,27 @@ const CompleteSetup: React.FC = () => {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    setShowSuggestions(e.target.value.length >= 2);
+                    const value = e.target.value;
+                    setSearchQuery(value);
+
+                    // Calculate suggestions synchronously (fixes state timing bug)
+                    if (value.trim().length < 2) {
+                      setSearchSuggestions([]);
+                      setShowSuggestions(false);
+                      return;
+                    }
+
+                    const allProductsForSearch = listProducts();
+                    // Apply role filter BEFORE searching to ensure 10 relevant results
+                    const roleFiltered = selectedRole === ''
+                      ? allProductsForSearch
+                      : allProductsForSearch.filter(p => p.roleType === selectedRole || p.roleType === 'Universal');
+                    const results = searchProducts(roleFiltered, value);
+
+                    setSearchSuggestions(results);
+                    setShowSuggestions(results.length > 0);
                   }}
-                  onFocus={() => searchQuery.length >= 2 && setShowSuggestions(true)}
+                  onFocus={() => searchQuery.length >= 2 && searchSuggestions.length > 0 && setShowSuggestions(true)}
                   placeholder="Search for gear you own..."
                   className="w-full bg-dark-700/60 border border-dark-600/50 rounded-lg pl-10 pr-4 py-3 text-dark-100 placeholder-dark-400 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition-all"
                 />
@@ -259,18 +341,18 @@ const CompleteSetup: React.FC = () => {
                 {showSuggestions && searchSuggestions.length > 0 && (
                   <div
                     ref={suggestionsRef}
-                    className="absolute z-20 w-full mt-2 bg-dark-800 border border-dark-700 rounded-lg shadow-xl overflow-hidden"
+                    className="absolute z-20 w-full mt-2 bg-dark-800 border border-dark-700 rounded-lg shadow-xl max-h-[280px] overflow-y-auto"
                   >
                     {searchSuggestions.map((product) => (
                       <button
                         key={product.id}
                         onClick={() => handleAddGear(product)}
-                        className="w-full px-4 py-3 text-left hover:bg-dark-700/60 transition-colors focus:outline-none focus:bg-dark-700/60"
+                        className="w-full px-4 py-3 text-left hover:bg-dark-700/60 transition-colors focus:outline-none focus:bg-dark-700/60 border-b border-dark-700/50 last:border-0"
                       >
                         <div className="flex items-center justify-between">
                           <div>
                             <div className="text-sm font-medium text-dark-100">
-                              {product.name}
+                              {highlightMatch(product.name, searchQuery)}
                             </div>
                             <div className="text-xs text-dark-400">
                               {product.brand} • {product.category}
@@ -313,27 +395,22 @@ const CompleteSetup: React.FC = () => {
               </div>
             </div>
 
-            {/* Row C: Class Tier Selector */}
+            {/* Row D: Class Tier Selector */}
             <div className="mb-6">
               <label
+                id="tier-select-label"
                 htmlFor="tier-select"
                 className="block text-sm font-medium text-dark-200 mb-2"
               >
-                3. Select class tier
+                4. Select class tier
               </label>
-              <select
+              <CustomDropdown
                 id="tier-select"
                 value={selectedTier}
-                onChange={(e) => {
-                  setSelectedTier(e.target.value as Tier);
-                  setResult(null); // Reset results when tier changes
-                }}
-                className="w-full bg-dark-700/60 border border-dark-600/50 rounded-lg px-4 py-3 text-dark-100 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition-all"
-              >
-                <option value="First">First class (Premium)</option>
-                <option value="Business">Business class (Mid-tier)</option>
-                <option value="Economy">Economy (Budget-friendly)</option>
-              </select>
+                onChange={handleTierChange}
+                options={tierOptions}
+                placeholder="-- Select tier --"
+              />
             </div>
 
             {/* Row D: Generate Button */}

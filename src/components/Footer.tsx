@@ -85,23 +85,15 @@ const Footer: React.FC = () => {
                   {COMPLIANCE.site.contactEmail}
                 </a>
               </p>
-              <address className="not-italic">
-                {COMPLIANCE.site.address.line}<br />
-                {COMPLIANCE.site.address.city}, {COMPLIANCE.site.address.postcode}<br />
-                {COMPLIANCE.site.address.country}
-              </address>
             </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
         <div className="border-t border-dark-700/50 py-6">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div className="flex justify-center">
             <p className="text-xs text-dark-400">
               © {new Date().getFullYear()} {COMPLIANCE.site.legalName}. All rights reserved.
-            </p>
-            <p className="text-xs text-dark-400">
-              Tax ID: {COMPLIANCE.site.taxId}
             </p>
           </div>
         </div>

@@ -126,6 +126,7 @@ src/
 
 ### Navigation & Theme ✅
 - **HeaderNav:** Global search (autosuggest, keyboard nav), theme toggle, hamburger menu
+- **Search System (v2.0):** Progressive prefix matching (3-4 char prefixes), prioritized results, 10-item limit
 - **Theme System:** Dark/light toggle, localStorage persistence, dynamic backgrounds, MutationObserver
 
 ### Compliance (GDPR + FTC) ✅
@@ -201,6 +202,35 @@ xl:w-[calc((100%-2rem)/3)]        // 1280px+: 3 cards
 - Viewing: 92vw × 92vh, professional dark panel
 - Zoom: 1x-5x, +/- buttons, wheel, keyboard (+/-/0)
 - Pan: Click-drag when zoomed, arrows (50px)
+
+### Search System (v2.0)
+**Implementation:** `/src/lib/products.ts` (searchProducts) + `/src/components/HeaderNav.tsx`
+
+**Features:**
+- Progressive prefix matching (3-4 char based on query length)
+- Prioritized results: prefix matches first, then substring matches
+- 10-item limit for performance
+- Real-time suggestions with keyboard navigation (↑/↓/Enter/Esc)
+- Highlight matching text in orange
+- Mobile-responsive dropdown
+
+**Algorithm:**
+```ts
+// 2-char query: substring only (most filtered)
+searchProducts(products, 'or')
+
+// 3-char query: 3-char prefix + substring
+searchProducts(products, 'ori') // "Ori"on first, then others with "ori"
+
+// 4+ char query: 4-char prefix + substring
+searchProducts(products, 'orio') // "Orio"n first, then others with "orio"
+```
+
+**UX Improvements:**
+- Click outside to close dropdown
+- Auto-close on product selection (CompleteSetup)
+- Focus return to search input after selection
+- Clear search query after navigation
 
 ---
 
@@ -287,6 +317,18 @@ npx serve -s build    # Serve production build
 - Carousel v2.0 mobile optimization (exact 1-item nav, delta clamping, GPU acceleration, 60fps)
 - Hero planes rebuild v2.0 (6 planes on CSS motion path, 87% code reduction, constant speed)
 **2025-10-15:** Code cleanup (removed unused clip-path files)
+**2025-11-21:**
+- Search system v2.0 (progressive prefix matching, improved filtering, CompleteSetup dropdown UX)
+- Company information update: Changed legal name from "Pilot Setups SRL" to "Pilot Setups"
+- Removed Tax ID and physical address from all pages (Footer, About Us, Terms, Privacy Policy)
+- Updated contact email to "pilotsetup@gmail.com" throughout the app
+- About Us page restructure:
+  - Removed "Who We Are" section
+  - Moved mission statement to page header
+  - Added "More Sites" section with "Coming soon..." placeholder
+  - Fixed TOC scroll detection logic for accurate section highlighting
+  - Improved active section detection with target position calculation (120px from viewport top)
+  - Added initialization delay to ensure proper DOM layout before scroll detection
 
 ---
 

@@ -1,0 +1,24 @@
+<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+    <!-- Baza/panel -->
+    <rect x="3" y="18" width="18" height="3" rx="1" />
+
+    <!-- Throttle stânga - slot -->
+    <line x1="8" y1="18" x2="8" y2="4" />
+    <!-- Throttle stânga - mâner -->
+    <rect x="6" y="6" width="4" height="5" rx="1" />
+
+    <!-- Throttle dreapta - slot -->
+    <line x1="16" y1="18" x2="16" y2="4" />
+    <!-- Throttle dreapta - mâner (poziție diferită) -->
+    <rect x="14" y="10" width="4" height="5" rx="1" />
+
+    <!-- Gradații stânga -->
+    <line x1="5" y1="8" x2="6" y2="8" />
+    <line x1="5" y1="12" x2="6" y2="12" />
+    <line x1="5" y1="16" x2="6" y2="16" />
+
+    <!-- Gradații dreapta -->
+    <line x1="18" y1="8" x2="19" y2="8" />
+    <line x1="18" y1="12" x2="19" y2="12" />
+    <line x1="18" y1="16" x2="19" y2="16" />
+</svg>

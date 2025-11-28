@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { HeroPlanes } from './HeroPlanes';
+import { HeroImageCarousel } from './HeroImageCarousel';
 
 const HeroDesk: React.FC = () => {
   const platforms = ['MSFS 2020', 'MSFS 2024', 'X-Plane 11', 'X-Plane 12'];
@@ -32,7 +33,7 @@ const HeroDesk: React.FC = () => {
             <div className="space-y-4">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
                 <span className="text-dark-100">
-                  Perfect Flight Sim
+                  Perfect Pilot
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-accent-400 to-accent-600 bg-clip-text text-transparent">
@@ -67,25 +68,9 @@ const HeroDesk: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column - Desk Setup Image */}
+          {/* Right Column - Carousel of Desk Setup Images */}
           <div className="relative z-30">
-            {/* Actual Desk Setup Photo */}
-            <div className="glass p-2 rounded-2xl">
-              <div className="relative aspect-video rounded-lg overflow-hidden">
-                <img
-                  src="/landingPaige/landingPaigeImage.png"
-                  alt="Flight simulator desk setup with HOTAS, throttle, and control panels"
-                  className="w-full h-full object-cover"
-                  loading="eager"
-                />
-              </div>
-
-              {/* LED Accents */}
-              <div className="absolute -top-1 -left-1 w-2 h-2 bg-accent-400 rounded-full opacity-60 animate-pulse"></div>
-              <div className="absolute -top-1 -right-1 w-2 h-2 bg-accent-400 rounded-full opacity-60 animate-pulse" style={{ animationDelay: '1s' }}></div>
-              <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-accent-400 rounded-full opacity-60 animate-pulse" style={{ animationDelay: '2s' }}></div>
-              <div className="absolute -bottom-1 -right-1 w-2 h-2 bg-accent-400 rounded-full opacity-60 animate-pulse" style={{ animationDelay: '3s' }}></div>
-            </div>
+            <HeroImageCarousel />
           </div>
         </div>
       </div>

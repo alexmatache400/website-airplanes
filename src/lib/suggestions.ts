@@ -14,8 +14,10 @@ export const CATEGORY_EQUIVALENCE: Record<Product['category'], Product['category
   Throttle: ['Throttle'],
   Pedals: ['Pedals'],
   Panel: ['Panel'],
-  Mount: ['Mount'],
-  Accessory: ['Accessory'],
+  MCDU: ['MCDU'],
+  Rudder: ['Rudder'],
+  Base: ['Base'],
+  Accessories: ['Accessories'],
 };
 
 /**
@@ -28,6 +30,7 @@ export interface SuggestionInput {
   allProducts: Product[]; // Product catalog
   seed?: string; // For reproducible randomness
   lockedSuggestions?: Map<string, Product>; // Locked suggestions per category
+  roleType?: 'Pilot' | 'Copilot'; // Filter products by role (Universal always included)
 }
 
 /**
@@ -139,7 +142,7 @@ function calculateMissingNeeds(
  * @returns Structured result with suggestions and metadata
  */
 export function generateSuggestions(input: SuggestionInput): SuggestionResult {
-  const { aircraft, tier, owned, allProducts, seed = '', lockedSuggestions = new Map() } = input;
+  const { aircraft, tier, owned, allProducts, seed = '', lockedSuggestions = new Map(), roleType } = input;
   const random = createSeededRandom(seed);
   const warnings: string[] = [];
   const suggestions: Product[] = [];
@@ -191,6 +194,11 @@ export function generateSuggestions(input: SuggestionInput): SuggestionResult {
 
       // Tier matching: prefer exact match, allow if no tier specified
       if (product.tier && product.tier !== tier) return false;
+
+      // Role filtering: only include products matching roleType or Universal
+      if (roleType && product.roleType !== roleType && product.roleType !== 'Universal') {
+        return false;
+      }
 
       return true;
     });
@@ -253,7 +261,7 @@ export function replaceSuggestion(
   input: SuggestionInput,
   excludeIds: Set<string> = new Set()
 ): Product | null {
-  const { tier, owned, allProducts, seed = '' } = input;
+  const { tier, owned, allProducts, seed = '', roleType } = input;
   const random = createSeededRandom(seed + categoryToReplace + Date.now()); // Add timestamp for variety
 
   // Combine owned IDs, current suggestion IDs, and exclude IDs
@@ -273,6 +281,11 @@ export function replaceSuggestion(
     if (!satisfiedCategories.includes(categoryToReplace)) return false;
 
     if (product.tier && product.tier !== tier) return false;
+
+    // Role filtering: only include products matching roleType or Universal
+    if (roleType && product.roleType !== roleType && product.roleType !== 'Universal') {
+      return false;
+    }
 
     return true;
   });

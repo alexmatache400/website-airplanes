@@ -1,0 +1,35 @@
+<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+    <!-- Perete stânga -->
+    <line x1="2" y1="2" x2="2" y2="20" />
+    <line x1="2" y1="2" x2="5" y2="2" />
+
+    <!-- Perete dreapta -->
+    <line x1="22" y1="2" x2="22" y2="20" />
+    <line x1="19" y1="2" x2="22" y2="2" />
+
+    <!-- Scaun central mare (suite) -->
+    <rect x="7" y="4" width="10" height="8" rx="2" />
+    <rect x="7" y="12" width="10" height="5" rx="1" />
+
+    <!-- Tetieră premium -->
+    <path d="M9 5 Q12 3, 15 5" />
+
+    <!-- Picioare scaun -->
+    <line x1="8" y1="17" x2="8" y2="20" />
+    <line x1="16" y1="17" x2="16" y2="20" />
+
+    <!-- Masă stânga -->
+    <rect x="3" y="10" width="3" height="6" rx="0.5" />
+    <circle cx="4.5" cy="12" r="0.5" fill="currentColor" />
+
+    <!-- Masă dreapta -->
+    <rect x="18" y="10" width="3" height="6" rx="0.5" />
+    <circle cx="19.5" cy="12" r="0.5" fill="currentColor" />
+
+    <!-- Cotiere late pe scaun -->
+    <line x1="7" y1="10" x2="7" y2="14" />
+    <line x1="17" y1="10" x2="17" y2="14" />
+
+    <!-- Baza/podea -->
+    <line x1="2" y1="21" x2="22" y2="21" />
+</svg>

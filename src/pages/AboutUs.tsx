@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, MapPin, ExternalLink, CheckCircle2 } from 'lucide-react';
+import { Mail, ExternalLink, CheckCircle2 } from 'lucide-react';
 import { COMPLIANCE, DISCLOSURE_TEXT } from '../config/compliance';
 
 const AboutUs: React.FC = () => {
@@ -35,13 +35,6 @@ const AboutUs: React.FC = () => {
       logo: `${COMPLIANCE.site.baseUrl}${COMPLIANCE.seo.logoUrl}`,
       description: COMPLIANCE.seo.siteDescription,
       email: COMPLIANCE.site.contactEmail,
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: COMPLIANCE.site.address.line,
-        addressLocality: COMPLIANCE.site.address.city,
-        postalCode: COMPLIANCE.site.address.postcode,
-        addressCountry: COMPLIANCE.site.address.country,
-      },
       sameAs: Object.values(COMPLIANCE.social).filter(Boolean),
     };
 
@@ -81,7 +74,7 @@ const AboutUs: React.FC = () => {
   useEffect(() => {
     const handleScroll = () => {
       const sections = [
-        'who-we-are',
+        'more-sites',
         'affiliate-disclosure',
         'scope-and-liability',
         'editorial-standards',
@@ -90,22 +83,58 @@ const AboutUs: React.FC = () => {
         'contact',
       ];
 
+      // Target position: slightly below top of viewport to account for scroll margin
+      const targetPosition = 120;
+      let closestSection = '';
+      let closestDistance = Infinity;
+
       for (const sectionId of sections) {
         const element = document.getElementById(sectionId);
         if (element) {
           const rect = element.getBoundingClientRect();
-          if (rect.top >= 0 && rect.top < window.innerHeight / 2) {
-            setActiveSection(sectionId);
-            break;
+
+          // Calculate distance from target position (120px from top)
+          const distance = Math.abs(rect.top - targetPosition);
+
+          // Section is visible if it's in or near the viewport
+          const isVisible = rect.bottom > 0 && rect.top < window.innerHeight;
+
+          if (isVisible && distance < closestDistance) {
+            closestDistance = distance;
+            closestSection = sectionId;
           }
         }
+      }
+
+      // Fallback: if no section is close to target, find the one currently in viewport
+      if (!closestSection) {
+        for (const sectionId of sections) {
+          const element = document.getElementById(sectionId);
+          if (element) {
+            const rect = element.getBoundingClientRect();
+            if (rect.top >= 0 && rect.top < window.innerHeight) {
+              closestSection = sectionId;
+              break;
+            }
+          }
+        }
+      }
+
+      if (closestSection) {
+        setActiveSection(closestSection);
       }
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll();
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    // Call immediately and again after short delay to ensure DOM is ready
+    handleScroll();
+    const timeoutId = setTimeout(handleScroll, 100);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   const scrollToSection = (sectionId: string) => {
@@ -116,7 +145,7 @@ const AboutUs: React.FC = () => {
   };
 
   const tocSections = [
-    { id: 'who-we-are', label: 'Who We Are' },
+    { id: 'more-sites', label: 'More Sites' },
     { id: 'affiliate-disclosure', label: 'Affiliate Disclosure' },
     { id: 'scope-and-liability', label: 'What We Do' },
     { id: 'editorial-standards', label: 'Editorial Integrity' },
@@ -180,38 +209,18 @@ const AboutUs: React.FC = () => {
             {/* Header */}
             <header className="space-y-4">
               <h1 className="text-4xl font-bold text-dark-100">About Us</h1>
-              <p className="text-lg text-dark-300">
-                Everything you need to know about {COMPLIANCE.seo.siteName}, how we operate, and our commitment to transparency.
+              <p className="text-lg text-dark-300 leading-relaxed">
+                Pilot Setups is a specialized resource for flight simulation enthusiasts seeking expert recommendations on hardware setups for <strong>Microsoft Flight Simulator 2020/2024</strong> and <strong>X-Plane 11/12</strong>.
               </p>
             </header>
 
-            {/* Who We Are */}
-            <section id="who-we-are" className="scroll-mt-24 space-y-4">
-              <h2 className="text-2xl font-bold text-dark-100 border-b border-dark-700 pb-3">Who We Are</h2>
-              <div className="bg-dark-800/40 backdrop-blur-sm rounded-xl border border-dark-700/50 p-6 space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <span className="text-dark-400 font-medium">Legal Name:</span>
-                    <p className="text-dark-100">{COMPLIANCE.site.legalName}</p>
-                  </div>
-                  <div>
-                    <span className="text-dark-400 font-medium">Trade Name:</span>
-                    <p className="text-dark-100">{COMPLIANCE.site.tradeName}</p>
-                  </div>
-                  <div>
-                    <span className="text-dark-400 font-medium">Tax ID (CUI/CIF):</span>
-                    <p className="text-dark-100">{COMPLIANCE.site.taxId}</p>
-                  </div>
-                  <div>
-                    <span className="text-dark-400 font-medium">Registered in:</span>
-                    <p className="text-dark-100">{COMPLIANCE.site.regCountry}</p>
-                  </div>
-                </div>
-                <div className="border-t border-dark-700 pt-4">
-                  <p className="text-dark-300 leading-relaxed">
-                    {COMPLIANCE.seo.siteName} is a specialized resource for flight simulation enthusiasts seeking expert recommendations on hardware setups for <strong>Microsoft Flight Simulator 2020/2024</strong> and <strong>X-Plane 11/12</strong>.
-                  </p>
-                </div>
+            {/* More Sites */}
+            <section id="more-sites" className="scroll-mt-24 space-y-4">
+              <h2 className="text-2xl font-bold text-dark-100 border-b border-dark-700 pb-3">More Sites</h2>
+              <div className="bg-dark-800/40 backdrop-blur-sm rounded-xl border border-dark-700/50 p-6">
+                <p className="text-dark-300 text-center py-8">
+                  Coming soon...
+                </p>
               </div>
             </section>
 
@@ -297,27 +306,14 @@ const AboutUs: React.FC = () => {
             {/* Contact */}
             <section id="contact" className="scroll-mt-24 space-y-4">
               <h2 className="text-2xl font-bold text-dark-100 border-b border-dark-700 pb-3">Contact Us</h2>
-              <div className="bg-dark-800/40 backdrop-blur-sm rounded-xl border border-dark-700/50 p-6 space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="flex items-start gap-3">
-                    <Mail className="w-5 h-5 text-accent-400 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h3 className="font-medium text-dark-100 mb-1">Email</h3>
-                      <a href={`mailto:${COMPLIANCE.site.contactEmail}`} className="text-accent-400 hover:text-accent-300 underline">
-                        {COMPLIANCE.site.contactEmail}
-                      </a>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <MapPin className="w-5 h-5 text-accent-400 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h3 className="font-medium text-dark-100 mb-1">Address</h3>
-                      <address className="text-dark-300 not-italic text-sm">
-                        {COMPLIANCE.site.address.line}<br />
-                        {COMPLIANCE.site.address.city}, {COMPLIANCE.site.address.postcode}<br />
-                        {COMPLIANCE.site.address.country}
-                      </address>
-                    </div>
+              <div className="bg-dark-800/40 backdrop-blur-sm rounded-xl border border-dark-700/50 p-6">
+                <div className="flex items-start gap-3">
+                  <Mail className="w-5 h-5 text-accent-400 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h3 className="font-medium text-dark-100 mb-1">Email</h3>
+                    <a href={`mailto:${COMPLIANCE.site.contactEmail}`} className="text-accent-400 hover:text-accent-300 underline">
+                      {COMPLIANCE.site.contactEmail}
+                    </a>
                   </div>
                 </div>
               </div>

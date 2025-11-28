@@ -7,17 +7,10 @@
 
 export const COMPLIANCE = {
   site: {
-    legalName: 'Flight Sim Setups SRL',
-    tradeName: 'Flight Sim Setups',
-    taxId: 'RO12345678', // CUI/CIF - to be replaced with actual
+    legalName: 'Pilot Setups',
+    tradeName: 'Pilot Setups',
     regCountry: 'Romania',
-    address: {
-      line: 'Str. Aviatorilor nr. 1',
-      city: 'Bucharest',
-      postcode: '010101',
-      country: 'Romania',
-    },
-    contactEmail: 'contact@flightsimsetups.com',
+    contactEmail: 'pilotsetup@gmail.com',
     baseUrl: 'https://flightsimsetups.com',
     lastUpdatedISO: '2025-10-13',
     businessHours: 'Monday - Friday, 9:00 - 17:00 EET',
@@ -46,7 +39,7 @@ export const COMPLIANCE = {
     discord: '',
   },
   seo: {
-    siteName: 'Flight Sim Setups',
+    siteName: 'Pilot Setups',
     siteDescription: 'Expert flight simulator hardware recommendations, comparisons, and setup guides for MSFS 2020/2024 and X-Plane 11/12.',
     logoUrl: '/logo.png', // Update with actual logo path
   },

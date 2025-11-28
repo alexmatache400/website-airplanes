@@ -1,14 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { listProducts, findProductByName, type Product } from '../lib/products';
 import ProductCard from '../components/ProductCard';
+import { CustomDropdown, type DropdownOption } from '../components/CustomDropdown';
 
-type Category = 'All' | 'HOTAS' | 'Throttle' | 'Joystick' | 'Pedals' | 'Panel' | 'Mount' | 'Accessory' | 'Bundle';
+type Category = 'All' | 'HOTAS' | 'Throttle' | 'Joystick' | 'Pedals' | 'Panel' | 'Bundle' | 'MCDU' | 'Rudder' | 'Base' | 'Accessories';
+type RoleType = 'All' | 'Pilot' | 'Copilot';
 
 const Products: React.FC = () => {
   const [searchParams] = useSearchParams();
   const [allProducts] = useState<Product[]>(listProducts());
   const [selectedCategory, setSelectedCategory] = useState<Category>('All');
+  const [selectedRole, setSelectedRole] = useState<RoleType>('All');
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
   const productRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const [isLightMode, setIsLightMode] = useState(false);
@@ -30,10 +33,57 @@ const Products: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Filter products by category
-  const products = selectedCategory === 'All'
-    ? allProducts
-    : allProducts.filter(p => p.category === selectedCategory);
+  // Filter products by category and role
+  // Universal products always show regardless of role selection
+  // Accessories only appear when explicitly selected in category filter
+  const products = allProducts.filter(p => {
+    // Accessories ONLY show when explicitly selected (not in "All Products")
+    if (p.category === 'Accessories') {
+      return selectedCategory === 'Accessories';
+    }
+
+    // For all other products, apply normal category and role filtering
+    const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
+    const matchesRole = selectedRole === 'All' || p.roleType === selectedRole || p.roleType === 'Universal';
+
+    return matchesCategory && matchesRole;
+  });
+
+  // Category dropdown options with icons
+  const categoryOptions: DropdownOption[] = useMemo(() => [
+    { value: 'All', label: 'All Products', count: allProducts.length },
+    { value: 'HOTAS', label: 'HOTAS', icon: 'hotas', count: allProducts.filter(p => p.category === 'HOTAS').length },
+    { value: 'Throttle', label: 'Throttle', icon: 'throttle', count: allProducts.filter(p => p.category === 'Throttle').length },
+    { value: 'Joystick', label: 'Joystick', icon: 'joystick', count: allProducts.filter(p => p.category === 'Joystick').length },
+    { value: 'Pedals', label: 'Pedals', icon: 'pedals', count: allProducts.filter(p => p.category === 'Pedals').length },
+    { value: 'Panel', label: 'Panel', icon: 'panel', count: allProducts.filter(p => p.category === 'Panel').length },
+    { value: 'MCDU', label: 'MCDU', icon: 'mcdu', count: allProducts.filter(p => p.category === 'MCDU').length },
+    { value: 'Rudder', label: 'Rudder', icon: 'rudder', count: allProducts.filter(p => p.category === 'Rudder').length },
+    { value: 'Base', label: 'Base', icon: 'base', count: allProducts.filter(p => p.category === 'Base').length },
+    { value: 'Accessories', label: 'Accessories', icon: 'accessories', count: allProducts.filter(p => p.category === 'Accessories').length },
+    { value: 'Bundle', label: 'Bundle', icon: 'bundles', count: allProducts.filter(p => p.category === 'Bundle').length },
+  ], [allProducts]);
+
+  // Role dropdown options with icons
+  const roleOptions: DropdownOption[] = useMemo(() => [
+    {
+      value: 'All',
+      label: 'All Roles',
+      count: allProducts.filter(p => selectedCategory === 'All' || p.category === selectedCategory).length
+    },
+    {
+      value: 'Pilot',
+      label: 'Pilot',
+      icon: 'pilot',
+      count: allProducts.filter(p => (selectedCategory === 'All' || p.category === selectedCategory) && (p.roleType === 'Pilot' || p.roleType === 'Universal')).length
+    },
+    {
+      value: 'Copilot',
+      label: 'Copilot',
+      icon: 'copilot',
+      count: allProducts.filter(p => (selectedCategory === 'All' || p.category === selectedCategory) && (p.roleType === 'Copilot' || p.roleType === 'Universal')).length
+    },
+  ], [allProducts, selectedCategory]);
 
   // Handle search query from URL
   useEffect(() => {
@@ -96,47 +146,49 @@ const Products: React.FC = () => {
             Flight Sim Hardware
           </h1>
           <p className="text-slate-400 text-lg">
-            Premium HOTAS, pedals, and panels for serious sim pilots
+            Premium Equipment chosen by pilots for pilots
           </p>
         </div>
 
-        {/* Category Filter */}
-        <div className="mb-8 max-w-2xl mx-auto">
-          <label
-            htmlFor="category-select"
-            className="block text-lg font-medium text-dropdown-text mb-3"
-          >
-            Filter by Product Type
-          </label>
-          <select
-            id="category-select"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value as Category)}
-            className="w-full bg-dropdown-bg text-dropdown-text border-2 border-dropdown-border rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-dropdown-focus-ring focus:border-transparent hover:bg-dropdown-hover-bg transition-colors appearance-none cursor-pointer"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M2 4l4 4 4-4'/%3E%3C/svg%3E")`,
-              backgroundPosition: 'right 1rem center',
-              backgroundRepeat: 'no-repeat',
-              paddingRight: '2.5rem'
-            }}
-          >
-            <option value="All">All Products ({allProducts.length})</option>
-            <option value="HOTAS">🕹️ HOTAS ({allProducts.filter(p => p.category === 'HOTAS').length})</option>
-            <option value="Throttle">🎚️ Throttle ({allProducts.filter(p => p.category === 'Throttle').length})</option>
-            <option value="Joystick">🎮 Joystick ({allProducts.filter(p => p.category === 'Joystick').length})</option>
-            <option value="Pedals">🦶 Pedals ({allProducts.filter(p => p.category === 'Pedals').length})</option>
-            <option value="Panel">📱 Panel ({allProducts.filter(p => p.category === 'Panel').length})</option>
-            <option value="Mount">🔧 Mount ({allProducts.filter(p => p.category === 'Mount').length})</option>
-            <option value="Accessory">⚙️ Accessory ({allProducts.filter(p => p.category === 'Accessory').length})</option>
-            <option value="Bundle">📦 Bundle ({allProducts.filter(p => p.category === 'Bundle').length})</option>
-          </select>
-        </div>
+        {/* Filter Section - Category and Role */}
+        <div className="mb-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Select Flight Gear Dropdown */}
+            <div>
+              <label
+                id="category-select-label"
+                htmlFor="category-select"
+                className="block text-lg font-medium text-dropdown-text mb-3"
+              >
+                Select Flight Gear
+              </label>
+              <CustomDropdown
+                id="category-select"
+                value={selectedCategory}
+                onChange={(value) => setSelectedCategory(value as Category)}
+                options={categoryOptions}
+                placeholder="-- Select a category --"
+              />
+            </div>
 
-        {/* Product Count */}
-        <div className="mb-6 text-center">
-          <p className="text-sm text-slate-400">
-            Showing {products.length} {selectedCategory === 'All' ? 'products' : `${selectedCategory} products`}
-          </p>
+            {/* Your Role Dropdown */}
+            <div>
+              <label
+                id="role-select-label"
+                htmlFor="role-select"
+                className="block text-lg font-medium text-dropdown-text mb-3"
+              >
+                Your Role
+              </label>
+              <CustomDropdown
+                id="role-select"
+                value={selectedRole}
+                onChange={(value) => setSelectedRole(value as RoleType)}
+                options={roleOptions}
+                placeholder="-- Select a role --"
+              />
+            </div>
+          </div>
         </div>
 
         {/* 2-per-row grid on md+, 1 per row on mobile */}
@@ -153,6 +205,21 @@ const Products: React.FC = () => {
               <ProductCard product={product} />
             </div>
           ))}
+        </div>
+
+        {/* Product Count - Bottom */}
+        <div className="mt-8 text-center">
+          <p className="text-sm text-slate-400">
+            Showing {products.length} {
+              selectedCategory === 'All' && selectedRole === 'All'
+                ? 'products'
+                : selectedCategory === 'All'
+                ? `products for ${selectedRole}`
+                : selectedRole === 'All'
+                ? `${selectedCategory} products`
+                : `${selectedCategory} products for ${selectedRole}`
+            }
+          </p>
         </div>
         </div>
       </div>

@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Product } from '../lib/products';
 import Modal from './Modal';
 import Lightbox from './Lightbox';
+import { CategoryIcon } from './CategoryIcon';
 
 interface ProductCardProps {
   product: Product;
@@ -20,27 +21,25 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const navigate = useNavigate();
   const didPushStateRef = useRef(false);
 
-  // Category-based colors
-  const categoryColors = {
-    HOTAS: 'from-sky-500/20 to-blue-600/20 border-sky-500/30 text-sky-300',
-    Throttle: 'from-teal-500/20 to-teal-600/20 border-teal-500/30 text-teal-300',
-    Joystick: 'from-indigo-500/20 to-indigo-600/20 border-indigo-500/30 text-indigo-300',
-    Pedals: 'from-cyan-500/20 to-cyan-600/20 border-cyan-500/30 text-cyan-300',
-    Panel: 'from-violet-500/20 to-violet-600/20 border-violet-500/30 text-violet-300',
-    Mount: 'from-emerald-500/20 to-emerald-600/20 border-emerald-500/30 text-emerald-300',
-    Accessory: 'from-slate-500/20 to-slate-600/20 border-slate-500/30 text-slate-300',
-    Bundle: 'from-purple-500/20 to-purple-600/20 border-purple-500/30 text-purple-300',
+  // Helper function to truncate text to specified length
+  const truncateText = (text: string, maxLength: number = 100): string => {
+    if (text.length <= maxLength) return text;
+    return text.slice(0, maxLength).trim() + '...';
   };
 
-  const categoryIcons = {
-    HOTAS: '🕹️',
-    Throttle: '🎚️',
-    Joystick: '🎮',
-    Pedals: '🦶',
-    Panel: '📱',
-    Mount: '🔧',
-    Accessory: '⚙️',
-    Bundle: '📦',
+  // Category-based colors (with light mode support)
+  const categoryColors = {
+    HOTAS: 'from-sky-500/20 to-blue-600/20 border-sky-500/30 text-sky-200\n' +
+        'dark:from-sky-500/70 dark:to-blue-600/70 dark:border-sky-700 dark:text-sky-650\n',
+    Throttle: 'from-emerald-300/40 to-emerald-500/80 border-emerald-600 text-slate-900 dark:from-emerald-500/30 dark:to-emerald-700/70 dark:border-emerald-400 dark:text-slate-50',
+    Joystick: 'from-violet-400/40 to-fuchsia-500/80 border-violet-600 text-slate-900 dark:from-violet-500/40 dark:to-fuchsia-600/70 dark:border-violet-400 dark:text-slate-50',
+    Pedals: 'from-amber-200/60 to-amber-400/90 border-amber-500 text-slate-900 dark:from-amber-400/30 dark:to-amber-600/70 dark:border-amber-300 dark:text-slate-50',
+    Panel: 'from-rose-300/50 to-rose-500/90 border-rose-600 text-slate-900 dark:from-rose-500/30 dark:to-rose-700/70 dark:border-rose-400 dark:text-slate-50',
+    MCDU: 'from-cyan-300/40 to-cyan-500/80 border-cyan-600 text-slate-900 dark:from-cyan-500/30 dark:to-cyan-700/70 dark:border-cyan-400 dark:text-slate-50',
+    Rudder: 'from-orange-300/40 to-orange-500/80 border-orange-600 text-slate-900 dark:from-orange-500/30 dark:to-orange-700/70 dark:border-orange-400 dark:text-slate-50',
+    Base: 'from-teal-300/40 to-teal-500/80 border-teal-600 text-slate-900 dark:from-teal-500/30 dark:to-teal-700/80 dark:border-teal-400 dark:text-slate-50',
+    Accessories: 'from-indigo-300/40 to-indigo-500/80 border-indigo-600 text-slate-900 dark:from-indigo-500/30 dark:to-indigo-700/70 dark:border-indigo-400 dark:text-slate-50',
+    Bundle: 'from-slate-200/80 to-slate-400/90 border-slate-500 text-slate-900 dark:from-slate-600/40 dark:to-slate-800/80 dark:border-slate-500 dark:text-slate-50\n',
   };
 
   // Check if this product's modal should be open based on URL
@@ -95,7 +94,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const FallbackAvatar = () => (
     <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-dark-700 to-dark-800">
       <div className="text-center space-y-2">
-        <div className="text-4xl opacity-40">{categoryIcons[product.category]}</div>
+        <div className="opacity-40">
+          <CategoryIcon category={product.category} size={48} className="w-12 h-12 mx-auto" />
+        </div>
         <div className="text-sm text-dark-400">{product.category}</div>
       </div>
     </div>
@@ -158,12 +159,15 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
         {/* Category Badge (top-left) */}
         <div className={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${categoryColors[product.category]} backdrop-blur-sm border`}>
-          {categoryIcons[product.category]} {product.category}
+          <span className="inline-flex items-center gap-1.5">
+            <CategoryIcon category={product.category} className="w-3.5 h-3.5 flex-shrink-0" />
+            <span>{product.category}</span>
+          </span>
         </div>
 
         {/* Price Badge */}
         {(product.price_eur || product.price_label) && (
-          <div className="absolute top-3 right-3 bg-dark-900/80 backdrop-blur-sm text-accent-400 px-2 py-1 rounded-full text-sm font-semibold">
+          <div className="absolute top-3 right-3 bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-sky-900 dark:text-accent-400 px-2 py-1 rounded-full text-sm font-semibold border border-slate-300 dark:border-transparent">
             {product.price_eur ? formatPrice(product.price_eur) : product.price_label}
           </div>
         )}
@@ -174,13 +178,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
         {/* Product Name */}
         <div>
           <h3 className="font-semibold text-dark-100 mb-1 line-clamp-2 group-hover:text-accent-400 transition-colors duration-200">
-            {product.name}
+            {truncateText(product.name, 40)}
           </h3>
         </div>
 
         {/* Description */}
         <p className="text-sm text-dark-300 line-clamp-2">
-          {product.description}
+          {truncateText(product.description, 40)}
         </p>
 
         {/* Compatible with */}
@@ -217,7 +221,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
         {/* Product Header Info */}
         <div className="flex flex-wrap items-center gap-2 mb-6">
           <span className={`px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${categoryColors[product.category]} backdrop-blur-sm border`}>
-            {categoryIcons[product.category]} {product.category}
+            <span className="inline-flex items-center gap-1.5">
+              <CategoryIcon category={product.category} className="w-3.5 h-3.5 flex-shrink-0" />
+              <span>{product.category}</span>
+            </span>
           </span>
         </div>
 

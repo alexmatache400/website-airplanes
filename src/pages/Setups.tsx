@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { getProductsByIds, type Tier } from '../lib/products';
+import React, { useState, useEffect, useMemo } from 'react';
+import { getProductsByIds, type Tier, type Product } from '../lib/products';
 import ProductCard from '../components/ProductCard';
 import setupsData from '../data/setups.json';
+import AirplaneAnimation from '../components/AirplaneAnimation';
+import { CustomDropdown, type DropdownOption } from '../components/CustomDropdown';
+import { CategoryIcon } from '../components/CategoryIcon';
 
 type AircraftModel =
   | 'F-16 Viper'
@@ -17,12 +20,7 @@ type AircraftModel =
   | 'A321neo'
   | '';
 
-interface SetupMapping {
-  [key: string]: {
-    productIds: string[];
-    description: string;
-  };
-}
+type RoleType = '' | 'Pilot' | 'Copilot';
 
 interface AirbusSetup {
   aircraft: string;
@@ -37,7 +35,10 @@ interface AirbusSetup {
 const Setups: React.FC = () => {
   const [selectedAircraft, setSelectedAircraft] = useState<AircraftModel>('');
   const [selectedTier, setSelectedTier] = useState<Tier | 'All'>('All');
+  const [selectedRole, setSelectedRole] = useState<RoleType>('');
   const [isLightMode, setIsLightMode] = useState(false);
+
+  const setup = setupsData as AirbusSetup[];
 
   // Track theme for conditional background image
   useEffect(() => {
@@ -56,15 +57,47 @@ const Setups: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  const setup = setupsData as AirbusSetup[];
+  // Load saved selections from localStorage on mount
+  useEffect(() => {
+    const savedAircraft = localStorage.getItem('setups_selectedAircraft');
+    const savedRole = localStorage.getItem('setups_selectedRole');
+    const savedTier = localStorage.getItem('setups_selectedTier');
 
-  const handleAircraftChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedAircraft(e.target.value as AircraftModel);
+    // Validate and restore aircraft
+    if (savedAircraft && setup.find(s => s.aircraft === savedAircraft)) {
+      setSelectedAircraft(savedAircraft as AircraftModel);
+    }
+
+    // Validate and restore role
+    if (savedRole && (savedRole === '' || savedRole === 'Pilot' || savedRole === 'Copilot')) {
+      setSelectedRole(savedRole as RoleType);
+    }
+
+    // Validate and restore tier
+    if (savedTier && (savedTier === 'All' || savedTier === 'First' || savedTier === 'Business' || savedTier === 'Economy')) {
+      setSelectedTier(savedTier as Tier | 'All');
+    }
+  }, [setup]);
+
+  const handleAircraftChange = (value: string) => {
+    const aircraftValue = value as AircraftModel;
+    setSelectedAircraft(aircraftValue);
+    localStorage.setItem('setups_selectedAircraft', aircraftValue);
     setSelectedTier('All'); // Reset tier filter when aircraft changes
+    localStorage.setItem('setups_selectedTier', 'All');
+    // Note: selectedRole persists across aircraft changes (per user preference)
   };
 
-  const handleTierChange = (tier: Tier | 'All') => {
-    setSelectedTier(tier);
+  const handleTierChange = (value: string) => {
+    const tierValue = value as Tier | 'All';
+    setSelectedTier(tierValue);
+    localStorage.setItem('setups_selectedTier', tierValue);
+  };
+
+  const handleRoleChange = (value: string) => {
+    const roleValue = value as RoleType;
+    setSelectedRole(roleValue);
+    localStorage.setItem('setups_selectedRole', roleValue);
   };
 
   // Get setup data for selected aircraft
@@ -73,6 +106,53 @@ const Setups: React.FC = () => {
 
     return setup.find(setup => setup.aircraft === selectedAircraft);
   };
+
+  // Filter products by role
+  // Universal products always show regardless of Pilot/Copilot selection
+  // Returns empty array if no role is selected (empty string)
+  const filterProductsByRole = (products: Product[]): Product[] => {
+    if (selectedRole === '') {
+      return []; // No role selected, show empty state instead
+    }
+    return products.filter(
+      product => product.roleType === selectedRole || product.roleType === 'Universal'
+    );
+  };
+
+  // Aircraft dropdown options with optgroups
+  const aircraftOptions: DropdownOption[] = useMemo(() => [
+    { value: '', label: '-- Select an aircraft --' },
+    // Fighter Jets
+    { value: 'F-16 Viper', label: 'F-16 Viper', group: 'Fighter Jets' },
+    { value: 'F/A-18 Hornet', label: 'F/A-18 Hornet', group: 'Fighter Jets' },
+    // Airbus A320 Family
+    { value: 'A318', label: 'Airbus A318', group: 'Airbus A320 Family' },
+    { value: 'A319', label: 'Airbus A319', group: 'Airbus A320 Family' },
+    { value: 'A319neo', label: 'Airbus A319neo', group: 'Airbus A320 Family' },
+    { value: 'A320', label: 'Airbus A320', group: 'Airbus A320 Family' },
+    { value: 'A320neo', label: 'Airbus A320neo', group: 'Airbus A320 Family' },
+    { value: 'A321', label: 'Airbus A321', group: 'Airbus A320 Family' },
+    { value: 'A321neo', label: 'Airbus A321neo', group: 'Airbus A320 Family' },
+    // Other Commercial
+    { value: 'Boeing 737', label: 'Boeing 737', group: 'Other Commercial' },
+    // General Aviation
+    { value: 'General Aviation', label: 'General Aviation', group: 'General Aviation' },
+  ], []);
+
+  // Role dropdown options with icons
+  const roleOptions: DropdownOption[] = useMemo(() => [
+    { value: '', label: '-- Select a role --' },
+    { value: 'Pilot', label: 'Pilot', icon: 'pilot' },
+    { value: 'Copilot', label: 'Copilot', icon: 'copilot' },
+  ], []);
+
+  // Tier dropdown options with icons
+  const tierOptions: DropdownOption[] = useMemo(() => [
+    { value: 'All', label: 'All Tiers' },
+    { value: 'First', label: 'First Class', icon: 'first' },
+    { value: 'Business', label: 'Business Class', icon: 'business' },
+    { value: 'Economy', label: 'Economy Class', icon: 'economy' },
+  ], []);
 
   const currentSetup = getCurrentSetup();
 
@@ -98,180 +178,156 @@ const Setups: React.FC = () => {
         <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-white mb-3">
-            Recommended Setups
+            Full Setups
           </h1>
           <p className="text-slate-400 text-lg">
             Pre-configured hardware bundles for specific aircraft
           </p>
         </div>
 
-        {/* Aircraft Selection Dropdown */}
-        <div className="mb-8 max-w-2xl mx-auto">
-          <label
-            htmlFor="aircraft-select"
-            className="block text-lg font-medium text-dropdown-text mb-3"
-          >
-            Choose Aircraft Model
-          </label>
-          <select
-            id="aircraft-select"
-            value={selectedAircraft}
-            onChange={handleAircraftChange}
-            className="w-full bg-dropdown-bg text-dropdown-text border-2 border-dropdown-border rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-dropdown-focus-ring focus:border-transparent hover:bg-dropdown-hover-bg transition-colors appearance-none cursor-pointer"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M2 4l4 4 4-4'/%3E%3C/svg%3E")`,
-              backgroundPosition: 'right 1rem center',
-              backgroundRepeat: 'no-repeat',
-              paddingRight: '2.5rem'
-            }}
-          >
-            <option value="">-- Select an aircraft --</option>
-            <optgroup label="Fighter Jets">
-              <option value="F-16 Viper">F-16 Viper</option>
-              <option value="F/A-18 Hornet">F/A-18 Hornet</option>
-            </optgroup>
-            <optgroup label="Airbus A320 Family">
-              <option value="A318">Airbus A318</option>
-              <option value="A319">Airbus A319</option>
-              <option value="A319neo">Airbus A319neo</option>
-              <option value="A320">Airbus A320</option>
-              <option value="A320neo">Airbus A320neo</option>
-              <option value="A321">Airbus A321</option>
-              <option value="A321neo">Airbus A321neo</option>
-            </optgroup>
-            <optgroup label="Other Commercial">
-              <option value="Boeing 737">Boeing 737</option>
-            </optgroup>
-            <optgroup label="General Aviation">
-              <option value="General Aviation">General Aviation</option>
-            </optgroup>
-          </select>
+        {/* Aircraft and Role Selection - 2 Column Layout */}
+        <div className="mb-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Aircraft Dropdown */}
+            <div>
+              <label
+                id="aircraft-select-label"
+                htmlFor="aircraft-select"
+                className="block text-lg font-medium text-dropdown-text mb-3"
+              >
+                Choose Aircraft Model
+              </label>
+              <CustomDropdown
+                id="aircraft-select"
+                value={selectedAircraft}
+                onChange={handleAircraftChange}
+                options={aircraftOptions}
+                placeholder="-- Select an aircraft --"
+              />
+            </div>
+
+            {/* Your Role Dropdown */}
+            <div>
+              <label
+                id="role-select-label"
+                htmlFor="role-select"
+                className="block text-lg font-medium text-dropdown-text mb-3"
+              >
+                Your Role
+              </label>
+              <CustomDropdown
+                id="role-select"
+                value={selectedRole}
+                onChange={handleRoleChange}
+                options={roleOptions}
+                placeholder="-- Select a role --"
+              />
+            </div>
+          </div>
         </div>
 
-        {currentSetup && (
-          <div className="mb-8 max-w-2xl mx-auto">
-            <label className="block text-lg font-medium text-dropdown-text mb-3">
-              Equipment Tier
-            </label>
-            <div className="flex flex-wrap gap-3">
-              <button
-                onClick={() => handleTierChange('All')}
-                className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
-                  selectedTier === 'All'
-                    ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/50'
-                    : 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700'
-                }`}
-              >
-                All Tiers
-              </button>
-              <button
-                onClick={() => handleTierChange('First')}
-                className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
-                  selectedTier === 'First'
-                    ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/50'
-                    : 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700'
-                }`}
-              >
-                🥇 First Class
-              </button>
-              <button
-                onClick={() => handleTierChange('Business')}
-                className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
-                  selectedTier === 'Business'
-                    ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/50'
-                    : 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700'
-                }`}
-              >
-                🥈 Business Class
-              </button>
-              <button
-                onClick={() => handleTierChange('Economy')}
-                className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
-                  selectedTier === 'Economy'
-                    ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/50'
-                    : 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700'
-                }`}
-              >
-                🥉 Economy Class
-              </button>
+        {/* Equipment Tier Dropdown + Animation (2-Column Layout) */}
+        {selectedAircraft && selectedRole && currentSetup && (
+          <div className="mb-8 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Left: Equipment Tier Dropdown */}
+              <div className={isLightMode ? 'md:col-span-2' : ''}>
+                <div className={isLightMode ? 'max-w-md mx-auto' : ''}>
+                  <label
+                    id="tier-select-label"
+                    htmlFor="tier-select"
+                    className="block text-lg font-medium text-dropdown-text mb-3"
+                  >
+                    Equipment Tier
+                  </label>
+                  <CustomDropdown
+                    id="tier-select"
+                    value={selectedTier}
+                    onChange={handleTierChange}
+                    options={tierOptions}
+                    placeholder="-- Select tier --"
+                  />
+                </div>
+              </div>
+
+              {/* Right: Airplane Animation (Dark Mode Only) */}
+              {!isLightMode && (
+                <div>
+                  <AirplaneAnimation />
+                </div>
+              )}
             </div>
           </div>
         )}
 
-        {/* Setup Description */}
-        {selectedAircraft && currentSetup && (
-          <div className="max-w-2xl mx-auto mb-8">
-            <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-6">
-              <h2 className="text-2xl font-semibold text-white mb-2">
-                {selectedAircraft} Setup
-              </h2>
-              <p className="text-slate-300">
-                {'description' in currentSetup
-                  ? currentSetup.description
-                  : (currentSetup as any).description}
-              </p>
-            </div>
-          </div>
-        )}
 
         {/* Product Cards - Airbus (Tiered) */}
-        {currentSetup && 'tiers' in currentSetup && (
+        {selectedAircraft && selectedRole && currentSetup && 'tiers' in currentSetup && (
           <>
             {selectedTier === 'All' ? (
               // Show all tiers as separate sections
               <>
                 {/* First Class */}
-                {currentSetup.tiers.First.length > 0 && (
-                  <div className="mb-12">
-                    <div className="flex items-center gap-3 mb-6">
-                      <span className="text-3xl">🥇</span>
-                      <h3 className="text-2xl font-bold text-amber-400">First Class</h3>
-                      <span className="text-sm text-slate-500 ml-auto">Premium tier</span>
+                {currentSetup.tiers.First.length > 0 && (() => {
+                  const filteredProducts = filterProductsByRole(getProductsByIds(currentSetup.tiers.First));
+                  return filteredProducts.length > 0 && (
+                    <div className="mb-12">
+                      <div className="flex items-center gap-3 mb-6">
+                        <CategoryIcon category="first" size={32} className="w-8 h-8 text-amber-400" />
+                        <h3 className="text-2xl font-bold text-amber-400">First Class</h3>
+                        <span className="text-sm text-slate-500 ml-auto">Premium tier</span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {filteredProducts.map((product) => (
+                          <ProductCard key={product.id} product={product} />
+                        ))}
+                      </div>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {getProductsByIds(currentSetup.tiers.First).map((product) => (
-                        <ProductCard key={product.id} product={product} />
-                      ))}
-                    </div>
-                  </div>
-                )}
+                  );
+                })()}
 
                 {/* Business Class */}
-                {currentSetup.tiers.Business.length > 0 && (
-                  <div className="mb-12">
-                    <div className="flex items-center gap-3 mb-6">
-                      <span className="text-3xl">🥈</span>
-                      <h3 className="text-2xl font-bold text-blue-400">Business Class</h3>
-                      <span className="text-sm text-slate-500 ml-auto">Mid-tier</span>
+                {currentSetup.tiers.Business.length > 0 && (() => {
+                  const filteredProducts = filterProductsByRole(getProductsByIds(currentSetup.tiers.Business));
+                  return filteredProducts.length > 0 && (
+                    <div className="mb-12">
+                      <div className="flex items-center gap-3 mb-6">
+                        <CategoryIcon category="business" size={32} className="w-8 h-8 text-blue-400" />
+                        <h3 className="text-2xl font-bold text-blue-400">Business Class</h3>
+                        <span className="text-sm text-slate-500 ml-auto">Mid-tier</span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {filteredProducts.map((product) => (
+                          <ProductCard key={product.id} product={product} />
+                        ))}
+                      </div>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {getProductsByIds(currentSetup.tiers.Business).map((product) => (
-                        <ProductCard key={product.id} product={product} />
-                      ))}
-                    </div>
-                  </div>
-                )}
+                  );
+                })()}
 
                 {/* Economy Class */}
-                {currentSetup.tiers.Economy.length > 0 && (
-                  <div className="mb-12">
-                    <div className="flex items-center gap-3 mb-6">
-                      <span className="text-3xl">🥉</span>
-                      <h3 className="text-2xl font-bold text-emerald-400">Economy Class</h3>
-                      <span className="text-sm text-slate-500 ml-auto">Entry-level</span>
+                {currentSetup.tiers.Economy.length > 0 && (() => {
+                  const filteredProducts = filterProductsByRole(getProductsByIds(currentSetup.tiers.Economy));
+                  return filteredProducts.length > 0 && (
+                    <div className="mb-12">
+                      <div className="flex items-center gap-3 mb-6">
+                        <CategoryIcon category="economy" size={32} className="w-8 h-8 text-emerald-400" />
+                        <h3 className="text-2xl font-bold text-emerald-400">Economy Class</h3>
+                        <span className="text-sm text-slate-500 ml-auto">Entry-level</span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {filteredProducts.map((product) => (
+                          <ProductCard key={product.id} product={product} />
+                        ))}
+                      </div>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {getProductsByIds(currentSetup.tiers.Economy).map((product) => (
-                        <ProductCard key={product.id} product={product} />
-                      ))}
-                    </div>
-                  </div>
-                )}
+                  );
+                })()}
               </>
             ) : (
               // Show only selected tier
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {getProductsByIds(currentSetup.tiers[selectedTier as Tier]).map((product) => (
+                {filterProductsByRole(getProductsByIds(currentSetup.tiers[selectedTier as Tier])).map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>
@@ -288,7 +344,7 @@ const Setups: React.FC = () => {
           </div>
         )} */}
 
-        {/* Empty State */}
+        {/* Empty State 1: No Aircraft Selected */}
         {!selectedAircraft && (
           <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-12 text-center max-w-2xl mx-auto">
             <svg
@@ -306,6 +362,28 @@ const Setups: React.FC = () => {
             </svg>
             <p className="text-slate-400 text-lg">
               Please select an aircraft model to view the recommended setup.
+            </p>
+          </div>
+        )}
+
+        {/* Empty State 2: Aircraft Selected, No Role Selected */}
+        {selectedAircraft && !selectedRole && (
+          <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-12 text-center max-w-2xl mx-auto">
+            <svg
+              className="w-16 h-16 mx-auto mb-4 text-slate-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+              />
+            </svg>
+            <p className="text-slate-400 text-lg">
+              Please select a role to view the recommended setup.
             </p>
           </div>
         )}

@@ -1,6 +1,7 @@
 // Future-proof data access layer
 // Currently reads from static JSON, can be swapped for API/DB calls later
 
+import React from 'react';
 import productsData from '../data/products.json';
 
 export type Tier = 'First' | 'Business' | 'Economy';
@@ -10,7 +11,8 @@ export type Product = {
   brand: 'Winwing' | 'Thrustmaster' | 'Honeycomb' | 'Logitech' | 'WingFlex' | 'Other';
   name: string;
   slug: string;
-  category: 'HOTAS' | 'Throttle' | 'Joystick' | 'Pedals' | 'Panel' | 'Mount' | 'Accessory' | 'Bundle';
+  category: 'HOTAS' | 'Throttle' | 'Joystick' | 'Pedals' | 'Panel' | 'Bundle' | 'MCDU' | 'Rudder' | 'Base' | 'Accessories';
+  roleType: 'Pilot' | 'Copilot' | 'Universal';
   sim_support: Array<'MSFS2020' | 'MSFS2024' | 'XPL11' | 'XPL12'>;
   tier?: Tier;
   price_eur?: number;
@@ -55,6 +57,106 @@ export function listProducts(params: ListProductsParams = {}): Product[] {
   }
 
   return products;
+}
+
+/**
+ * Smart search with prioritization:
+ * 1. Prefix matches (progressive length) - only for queries 3+ chars
+ * 2. Substring matches (anywhere in product name) - for all queries 2+ chars
+ *
+ * @param products - Array of products to search
+ * @param query - Search query (minimum 2 characters required)
+ * @returns Prioritized array of maximum 10 products
+ *
+ * @example
+ * // 2-char query: only substring matches (most filtered)
+ * searchProducts(allProducts, 'or'); // Only products with "or" in name
+ *
+ * // 3-char query: prefix (3 chars) + substring
+ * searchProducts(allProducts, 'ori'); // Products starting with "ori" first, then containing "ori"
+ *
+ * // 4+ char query: prefix (4 chars) + substring (very specific)
+ * searchProducts(allProducts, 'orio'); // Products starting with "orio" first, then containing "orio"
+ */
+export function searchProducts(products: Product[], query: string): Product[] {
+  // Minimum 2 characters required
+  if (query.trim().length < 2) {
+    return [];
+  }
+
+  const normalizedQuery = query.toLowerCase().trim();
+
+  const prefixMatches: Product[] = [];
+  const substringMatches: Product[] = [];
+  const addedIds = new Set<string>(); // Track added products to avoid duplicates
+
+  products.forEach(product => {
+    const name = product.name.toLowerCase();
+    const words = name.split(/\s+/); // Split by whitespace
+
+    // Check if any word starts with the FULL query (not truncated)
+    const hasWordPrefix = words.some(word =>
+      word.startsWith(normalizedQuery)
+    );
+
+    // Check if query appears anywhere in the name (substring)
+    const hasSubstring = name.includes(normalizedQuery);
+
+    if (hasWordPrefix && !addedIds.has(product.id)) {
+      prefixMatches.push(product);
+      addedIds.add(product.id);
+    } else if (hasSubstring && !addedIds.has(product.id)) {
+      substringMatches.push(product);
+      addedIds.add(product.id);
+    }
+  });
+
+  // Combine: prefix first (if applicable), then substring
+  const combined = [...prefixMatches, ...substringMatches];
+
+  // Limit to 10 results
+  return combined.slice(0, 10);
+}
+
+/**
+ * Highlights matching portions of text with orange color
+ * Case-insensitive matching
+ *
+ * @param text - The text to highlight (e.g., product name)
+ * @param query - The search query to match
+ * @returns React fragment with highlighted portions
+ *
+ * @example
+ * // Returns: <>Win<span className="text-orange-500">wing</span> Orion</>
+ * highlightMatch('Winwing Orion', 'wing');
+ */
+export function highlightMatch(text: string, query: string): React.ReactNode {
+  if (!query || query.trim().length < 2) {
+    return text;
+  }
+
+  const normalizedQuery = query.toLowerCase().trim();
+  const lowerText = text.toLowerCase();
+
+  // Find the match position (case-insensitive)
+  const matchIndex = lowerText.indexOf(normalizedQuery);
+
+  if (matchIndex === -1) {
+    return text;
+  }
+
+  // Split text into: before match, match, after match
+  const before = text.slice(0, matchIndex);
+  const match = text.slice(matchIndex, matchIndex + normalizedQuery.length);
+  const after = text.slice(matchIndex + normalizedQuery.length);
+
+  return React.createElement(
+    React.Fragment,
+    null,
+    before,
+    React.createElement('span', { className: 'text-orange-500' }, match),
+    after
+  );
 }
 
 /**
