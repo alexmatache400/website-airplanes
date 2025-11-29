@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Search, X, Dice5, Lock, Unlock, Shuffle } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
-import { listProducts, searchProducts, highlightMatch, type Product, type Tier } from '../lib/products';
+import { listProducts, searchProducts, highlightMatch, filterProductsByFamily, type Product, type Tier } from '../lib/products';
 import { listAircraft, type AircraftPreset } from '../lib/aircraft';
-import { generateSuggestions, replaceSuggestion, type SuggestionResult } from '../lib/suggestions';
+import { generateSuggestions, replaceSuggestion, hasReplacementOptions, type SuggestionResult } from '../lib/suggestions';
 import { CustomDropdown, type DropdownOption } from '../components/CustomDropdown';
 
 type RoleType = '' | 'Pilot' | 'Copilot';
@@ -38,8 +38,9 @@ const CompleteSetup: React.FC = () => {
   }, []);
 
   // Role change handler
-  const handleRoleChange = (value: string) => {
-    const roleValue = value as RoleType;
+  const handleRoleChange = (value: string | string[]) => {
+    const stringValue = Array.isArray(value) ? value[0] : value;
+    const roleValue = stringValue as RoleType;
     setSelectedRole(roleValue);
     localStorage.setItem('completesetup_selectedRole', roleValue);
   };
@@ -99,21 +100,48 @@ const CompleteSetup: React.FC = () => {
   const handleShuffleAll = () => {
     if (!selectedAircraft || !result) return;
 
-    // Keep locked products, reseed others
-    const newSeed = Date.now().toString();
-    setSeed(newSeed);
+    // Create a copy of current suggestions
+    let updatedSuggestions = [...result.suggestions];
 
-    const generatedResult = generateSuggestions({
-      aircraft: selectedAircraft,
-      tier: selectedTier,
-      owned: ownedGear,
-      allProducts,
-      seed: newSeed,
-      lockedSuggestions: lockedProducts,
-      roleType: selectedRole || undefined,
+    // Iterate through each product and replace if:
+    // 1. Not locked
+    // 2. Has replacement options available (canBeReplaced)
+    result.suggestions.forEach((product, index) => {
+      const locked = isLocked(product);
+      const hasAlternatives = canBeReplaced(product);
+
+      // Only shuffle if not locked AND has alternatives
+      if (!locked && hasAlternatives) {
+        // Use the same excludeIds logic as handleReplace
+        const excludeIds = new Set([product.id]);
+
+        // Get a replacement using the same logic as individual dice
+        const replacement = replaceSuggestion(
+          result.suggestions,
+          product.category,
+          {
+            aircraft: selectedAircraft,
+            tier: selectedTier,
+            owned: ownedGear,
+            allProducts,
+            seed: seed + product.id + Date.now() + Math.random(),
+            roleType: selectedRole || undefined,
+          },
+          excludeIds
+        );
+
+        // Update the suggestion if replacement found
+        if (replacement) {
+          updatedSuggestions[index] = replacement;
+        }
+      }
     });
 
-    setResult(generatedResult);
+    // Update result with new suggestions
+    setResult({
+      ...result,
+      suggestions: updatedSuggestions,
+    });
   };
 
   const handleReplace = (product: Product) => {
@@ -196,6 +224,41 @@ const CompleteSetup: React.FC = () => {
     { value: 'Copilot', label: 'Copilot', icon: 'copilot' },
   ], []);
 
+  /**
+   * Memoized map of product category to whether replacement options exist
+   * Recalculates only when result, selectedAircraft, selectedTier, ownedGear, or selectedRole change
+   */
+  const replacementAvailability = useMemo(() => {
+    if (!result || !selectedAircraft) return new Map<string, boolean>();
+
+    const availabilityMap = new Map<string, boolean>();
+
+    result.suggestions.forEach(product => {
+      const hasOptions = hasReplacementOptions(
+        result.suggestions,
+        product.category,
+        {
+          aircraft: selectedAircraft,
+          tier: selectedTier,
+          owned: ownedGear,
+          allProducts,
+          roleType: selectedRole || undefined,
+        }
+      );
+
+      availabilityMap.set(product.category, hasOptions);
+    });
+
+    return availabilityMap;
+  }, [result, selectedAircraft, selectedTier, ownedGear, selectedRole, allProducts]);
+
+  /**
+   * Check if a product has replacement options available
+   */
+  const canBeReplaced = (product: Product): boolean => {
+    return replacementAvailability.get(product.category) ?? false;
+  };
+
   // Tier dropdown options with icons
   const tierOptions: DropdownOption[] = useMemo(() => [
     { value: 'First', label: 'First class (Premium)', icon: 'first' },
@@ -213,15 +276,17 @@ const CompleteSetup: React.FC = () => {
   ], [allAircraft]);
 
   // Aircraft change handler
-  const handleAircraftChange = (value: string) => {
-    const aircraft = allAircraft.find(a => a.id === value);
+  const handleAircraftChange = (value: string | string[]) => {
+    const stringValue = Array.isArray(value) ? value[0] : value;
+    const aircraft = allAircraft.find(a => a.id === stringValue);
     setSelectedAircraft(aircraft || null);
     setResult(null); // Reset results when aircraft changes
   };
 
   // Tier change handler
-  const handleTierChange = (value: string) => {
-    setSelectedTier(value as Tier);
+  const handleTierChange = (value: string | string[]) => {
+    const stringValue = Array.isArray(value) ? value[0] : value;
+    setSelectedTier(stringValue as Tier);
     setResult(null); // Reset results when tier changes
   };
 
@@ -323,10 +388,18 @@ const CompleteSetup: React.FC = () => {
                     }
 
                     const allProductsForSearch = listProducts();
-                    // Apply role filter BEFORE searching to ensure 10 relevant results
+
+                    // Apply family filter FIRST (based on selected aircraft)
+                    const familyFiltered = filterProductsByFamily(
+                      allProductsForSearch,
+                      selectedAircraft?.id || null
+                    );
+
+                    // Then apply role filter to ensure 10 relevant results
                     const roleFiltered = selectedRole === ''
-                      ? allProductsForSearch
-                      : allProductsForSearch.filter(p => p.roleType === selectedRole || p.roleType === 'Universal');
+                      ? familyFiltered
+                      : familyFiltered.filter(p => p.roleType === selectedRole || p.roleType === 'Universal');
+
                     const results = searchProducts(roleFiltered, value);
 
                     setSearchSuggestions(results);
@@ -434,18 +507,6 @@ const CompleteSetup: React.FC = () => {
                   Suggestions for {selectedAircraft?.name} ({selectedTier} class)
                 </h2>
 
-                {result.missingByCategory.length > 0 && (
-                  <div className="text-dark-300 mb-4">
-                    <span className="font-medium">Missing components:</span>{' '}
-                    {result.missingByCategory.map((missing, idx) => (
-                      <span key={missing.category}>
-                        {missing.category} × {missing.needed}
-                        {idx < result.missingByCategory.length - 1 ? ', ' : ''}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
                 {result.warnings.length > 0 && (
                   <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
                     {result.warnings.map((warning, idx) => (
@@ -503,35 +564,37 @@ const CompleteSetup: React.FC = () => {
                       {/* Product Card */}
                       <ProductCard product={product} />
 
-                      {/* Controls Overlay - Top Center */}
-                      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex gap-2">
-                        <button
-                          onClick={() => handleToggleLock(product)}
-                          className={`p-2 rounded-lg backdrop-blur-sm transition-all focus:outline-none focus:ring-2 focus:ring-accent-500 ${
-                            isLocked(product)
-                              ? 'bg-accent-500/90 hover:bg-accent-600 text-white'
-                              : 'bg-dark-800/80 hover:bg-dark-700 text-dark-300 hover:text-dark-100'
-                          }`}
-                          title={isLocked(product) ? 'Locked' : 'Lock this suggestion'}
-                          aria-label={isLocked(product) ? 'Unlock' : 'Lock'}
-                        >
-                          {isLocked(product) ? (
-                            <Lock className="w-4 h-4" />
-                          ) : (
-                            <Unlock className="w-4 h-4" />
-                          )}
-                        </button>
+                      {/* Controls Overlay - Top Center (only show if replacement options exist) */}
+                      {canBeReplaced(product) && (
+                        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+                          <button
+                            onClick={() => handleToggleLock(product)}
+                            className={`p-2 rounded-lg backdrop-blur-sm transition-all focus:outline-none focus:ring-2 focus:ring-accent-500 ${
+                              isLocked(product)
+                                ? 'bg-accent-500/90 hover:bg-accent-600 text-white'
+                                : 'bg-dark-800/80 hover:bg-dark-700 text-dark-300 hover:text-dark-100'
+                            }`}
+                            title={isLocked(product) ? 'Locked' : 'Lock this suggestion'}
+                            aria-label={isLocked(product) ? 'Unlock' : 'Lock'}
+                          >
+                            {isLocked(product) ? (
+                              <Lock className="w-4 h-4" />
+                            ) : (
+                              <Unlock className="w-4 h-4" />
+                            )}
+                          </button>
 
-                        <button
-                          onClick={() => handleReplace(product)}
-                          disabled={isLocked(product)}
-                          className="p-2 rounded-lg bg-dark-800/80 hover:bg-dark-700 text-dark-300 hover:text-dark-100 backdrop-blur-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent-500"
-                          title="Replace this suggestion"
-                          aria-label="Replace"
-                        >
-                          <Dice5 className="w-4 h-4" />
-                        </button>
-                      </div>
+                          <button
+                            onClick={() => handleReplace(product)}
+                            disabled={isLocked(product)}
+                            className="p-2 rounded-lg bg-dark-800/80 hover:bg-dark-700 text-dark-300 hover:text-dark-100 backdrop-blur-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent-500"
+                            title="Replace this suggestion"
+                            aria-label="Replace"
+                          >
+                            <Dice5 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

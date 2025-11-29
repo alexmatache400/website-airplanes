@@ -7,10 +7,10 @@
 
 export const COMPLIANCE = {
   site: {
-    legalName: 'Pilot Setups',
-    tradeName: 'Pilot Setups',
+    legalName: 'Pilot Setup',
+    tradeName: 'Pilot Setup',
     regCountry: 'Romania',
-    contactEmail: 'pilotsetup@gmail.com',
+    contactEmail: 'contact@pilotsetup.com',
     baseUrl: 'https://flightsimsetups.com',
     lastUpdatedISO: '2025-10-13',
     businessHours: 'Monday - Friday, 9:00 - 17:00 EET',
@@ -39,7 +39,7 @@ export const COMPLIANCE = {
     discord: '',
   },
   seo: {
-    siteName: 'Pilot Setups',
+    siteName: 'Pilot Setup',
     siteDescription: 'Expert flight simulator hardware recommendations, comparisons, and setup guides for MSFS 2020/2024 and X-Plane 11/12.',
     logoUrl: '/logo.png', // Update with actual logo path
   },

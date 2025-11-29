@@ -9,17 +9,16 @@
           { "category": "Panel", "count": 1 },
           { "category": "Joystick", "count": 1 },
           { "category": "Throttle", "count": 1 },
-          { "category": "Pedals", "count": 1 }
+          { "category": "Rudder", "count": 1 }
         ],
         "preferredProducts": [
-          "wingflex-mcdu-a32f",
-          "wingflex-fcu-airbus",
-          "winwing-glareshield-3x0",
-          "winwing-mcdu-fullsize",
           "winwing-ursa-minor-joystick-l",
-          "ursa-minor-32-throttle-metal",
+          "winwing-ursa-minor-joystick-r",
+          "ursa-minor-32-throttle-metal-32-pac-metal",
           "orion-metal-rudder-pedals",
-          "tm-tca-captain-pack-airbus"
+          "winwing-glareshield-3x0",
+          "32-agp-metal",
+          "32-ecam"
         ]
       },
       "Business": {
@@ -30,12 +29,13 @@
           { "category": "Pedals", "count": 1 }
         ],
         "preferredProducts": [
-          "tm-tfrp-rudder-pedals",
           "winwing-ursa-minor-joystick-l",
+          "winwing-ursa-minor-joystick-r",
+          "logi-flight-rudder-pedals",
           "ursa-minor-32-throttle-metal",
-          "winwing-mcdu-fullsize",
-          "wingflex-mcdu-a32f",
-          "tm-tca-captain-pack-airbus"
+          "32-ecam",
+          "efis-r",
+          "efis-l"
         ]
       },
       "Economy": {
@@ -45,9 +45,9 @@
         ],
         "preferredProducts": [
           "tm-tfrp-rudder-pedals",
-          "winwing-ursa-minor-joystick-l",
-          "ursa-minor-32-throttle-metal",
-          "tm-tca-captain-pack-airbus"
+          "tm-tca-captain-pack-airbus",
+          "efis-r",
+          "efis-l"
         ]
       }
     },
@@ -65,10 +65,10 @@
           { "category": "Pedals", "count": 1 }
         ],
         "preferredProducts": [
-          "3m-pdc-panel",
-          "efis-r",
-          "tm-hotas-warthog-dual-throttle",
-          "orion-metal-rudder-pedals"
+          "tm-tca-yoke-pack-boeing",
+          "orion-metal-rudder-pedals",
+          "winwing-3-glareshield-mag",
+          "pfp-3n"
         ]
       },
       "Business": {
@@ -78,9 +78,9 @@
           { "category": "Pedals", "count": 1 }
         ],
         "preferredProducts": [
-          "3m-pdc-panel",
-          "ursa-minor-32-throttle-metal",
-          "logi-flight-rudder-pedals"
+          "tm-tca-yoke-pack-boeing",
+          "tm-tfrp-rudder-pedals",
+          "3m-pdc-panel"
         ]
       },
       "Economy": {
@@ -89,8 +89,8 @@
           { "category": "Pedals", "count": 1 }
         ],
         "preferredProducts": [
-          "ursa-minor-32-throttle-metal",
-          "tm-tfrp-rudder-pedals"
+          "tm-tca-yoke-pack-boeing",
+          "logi-flight-rudder-pedals"
         ]
       }
     },
@@ -157,7 +157,7 @@
       "Business": {
         "needs": [
           { "category": "HOTAS", "count": 1 },
-          { "category": "Pedals", "count": 1 },
+          { "category": "Rudder", "count": 1 },
           { "category": "Panel", "count": 1 }
         ],
         "preferredProducts": [

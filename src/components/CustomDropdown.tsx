@@ -11,11 +11,12 @@ export interface DropdownOption {
 
 interface CustomDropdownProps {
   id: string;
-  value: string;
-  onChange: (value: string) => void;
+  value: string | string[];
+  onChange: (value: string | string[]) => void;
   options: DropdownOption[];
   className?: string;
   placeholder?: string;
+  multiSelect?: boolean;
 }
 
 export const CustomDropdown: React.FC<CustomDropdownProps> = ({
@@ -24,7 +25,8 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
   onChange,
   options,
   className = '',
-  placeholder = '-- Select --'
+  placeholder = '-- Select --',
+  multiSelect = false
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
@@ -32,10 +34,47 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
   const listRef = useRef<HTMLUListElement>(null);
   const navigationSourceRef = useRef<'keyboard' | 'mouse' | null>(null);
 
-  const selectedOption = options.find(opt => opt.value === value);
-  const displayLabel = selectedOption
-    ? `${selectedOption.label}${selectedOption.count !== undefined ? ` (${selectedOption.count})` : ''}`
-    : placeholder;
+  // Helper function to get selected values as array
+  const getSelectedValues = (): string[] => {
+    if (multiSelect) {
+      return Array.isArray(value) ? value : [];
+    }
+    return typeof value === 'string' ? [value] : [];
+  };
+
+  // Helper function to check if a value is selected
+  const isSelected = (optionValue: string): boolean => {
+    if (multiSelect) {
+      return Array.isArray(value) && value.includes(optionValue);
+    }
+    return value === optionValue;
+  };
+
+  // Helper function to check if all non-"All" categories are selected
+  const areAllCategoriesSelected = (): boolean => {
+    if (!multiSelect || !Array.isArray(value)) return false;
+    const nonAllOptions = options.filter(opt => opt.value !== 'All');
+    return nonAllOptions.every(opt => value.includes(opt.value));
+  };
+
+  // Display label logic
+  const displayLabel = (() => {
+    if (multiSelect && Array.isArray(value)) {
+      if (value.length === 0) {
+        return placeholder;
+      }
+      if (areAllCategoriesSelected()) {
+        return 'All categories';
+      }
+      return value.length === 1
+        ? options.find(opt => opt.value === value[0])?.label || placeholder
+        : `${value.length} categories selected`;
+    }
+    const selectedOption = options.find(opt => opt.value === value);
+    return selectedOption
+      ? `${selectedOption.label}${selectedOption.count !== undefined ? ` (${selectedOption.count})` : ''}`
+      : placeholder;
+  })();
 
   // Handle click outside to close dropdown
   useEffect(() => {
@@ -69,16 +108,44 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
     setIsOpen(!isOpen);
     if (!isOpen) {
       // Set focused index to current selection when opening
-      const currentIndex = options.findIndex(opt => opt.value === value);
-      setFocusedIndex(currentIndex >= 0 ? currentIndex : 0);
+      if (multiSelect) {
+        setFocusedIndex(0);
+      } else {
+        const currentIndex = options.findIndex(opt => opt.value === value);
+        setFocusedIndex(currentIndex >= 0 ? currentIndex : 0);
+      }
     }
   };
 
   const handleSelect = (optionValue: string) => {
     navigationSourceRef.current = null;
-    onChange(optionValue);
-    setIsOpen(false);
-    setFocusedIndex(-1);
+
+    if (multiSelect) {
+      const currentValues = Array.isArray(value) ? value : [];
+
+      // Handle "All" option
+      if (optionValue === 'All') {
+        // If all categories are selected, deselect all; otherwise select all non-"All" options
+        if (areAllCategoriesSelected()) {
+          onChange([]);
+        } else {
+          const allNonAllValues = options.filter(opt => opt.value !== 'All').map(opt => opt.value);
+          onChange(allNonAllValues);
+        }
+      } else {
+        // Toggle the selected category
+        if (currentValues.includes(optionValue)) {
+          onChange(currentValues.filter(v => v !== optionValue));
+        } else {
+          onChange([...currentValues, optionValue]);
+        }
+      }
+      // Keep dropdown open in multi-select mode
+    } else {
+      onChange(optionValue);
+      setIsOpen(false);
+      setFocusedIndex(-1);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -158,9 +225,12 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
         aria-labelledby={`${id}-label`}
       >
         <span className="flex items-center gap-2">
-          {selectedOption?.icon && (
-            <CategoryIcon category={selectedOption.icon} className="w-4 h-4 flex-shrink-0" />
-          )}
+          {!multiSelect && (() => {
+            const selectedOption = options.find(opt => opt.value === value);
+            return selectedOption?.icon && (
+              <CategoryIcon category={selectedOption.icon} className="w-4 h-4 flex-shrink-0" />
+            );
+          })()}
           <span className="truncate">{displayLabel}</span>
         </span>
         {/* Dropdown arrow */}
@@ -214,7 +284,7 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
                 {/* Option Item */}
                 <li
                   role="option"
-                  aria-selected={option.value === value}
+                  aria-selected={isSelected(option.value)}
                   onClick={() => handleSelect(option.value)}
                   onMouseEnter={() => {
                     navigationSourceRef.current = 'mouse';
@@ -222,7 +292,7 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
                   }}
                   className={`
                     px-4 py-3 cursor-pointer flex items-center gap-2 transition-colors
-                    ${option.value === value
+                    ${isSelected(option.value)
                       ? 'bg-dropdown-focus-ring bg-opacity-20 text-dropdown-text font-medium'
                       : 'text-dropdown-text hover:bg-dropdown-hover-bg'
                     }
@@ -232,6 +302,22 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
                     }
                   `}
                 >
+                  {/* Checkbox for multi-select */}
+                  {multiSelect && (
+                    <div className="flex-shrink-0">
+                      <div className={`w-4 h-4 border-2 rounded ${
+                        option.value === 'All'
+                          ? (areAllCategoriesSelected() ? 'bg-blue-500 border-blue-500' : 'border-slate-400')
+                          : (isSelected(option.value) ? 'bg-blue-500 border-blue-500' : 'border-slate-400')
+                      } flex items-center justify-center`}>
+                        {((option.value === 'All' && areAllCategoriesSelected()) || (option.value !== 'All' && isSelected(option.value))) && (
+                          <svg className="w-3 h-3 text-white" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M5 13l4 4L19 7"></path>
+                          </svg>
+                        )}
+                      </div>
+                    </div>
+                  )}
                   {option.icon && (
                     <CategoryIcon category={option.icon} className="w-4 h-4 flex-shrink-0" />
                   )}

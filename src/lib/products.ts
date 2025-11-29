@@ -15,6 +15,7 @@ export type Product = {
   roleType: 'Pilot' | 'Copilot' | 'Universal';
   sim_support: Array<'MSFS2020' | 'MSFS2024' | 'XPL11' | 'XPL12'>;
   tier?: Tier;
+  aircraftFamily?: 'airbus-a32f' | 'boeing-737' | 'f16-viper' | 'fa18-hornet' | 'general';
   price_eur?: number;
   price_label?: string;
   images: string[];
@@ -214,4 +215,41 @@ export function getProductsByIds(ids: string[]): Product[] {
   return ids
     .map(id => productMap.get(id))
     .filter((p): p is Product => p !== undefined);
+}
+
+/**
+ * Filters products by aircraft family
+ *
+ * @param products - Array of products to filter
+ * @param aircraftFamilyId - The aircraft family ID to filter by (e.g., 'airbus-a32f', 'f16-viper')
+ * @returns Array of products matching the family or marked as 'general'
+ *
+ * @example
+ * // Filter for F-16 specific products
+ * const f16Products = filterProductsByFamily(allProducts, 'f16-viper');
+ * // Returns: products with aircraftFamily === 'f16-viper' OR aircraftFamily === 'general'
+ *
+ * // No family filter (show all)
+ * const allProducts = filterProductsByFamily(products, null);
+ * // Returns: all products unchanged
+ */
+export function filterProductsByFamily(
+  products: Product[],
+  aircraftFamilyId: string | null
+): Product[] {
+  // If no family specified, return all products
+  if (!aircraftFamilyId || aircraftFamilyId.trim() === '') {
+    return products;
+  }
+
+  // Filter by family: include products that match the family OR are general
+  return products.filter(product => {
+    // Products without aircraftFamily field are treated as 'general' (backward compatibility)
+    if (!product.aircraftFamily) {
+      return true; // Include products without family (treat as general)
+    }
+
+    // Include if product matches the selected family OR is marked as general
+    return product.aircraftFamily === aircraftFamilyId || product.aircraftFamily === 'general';
+  });
 }

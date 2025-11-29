@@ -1,74 +1,94 @@
 [
   {
+    "aircraft": "F-16 Viper",
+    "description": "Single-engine multirole fighter: agile, advanced avionics, proven combat performance.",
+    "tiers": {
+      "First": [ "2", "4", "6", "7" ],
+      "Business": [ "1", "7" ],
+      "Economy": [ "3", "5" ]
+    }
+  },
+
+  {
+    "aircraft": "F/A-18 Hornet",
+    "description": "Single-engine multirole fighter: agile, advanced avionics, proven combat performance.",
+    "tiers": {
+      "First": [ "2", "4", "6", "7" ],
+      "Business": [ "1", "7" ],
+      "Economy": [ "3", "5" ]
+    }
+  },
+
+  {
     "aircraft": "A318",
     "description": "Compact Airbus for short-haul operations. Perfect starter setup for single-aisle cockpit training.",
     "tiers": {
-      "First": [ "11", "12", "13", "14", "3"],
-      "Business": ["11", "12", "5", "14", "15"],
-      "Economy": ["10", "5", "4", "11", "18"]
+      "First": [ "15", "16", "36", "18", "19", "27", "34", "35" ],
+      "Business": [ "15", "16", "7", "17", "35", "29", "30" ],
+      "Economy": [ "8", "11", "29", "30" ]
     }
   },
   {
     "aircraft": "A319",
     "description": "Versatile short-to-medium range Airbus. Ideal for pilots transitioning to A320 family.",
     "tiers": {
-      "First": ["4", "5", "11", "12", "13", "14", "15", "16", "17", "18"],
-      "Business": ["10", "11", "12", "14", "15", "16"],
-      "Economy": ["10", "5", "4", "11", "18"]
+      "First": [ "15", "16", "36", "18", "19", "27", "34", "35" ],
+      "Business": [ "15", "16", "7", "17", "35", "29", "30" ],
+      "Economy": [ "8", "11", "29", "30" ]
     }
   },
   {
     "aircraft": "A319neo",
     "description": "New Engine Option variant with modern avionics. Enhanced cockpit for next-gen simulation.",
     "tiers": {
-      "First": ["4", "5", "11", "12", "13", "14", "15", "16", "17", "18"],
-      "Business": ["10", "11", "12", "14", "15", "16"],
-      "Economy": ["10", "5", "4", "11", "18"]
+      "First": [ "15", "16", "36", "18", "19", "27", "34", "35" ],
+      "Business": [ "15", "16", "7", "17", "35", "29", "30" ],
+      "Economy": [ "8", "11", "29", "30" ]
     }
   },
   {
     "aircraft": "A320",
     "description": "Most popular single-aisle airliner. Industry-standard cockpit for commercial flight sim.",
     "tiers": {
-      "First": ["4", "5", "11", "12", "13", "14", "15", "16", "17", "18"],
-      "Business": ["10", "11", "12", "14", "15", "16"],
-      "Economy": ["10", "5", "4", "11", "18"]
+      "First": [ "15", "16", "36", "18", "19", "27", "34", "35" ],
+      "Business": [ "15", "16", "7", "17", "35", "29", "30" ],
+      "Economy": [ "8", "11", "29", "30" ]
     }
   },
   {
     "aircraft": "A320neo",
     "description": "New engine, reduced fuel burn, quieter operations. Modern standard for A320 family training.",
     "tiers": {
-      "First": ["4", "5", "11", "12", "13", "14", "15", "16", "17", "18"],
-      "Business": ["10", "11", "12", "14", "15", "16"],
-      "Economy": ["10", "5", "4", "11", "18"]
+      "First": [ "15", "16", "36", "18", "19", "27", "34", "35" ],
+      "Business": [ "15", "16", "7", "17", "35", "29", "30" ],
+      "Economy": [ "8", "11", "29", "30" ]
     }
   },
   {
     "aircraft": "A321",
     "description": "Stretched A320 for higher capacity routes. Full-featured cockpit for long-range single-aisle ops.",
     "tiers": {
-      "First": ["4", "5", "11", "12", "13", "14", "15", "16", "17", "18"],
-      "Business": ["10", "11", "12", "14", "15", "16"],
-      "Economy": ["10", "5", "4", "11", "18"]
+      "First": [ "15", "16", "36", "18", "19", "27", "34", "35" ],
+      "Business": [ "15", "16", "7", "17", "35", "29", "30" ],
+      "Economy": [ "8", "11", "29", "30" ]
     }
   },
   {
     "aircraft": "A321neo",
     "description": "Longest-range single-aisle with advanced tech. Premium setup for pro-level A321 XLR simulation.",
     "tiers": {
-      "First": ["4", "5", "11", "12", "13", "14", "15", "16", "17", "18"],
-      "Business": ["10", "11", "12", "14", "15", "16"],
-      "Economy": ["10", "5", "4", "11", "18"]
+      "First": [ "15", "16", "36", "18", "19", "27", "34", "35" ],
+      "Business": [ "15", "16", "7", "17", "35", "29", "30" ],
+      "Economy": [ "8", "11", "29", "30" ]
     }
   },
   {
     "aircraft": "Boeing 737",
     "description": "A popular narrow-body, twin-engine jet airliner designed for short to medium-haul flights.",
     "tiers": {
-      "First": [ "19", "20", "21", "22", "23" ],
-      "Business": [ "19", "20", "21" ],
-      "Economy": [ "19", "21" ]
+      "First": [ "12", "19", "25", "37" ],
+      "Business": [ "12", "8", "24" ],
+      "Economy": [ "12", "7" ]
     }
   }
 ]

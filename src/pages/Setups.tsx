@@ -79,8 +79,9 @@ const Setups: React.FC = () => {
     }
   }, [setup]);
 
-  const handleAircraftChange = (value: string) => {
-    const aircraftValue = value as AircraftModel;
+  const handleAircraftChange = (value: string | string[]) => {
+    const stringValue = Array.isArray(value) ? value[0] : value;
+    const aircraftValue = stringValue as AircraftModel;
     setSelectedAircraft(aircraftValue);
     localStorage.setItem('setups_selectedAircraft', aircraftValue);
     setSelectedTier('All'); // Reset tier filter when aircraft changes
@@ -88,14 +89,16 @@ const Setups: React.FC = () => {
     // Note: selectedRole persists across aircraft changes (per user preference)
   };
 
-  const handleTierChange = (value: string) => {
-    const tierValue = value as Tier | 'All';
+  const handleTierChange = (value: string | string[]) => {
+    const stringValue = Array.isArray(value) ? value[0] : value;
+    const tierValue = stringValue as Tier | 'All';
     setSelectedTier(tierValue);
     localStorage.setItem('setups_selectedTier', tierValue);
   };
 
-  const handleRoleChange = (value: string) => {
-    const roleValue = value as RoleType;
+  const handleRoleChange = (value: string | string[]) => {
+    const stringValue = Array.isArray(value) ? value[0] : value;
+    const roleValue = stringValue as RoleType;
     setSelectedRole(roleValue);
     localStorage.setItem('setups_selectedRole', roleValue);
   };
@@ -325,11 +328,36 @@ const Setups: React.FC = () => {
                 })()}
               </>
             ) : (
-              // Show only selected tier
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {filterProductsByRole(getProductsByIds(currentSetup.tiers[selectedTier as Tier])).map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
+              // Show only selected tier with header
+              <div className="mb-12">
+                <div className="flex items-center gap-3 mb-6">
+                  <CategoryIcon
+                    category={selectedTier.toLowerCase()}
+                    size={32}
+                    className={`w-8 h-8 ${
+                      selectedTier === 'First' ? 'text-amber-400' :
+                      selectedTier === 'Business' ? 'text-blue-400' :
+                      'text-emerald-400'
+                    }`}
+                  />
+                  <h3 className={`text-2xl font-bold ${
+                    selectedTier === 'First' ? 'text-amber-400' :
+                    selectedTier === 'Business' ? 'text-blue-400' :
+                    'text-emerald-400'
+                  }`}>
+                    {selectedTier} Class
+                  </h3>
+                  <span className="text-sm text-slate-500 ml-auto">
+                    {selectedTier === 'First' ? 'Premium tier' :
+                     selectedTier === 'Business' ? 'Mid-tier' :
+                     'Entry-level'}
+                  </span>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {filterProductsByRole(getProductsByIds(currentSetup.tiers[selectedTier as Tier])).map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
               </div>
             )}
           </>

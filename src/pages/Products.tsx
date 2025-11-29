@@ -10,7 +10,7 @@ type RoleType = 'All' | 'Pilot' | 'Copilot';
 const Products: React.FC = () => {
   const [searchParams] = useSearchParams();
   const [allProducts] = useState<Product[]>(listProducts());
-  const [selectedCategory, setSelectedCategory] = useState<Category>('All');
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedRole, setSelectedRole] = useState<RoleType>('All');
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
   const productRefs = useRef<Map<string, HTMLDivElement>>(new Map());
@@ -35,15 +35,10 @@ const Products: React.FC = () => {
 
   // Filter products by category and role
   // Universal products always show regardless of role selection
-  // Accessories only appear when explicitly selected in category filter
+  // Empty selection shows all products
   const products = allProducts.filter(p => {
-    // Accessories ONLY show when explicitly selected (not in "All Products")
-    if (p.category === 'Accessories') {
-      return selectedCategory === 'Accessories';
-    }
-
-    // For all other products, apply normal category and role filtering
-    const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
+    // Category filter: if no categories selected, show all; otherwise show matching categories (OR logic)
+    const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(p.category);
     const matchesRole = selectedRole === 'All' || p.roleType === selectedRole || p.roleType === 'Universal';
 
     return matchesCategory && matchesRole;
@@ -65,25 +60,29 @@ const Products: React.FC = () => {
   ], [allProducts]);
 
   // Role dropdown options with icons
-  const roleOptions: DropdownOption[] = useMemo(() => [
-    {
-      value: 'All',
-      label: 'All Roles',
-      count: allProducts.filter(p => selectedCategory === 'All' || p.category === selectedCategory).length
-    },
-    {
-      value: 'Pilot',
-      label: 'Pilot',
-      icon: 'pilot',
-      count: allProducts.filter(p => (selectedCategory === 'All' || p.category === selectedCategory) && (p.roleType === 'Pilot' || p.roleType === 'Universal')).length
-    },
-    {
-      value: 'Copilot',
-      label: 'Copilot',
-      icon: 'copilot',
-      count: allProducts.filter(p => (selectedCategory === 'All' || p.category === selectedCategory) && (p.roleType === 'Copilot' || p.roleType === 'Universal')).length
-    },
-  ], [allProducts, selectedCategory]);
+  const roleOptions: DropdownOption[] = useMemo(() => {
+    const categoryFilter = (p: Product) => selectedCategories.length === 0 || selectedCategories.includes(p.category);
+
+    return [
+      {
+        value: 'All',
+        label: 'All Roles',
+        count: allProducts.filter(categoryFilter).length
+      },
+      {
+        value: 'Pilot',
+        label: 'Pilot',
+        icon: 'pilot',
+        count: allProducts.filter(p => categoryFilter(p) && (p.roleType === 'Pilot' || p.roleType === 'Universal')).length
+      },
+      {
+        value: 'Copilot',
+        label: 'Copilot',
+        icon: 'copilot',
+        count: allProducts.filter(p => categoryFilter(p) && (p.roleType === 'Copilot' || p.roleType === 'Universal')).length
+      },
+    ];
+  }, [allProducts, selectedCategories]);
 
   // Handle search query from URL
   useEffect(() => {
@@ -95,7 +94,7 @@ const Products: React.FC = () => {
     if (!matchedProduct) return;
 
     // Reset category filter to show the matched product
-    setSelectedCategory('All');
+    setSelectedCategories([]);
 
     // Scroll to product
     const element = productRefs.current.get(matchedProduct.slug);
@@ -164,10 +163,11 @@ const Products: React.FC = () => {
               </label>
               <CustomDropdown
                 id="category-select"
-                value={selectedCategory}
-                onChange={(value) => setSelectedCategory(value as Category)}
+                value={selectedCategories}
+                onChange={(value) => setSelectedCategories(value as string[])}
                 options={categoryOptions}
-                placeholder="-- Select a category --"
+                placeholder="-- Select categories --"
+                multiSelect={true}
               />
             </div>
 
@@ -211,13 +211,13 @@ const Products: React.FC = () => {
         <div className="mt-8 text-center">
           <p className="text-sm text-slate-400">
             Showing {products.length} {
-              selectedCategory === 'All' && selectedRole === 'All'
+              selectedCategories.length === 0 && selectedRole === 'All'
                 ? 'products'
-                : selectedCategory === 'All'
+                : selectedCategories.length === 0
                 ? `products for ${selectedRole}`
                 : selectedRole === 'All'
-                ? `${selectedCategory} products`
-                : `${selectedCategory} products for ${selectedRole}`
+                ? `products (${selectedCategories.length} ${selectedCategories.length === 1 ? 'category' : 'categories'})`
+                : `products (${selectedCategories.length} ${selectedCategories.length === 1 ? 'category' : 'categories'}, ${selectedRole})`
             }
           </p>
         </div>

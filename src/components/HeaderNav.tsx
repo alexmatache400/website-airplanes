@@ -148,7 +148,7 @@ const HeaderNav: React.FC = () => {
   return (
     <header className="sticky top-0 z-50 glass border-b border-dark-700/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-[74px]">
           {/* Logo */}
           <div className="flex items-center">
             <div className="flex-shrink-0">
@@ -156,12 +156,12 @@ const HeaderNav: React.FC = () => {
                 to="/"
                 className="flex items-center space-x-2 focus:outline-none"
               >
-                <div className="w-8 h-8 bg-gradient-to-br from-accent-400 to-accent-600 rounded-lg flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <div className="w-9 h-9 bg-gradient-to-br from-accent-400 to-accent-600 rounded-lg flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
                   </svg>
                 </div>
-                <span className="text-lg font-semibold text-dark-100">Pilot Setups</span>
+                <span className="text-xl font-semibold text-dark-100">Pilot Setup</span>
               </Link>
             </div>
           </div>
@@ -173,7 +173,7 @@ const HeaderNav: React.FC = () => {
                 <Link
                   key={link.label}
                   to={link.href}
-                  className="text-dark-300 hover:text-accent-400 px-3 py-2 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-900 rounded-md"
+                  className="text-dark-300 hover:text-accent-400 px-3 py-3 text-base font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-900 rounded-md"
                 >
                   {link.label}
                 </Link>
@@ -186,7 +186,7 @@ const HeaderNav: React.FC = () => {
             {/* Search */}
             <form onSubmit={handleSearchSubmit} className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg className="h-4 w-4 text-dark-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="h-5 w-5 text-dark-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
@@ -198,7 +198,7 @@ const HeaderNav: React.FC = () => {
                 onChange={(e) => handleSearchChange(e.target.value)}
                 onKeyDown={handleKeyDown}
                 onFocus={() => searchQuery.length >= 2 && suggestions.length > 0 && setShowSuggestions(true)}
-                className="glass-light pl-10 pr-4 py-2 w-64 text-sm text-dark-100 placeholder-dark-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent"
+                className="glass-light pl-10 pr-4 py-3 w-64 text-base text-dark-100 placeholder-dark-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent"
               />
 
               {/* Suggestions Dropdown */}
@@ -231,18 +231,18 @@ const HeaderNav: React.FC = () => {
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className="p-2 text-dark-300 hover:text-accent-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-900 rounded-md"
+              className="p-2.5 text-dark-300 hover:text-accent-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-900 rounded-md"
               aria-label="Toggle theme"
               title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
             >
               {isDarkMode ? (
                 // Sun icon for light mode
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
               ) : (
                 // Moon icon for dark mode
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                 </svg>
               )}
@@ -253,9 +253,9 @@ const HeaderNav: React.FC = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 text-dark-300 hover:text-accent-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-900 rounded-md"
+              className="p-2.5 text-dark-300 hover:text-accent-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-900 rounded-md"
             >
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {isMenuOpen ? (
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 ) : (
@@ -273,7 +273,7 @@ const HeaderNav: React.FC = () => {
               {/* Mobile Search */}
               <form onSubmit={handleSearchSubmit} className="relative mb-4">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="h-4 w-4 text-dark-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-5 w-5 text-dark-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </div>
@@ -284,7 +284,7 @@ const HeaderNav: React.FC = () => {
                   onChange={(e) => handleSearchChange(e.target.value)}
                   onKeyDown={handleKeyDown}
                   onFocus={() => searchQuery.length >= 2 && suggestions.length > 0 && setShowSuggestions(true)}
-                  className="glass-light pl-10 pr-4 py-2 w-full text-sm text-dark-100 placeholder-dark-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent"
+                  className="glass-light pl-10 pr-4 py-3 w-full text-base text-dark-100 placeholder-dark-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent"
                 />
 
                 {/* Mobile Suggestions Dropdown */}
@@ -331,15 +331,15 @@ const HeaderNav: React.FC = () => {
                 <span className="text-dark-300 text-base font-medium">Theme</span>
                 <button
                   onClick={toggleTheme}
-                  className="p-2 text-dark-300 hover:text-accent-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-900 rounded-md"
+                  className="p-2.5 text-dark-300 hover:text-accent-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-900 rounded-md"
                   aria-label="Toggle theme"
                 >
                   {isDarkMode ? (
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
                   ) : (
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                     </svg>
                   )}

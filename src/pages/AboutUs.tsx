@@ -210,7 +210,7 @@ const AboutUs: React.FC = () => {
             <header className="space-y-4">
               <h1 className="text-4xl font-bold text-dark-100">About Us</h1>
               <p className="text-lg text-dark-300 leading-relaxed">
-                Pilot Setups is a specialized resource for flight simulation enthusiasts seeking expert recommendations on hardware setups for <strong>Microsoft Flight Simulator 2020/2024</strong> and <strong>X-Plane 11/12</strong>.
+                Pilot Setup is a specialized resource for flight simulation enthusiasts seeking expert recommendations on hardware setups for <strong>Microsoft Flight Simulator 2020/2024</strong> and <strong>X-Plane 11/12</strong>.
               </p>
             </header>
 

@@ -7,7 +7,7 @@ const HeroDesk: React.FC = () => {
   const platforms = ['MSFS 2020', 'MSFS 2024', 'X-Plane 11', 'X-Plane 12'];
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[65vh] flex items-center justify-center overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0">
         {/* Remove gradient to show background image */}
@@ -37,7 +37,7 @@ const HeroDesk: React.FC = () => {
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-accent-400 to-accent-600 bg-clip-text text-transparent">
-                  Setups Found
+                  Setup Found
                 </span>
               </h1>
               <p className="text-lg sm:text-xl text-dark-300 max-w-2xl mx-auto lg:mx-0">

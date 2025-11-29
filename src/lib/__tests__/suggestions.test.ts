@@ -12,6 +12,7 @@ const mockProducts: Product[] = [
     name: 'Premium HOTAS',
     slug: 'premium-hotas',
     category: 'HOTAS',
+    roleType: 'Universal',
     sim_support: ['MSFS2020'],
     tier: 'First',
     images: [],
@@ -24,6 +25,7 @@ const mockProducts: Product[] = [
     name: 'Budget HOTAS',
     slug: 'budget-hotas',
     category: 'HOTAS',
+    roleType: 'Universal',
     sim_support: ['MSFS2020'],
     tier: 'Economy',
     images: [],
@@ -36,6 +38,7 @@ const mockProducts: Product[] = [
     name: 'Premium Joystick',
     slug: 'premium-joystick',
     category: 'Joystick',
+    roleType: 'Universal',
     sim_support: ['MSFS2020'],
     tier: 'First',
     images: [],
@@ -48,6 +51,7 @@ const mockProducts: Product[] = [
     name: 'Premium Throttle',
     slug: 'premium-throttle',
     category: 'Throttle',
+    roleType: 'Universal',
     sim_support: ['MSFS2020'],
     tier: 'First',
     images: [],
@@ -60,6 +64,7 @@ const mockProducts: Product[] = [
     name: 'Budget Pedals',
     slug: 'budget-pedals',
     category: 'Pedals',
+    roleType: 'Universal',
     sim_support: ['MSFS2020'],
     tier: 'Economy',
     images: [],
@@ -72,6 +77,7 @@ const mockProducts: Product[] = [
     name: 'Premium Pedals',
     slug: 'premium-pedals',
     category: 'Pedals',
+    roleType: 'Universal',
     sim_support: ['MSFS2020'],
     tier: 'First',
     images: [],
@@ -84,6 +90,7 @@ const mockProducts: Product[] = [
     name: 'Premium Panel',
     slug: 'premium-panel',
     category: 'Panel',
+    roleType: 'Universal',
     sim_support: ['MSFS2020'],
     tier: 'First',
     images: [],
@@ -96,6 +103,7 @@ const mockProducts: Product[] = [
     name: 'Mid Panel',
     slug: 'mid-panel',
     category: 'Panel',
+    roleType: 'Universal',
     sim_support: ['MSFS2020'],
     tier: 'Business',
     images: [],
@@ -273,6 +281,7 @@ describe('generateSuggestions', () => {
         name: 'Another Premium Joystick',
         slug: 'another-premium-joystick',
         category: 'Joystick',
+        roleType: 'Universal',
         sim_support: ['MSFS2020'],
         tier: 'First',
         images: [],
@@ -356,10 +365,11 @@ describe('replaceSuggestion', () => {
       ...mockProducts,
       {
         id: '10',
-        brand: 'Other',
+        brand: 'Winwing',
         name: 'Alternative Pedals',
         slug: 'alternative-pedals',
         category: 'Pedals',
+        roleType: 'Universal',
         sim_support: ['MSFS2020'],
         tier: 'First',
         images: [],
@@ -394,10 +404,11 @@ describe('replaceSuggestion', () => {
       ...mockProducts,
       {
         id: '10',
-        brand: 'Other',
+        brand: 'Winwing',
         name: 'Alternative Pedals',
         slug: 'alternative-pedals',
         category: 'Pedals',
+        roleType: 'Universal',
         sim_support: ['MSFS2020'],
         tier: 'First',
         images: [],
@@ -445,5 +456,236 @@ describe('replaceSuggestion', () => {
     );
 
     expect(replacement).toBeNull();
+  });
+});
+
+describe('generateSuggestions - Family Filtering', () => {
+  const mockProductsWithFamily: Product[] = [
+    {
+      id: 'f16-hotas',
+      brand: 'Winwing',
+      name: 'F-16 HOTAS ViperAce',
+      slug: 'orion2-hotas-viperace',
+      category: 'HOTAS',
+      roleType: 'Universal',
+      sim_support: ['MSFS2020'],
+      tier: 'First',
+      aircraftFamily: 'f16-viper',
+      images: [],
+      affiliate_urls: {},
+      description: 'F-16 HOTAS',
+    },
+    {
+      id: 'f18-hotas',
+      brand: 'Winwing',
+      name: 'F/A-18 HOTAS StrikeAce',
+      slug: 'orion2-hotas-strikeace',
+      category: 'HOTAS',
+      roleType: 'Universal',
+      sim_support: ['MSFS2020'],
+      tier: 'First',
+      aircraftFamily: 'fa18-hornet',
+      images: [],
+      affiliate_urls: {},
+      description: 'F/A-18 HOTAS',
+    },
+    {
+      id: 'general-pedals',
+      brand: 'Logitech',
+      name: 'Universal Pedals',
+      slug: 'logi-pedals',
+      category: 'Pedals',
+      roleType: 'Universal',
+      sim_support: ['MSFS2020'],
+      tier: 'First',
+      aircraftFamily: 'general',
+      images: [],
+      affiliate_urls: {},
+      description: 'Universal pedals',
+    },
+    {
+      id: 'airbus-panel',
+      brand: 'Winwing',
+      name: 'Airbus ECAM Panel',
+      slug: '32-ecam',
+      category: 'Panel',
+      roleType: 'Universal',
+      sim_support: ['MSFS2020'],
+      tier: 'First',
+      aircraftFamily: 'airbus-a32f',
+      images: [],
+      affiliate_urls: {},
+      description: 'Airbus ECAM',
+    },
+  ];
+
+  const f16Aircraft: AircraftPreset = {
+    id: 'f16-viper',
+    name: 'F-16 Viper',
+    slug: 'f16-viper',
+    tiers: {
+      First: {
+        needs: [
+          { category: 'HOTAS', count: 1 },
+          { category: 'Pedals', count: 1 },
+        ],
+        preferredProducts: ['orion2-hotas-viperace', 'logi-pedals'],
+      },
+    },
+  };
+
+  it('should filter candidates by aircraftFamily', () => {
+    const result = generateSuggestions({
+      aircraft: f16Aircraft,
+      tier: 'First',
+      owned: [],
+      allProducts: mockProductsWithFamily,
+      seed: 'test-seed',
+    });
+
+    // Should suggest F-16 HOTAS (not F/A-18 HOTAS)
+    const hotas = result.suggestions.find(p => p.category === 'HOTAS');
+    expect(hotas?.id).toBe('f16-hotas'); // F-16 specific
+    expect(hotas?.aircraftFamily).toBe('f16-viper');
+
+    // Should NOT suggest F/A-18 HOTAS
+    expect(result.suggestions.find(p => p.id === 'f18-hotas')).toBeUndefined();
+  });
+
+  it('should include general products regardless of family', () => {
+    const result = generateSuggestions({
+      aircraft: f16Aircraft,
+      tier: 'First',
+      owned: [],
+      allProducts: mockProductsWithFamily,
+      seed: 'test-seed',
+    });
+
+    // Should include general pedals even though aircraft is F-16 specific
+    const pedals = result.suggestions.find(p => p.category === 'Pedals');
+    expect(pedals?.id).toBe('general-pedals');
+    expect(pedals?.aircraftFamily).toBe('general');
+  });
+
+  it('should NOT suggest products from different families', () => {
+    const result = generateSuggestions({
+      aircraft: f16Aircraft,
+      tier: 'First',
+      owned: [],
+      allProducts: mockProductsWithFamily,
+      seed: 'test-seed',
+    });
+
+    // Should NOT suggest Airbus panel for F-16
+    expect(result.suggestions.find(p => p.id === 'airbus-panel')).toBeUndefined();
+
+    // Should NOT suggest F/A-18 HOTAS for F-16
+    expect(result.suggestions.find(p => p.id === 'f18-hotas')).toBeUndefined();
+  });
+
+  it('should prioritize preferred products from correct family', () => {
+    // Add multiple F-16 HOTAS options
+    const productsWithMultipleOptions: Product[] = [
+      ...mockProductsWithFamily,
+      {
+        id: 'f16-hotas-2',
+        brand: 'Winwing',
+        name: 'Another F-16 HOTAS',
+        slug: 'another-f16-hotas',
+        category: 'HOTAS',
+        roleType: 'Universal',
+        sim_support: ['MSFS2020'],
+        tier: 'First',
+        aircraftFamily: 'f16-viper',
+        images: [],
+        affiliate_urls: {},
+        description: 'Another F-16 HOTAS',
+      },
+    ];
+
+    const result = generateSuggestions({
+      aircraft: f16Aircraft,
+      tier: 'First',
+      owned: [],
+      allProducts: productsWithMultipleOptions,
+      seed: 'test-seed',
+    });
+
+    // Should prefer the preferred product (orion2-hotas-viperace)
+    const hotas = result.suggestions.find(p => p.category === 'HOTAS');
+    expect(hotas?.slug).toBe('orion2-hotas-viperace'); // Preferred product
+  });
+
+  it('should generate warnings when insufficient family-appropriate products available', () => {
+    // Aircraft needs Panel, but only Airbus panel available (wrong family)
+    const aircraftNeedingPanel: AircraftPreset = {
+      ...f16Aircraft,
+      tiers: {
+        First: {
+          needs: [
+            { category: 'HOTAS', count: 1 },
+            { category: 'Panel', count: 1 }, // Need panel
+          ],
+          preferredProducts: ['orion2-hotas-viperace'],
+        },
+      },
+    };
+
+    const result = generateSuggestions({
+      aircraft: aircraftNeedingPanel,
+      tier: 'First',
+      owned: [],
+      allProducts: mockProductsWithFamily, // Only has Airbus panel (wrong family)
+      seed: 'test-seed',
+    });
+
+    // Should warn about missing Panel
+    expect(result.warnings.length).toBeGreaterThan(0);
+    expect(result.warnings.some(w => w.includes('Panel'))).toBe(true);
+  });
+
+  it('should handle products without aircraftFamily field (treat as general)', () => {
+    const productsWithoutFamily: Product[] = [
+      ...mockProductsWithFamily,
+      {
+        id: 'legacy-panel',
+        brand: 'Winwing',
+        name: 'Legacy Panel',
+        slug: 'legacy-panel',
+        category: 'Panel',
+        roleType: 'Universal',
+        sim_support: ['MSFS2020'],
+        tier: 'First',
+        // No aircraftFamily field (backward compatibility)
+        images: [],
+        affiliate_urls: {},
+        description: 'Legacy panel without family',
+      },
+    ];
+
+    const aircraftNeedingPanel: AircraftPreset = {
+      ...f16Aircraft,
+      tiers: {
+        First: {
+          needs: [
+            { category: 'HOTAS', count: 1 },
+            { category: 'Panel', count: 1 },
+          ],
+          preferredProducts: ['orion2-hotas-viperace', 'legacy-panel'],
+        },
+      },
+    };
+
+    const result = generateSuggestions({
+      aircraft: aircraftNeedingPanel,
+      tier: 'First',
+      owned: [],
+      allProducts: productsWithoutFamily,
+      seed: 'test-seed',
+    });
+
+    // Should include legacy panel (treated as general)
+    const panel = result.suggestions.find(p => p.category === 'Panel');
+    expect(panel?.id).toBe('legacy-panel');
   });
 });

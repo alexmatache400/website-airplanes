@@ -51,7 +51,7 @@ export const FeaturedProductsCarousel: React.FC<FeaturedProductsCarouselProps> =
   // Fallback for no products
   if (products.length === 0) {
     return (
-      <section className={`py-16 px-4 sm:px-6 lg:px-8 ${className}`}>
+      <section className={`py-12 px-4 sm:px-6 lg:px-8 ${className}`}>
         <div className="max-w-7xl mx-auto">
           <div className="text-center">
             <h2 className="text-3xl font-bold text-dark-100 mb-4">
@@ -67,7 +67,7 @@ export const FeaturedProductsCarousel: React.FC<FeaturedProductsCarouselProps> =
   }
 
   return (
-    <section className={`py-16 px-4 sm:px-6 lg:px-8 ${className}`}>
+    <section className={`py-12 px-4 sm:px-6 lg:px-8 ${className}`}>
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-12">
@@ -84,7 +84,7 @@ export const FeaturedProductsCarousel: React.FC<FeaturedProductsCarouselProps> =
           items={productCards}
           autoplay={true}
           speed={70}
-          gap={24}
+          gap={16}
           ariaLabel="Featured products carousel"
           onReachEnd={() => {
             // Optional: Track carousel cycles for analytics

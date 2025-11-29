@@ -319,9 +319,9 @@ npx serve -s build    # Serve production build
 **2025-10-15:** Code cleanup (removed unused clip-path files)
 **2025-11-21:**
 - Search system v2.0 (progressive prefix matching, improved filtering, CompleteSetup dropdown UX)
-- Company information update: Changed legal name from "Pilot Setups SRL" to "Pilot Setups"
+- Company information update: Changed legal name from "Pilot Setup SRL" to "Pilot Setups"
 - Removed Tax ID and physical address from all pages (Footer, About Us, Terms, Privacy Policy)
-- Updated contact email to "pilotsetup@gmail.com" throughout the app
+- Updated contact email to "contact@pilotsetup.com" throughout the app
 - About Us page restructure:
   - Removed "Who We Are" section
   - Moved mission statement to page header

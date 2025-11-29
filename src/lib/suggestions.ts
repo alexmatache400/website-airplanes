@@ -12,10 +12,10 @@ export const CATEGORY_EQUIVALENCE: Record<Product['category'], Product['category
   Bundle: ['Bundle'], // Bundles should be evaluated case-by-case
   Joystick: ['Joystick'],
   Throttle: ['Throttle'],
-  Pedals: ['Pedals'],
+  Pedals: ['Pedals', 'Rudder'], // Pedals can satisfy Rudder needs and vice versa
   Panel: ['Panel'],
   MCDU: ['MCDU'],
-  Rudder: ['Rudder'],
+  Rudder: ['Rudder', 'Pedals'], // Rudder can satisfy Pedals needs and vice versa
   Base: ['Base'],
   Accessories: ['Accessories'],
 };
@@ -200,6 +200,12 @@ export function generateSuggestions(input: SuggestionInput): SuggestionResult {
         return false;
       }
 
+      // Family filtering: only include products matching aircraft family or marked as 'general'
+      // Products without aircraftFamily field are treated as 'general' (backward compatibility)
+      if (product.aircraftFamily && product.aircraftFamily !== aircraft.id && product.aircraftFamily !== 'general') {
+        return false;
+      }
+
       return true;
     });
 
@@ -247,6 +253,74 @@ export function generateSuggestions(input: SuggestionInput): SuggestionResult {
 }
 
 /**
+ * Get filtered and sorted candidates for product replacement
+ * Shared logic used by both replaceSuggestion and hasReplacementOptions
+ *
+ * @param categoryToReplace - Category of product to replace
+ * @param input - Original suggestion input
+ * @param excludeIds - Product IDs to exclude from candidates
+ * @param currentSuggestions - Current list of suggestions (for exclusion)
+ * @returns Sorted array of candidate products (preferred first)
+ */
+function getReplacementCandidates(
+  categoryToReplace: Product['category'],
+  input: SuggestionInput,
+  excludeIds: Set<string>,
+  currentSuggestions: Product[]
+): Product[] {
+  const { aircraft, tier, owned, allProducts, roleType } = input;
+
+  // Get preferred products list from aircraft preset
+  const tierPreset = aircraft.tiers[tier];
+  const preferredSlugs = new Set(tierPreset?.preferredProducts || []);
+
+  // Combine owned IDs, current suggestion IDs, and exclude IDs
+  const ownedIds = new Set(owned.map(p => p.id));
+  const suggestedIds = new Set(currentSuggestions.map(p => p.id));
+  const allExcludedIds = new Set([
+    ...Array.from(ownedIds),
+    ...Array.from(suggestedIds),
+    ...Array.from(excludeIds)
+  ]);
+
+  // Filter candidates
+  const candidates = allProducts.filter(product => {
+    if (allExcludedIds.has(product.id)) return false;
+
+    const satisfiedCategories = getSatisfiedCategories(product);
+    if (!satisfiedCategories.includes(categoryToReplace)) return false;
+
+    if (product.tier && product.tier !== tier) return false;
+
+    // Role filtering: only include products matching roleType or Universal
+    if (roleType && product.roleType !== roleType && product.roleType !== 'Universal') {
+      return false;
+    }
+
+    // Family filtering: only include products matching aircraft family or marked as 'general'
+    if (product.aircraftFamily && product.aircraftFamily !== aircraft.id && product.aircraftFamily !== 'general') {
+      return false;
+    }
+
+    return true;
+  });
+
+  // Sort candidates: preferred products first, then others
+  const preferred: Product[] = [];
+  const others: Product[] = [];
+
+  candidates.forEach(product => {
+    if (preferredSlugs.has(product.slug) || preferredSlugs.has(product.id)) {
+      preferred.push(product);
+    } else {
+      others.push(product);
+    }
+  });
+
+  return [...preferred, ...others];
+}
+
+/**
  * Replace a single suggestion in a category
  *
  * @param currentSuggestions - Current list of suggestions
@@ -261,40 +335,63 @@ export function replaceSuggestion(
   input: SuggestionInput,
   excludeIds: Set<string> = new Set()
 ): Product | null {
-  const { tier, owned, allProducts, seed = '', roleType } = input;
+  const { seed = '' } = input;
   const random = createSeededRandom(seed + categoryToReplace + Date.now()); // Add timestamp for variety
 
-  // Combine owned IDs, current suggestion IDs, and exclude IDs
-  const ownedIds = new Set(owned.map(p => p.id));
-  const suggestedIds = new Set(currentSuggestions.map(p => p.id));
-  const allExcludedIds = new Set([
-    ...Array.from(ownedIds),
-    ...Array.from(suggestedIds),
-    ...Array.from(excludeIds)
-  ]);
+  // Get sorted candidates using shared logic
+  const sortedCandidates = getReplacementCandidates(
+    categoryToReplace,
+    input,
+    excludeIds,
+    currentSuggestions
+  );
 
-  // Filter candidates
-  let candidates = allProducts.filter(product => {
-    if (allExcludedIds.has(product.id)) return false;
-
-    const satisfiedCategories = getSatisfiedCategories(product);
-    if (!satisfiedCategories.includes(categoryToReplace)) return false;
-
-    if (product.tier && product.tier !== tier) return false;
-
-    // Role filtering: only include products matching roleType or Universal
-    if (roleType && product.roleType !== roleType && product.roleType !== 'Universal') {
-      return false;
-    }
-
-    return true;
-  });
-
-  if (candidates.length === 0) {
+  if (sortedCandidates.length === 0) {
     return null;
   }
 
-  // Shuffle and pick first
-  const shuffled = shuffleArray(candidates, random);
-  return shuffled[0];
+  // Shuffle preferred and non-preferred separately to maintain prioritization
+  const tierPreset = input.aircraft.tiers[input.tier];
+  const preferredSlugs = new Set(tierPreset?.preferredProducts || []);
+
+  const preferred = sortedCandidates.filter(p =>
+    preferredSlugs.has(p.slug) || preferredSlugs.has(p.id)
+  );
+  const others = sortedCandidates.filter(p =>
+    !preferredSlugs.has(p.slug) && !preferredSlugs.has(p.id)
+  );
+
+  // Shuffle each group for variety, then combine
+  const shuffledPreferred = shuffleArray(preferred, random);
+  const shuffledOthers = shuffleArray(others, random);
+  const finalCandidates = [...shuffledPreferred, ...shuffledOthers];
+
+  // Return first (prioritizes preferred products)
+  return finalCandidates[0] || null;
+}
+
+/**
+ * Check if replacement options exist for a product in a category
+ * Used to determine if lock/dice buttons should be shown in UI
+ *
+ * @param currentSuggestions - Current list of suggestions
+ * @param categoryToCheck - Category of product to check
+ * @param input - Original suggestion input
+ * @returns true if at least one replacement option exists
+ */
+export function hasReplacementOptions(
+  currentSuggestions: Product[],
+  categoryToCheck: Product['category'],
+  input: SuggestionInput
+): boolean {
+  // Use shared filtering logic with no additional exclusions
+  const candidates = getReplacementCandidates(
+    categoryToCheck,
+    input,
+    new Set(),
+    currentSuggestions
+  );
+
+  // Return true if at least one alternative exists
+  return candidates.length > 0;
 }
