@@ -166,10 +166,24 @@ export function generateSuggestions(input: SuggestionInput): SuggestionResult {
   // 4) Create set of owned product IDs to exclude
   const ownedIds = new Set(owned.map(p => p.id));
 
+  // 4.5) Create set of owned product categories to exclude from suggestions
+  // If user owns a product from a category, don't suggest more from that category
+  const ownedCategories = new Set<Product['category']>();
+  owned.forEach(product => {
+    const satisfiedCategories = getSatisfiedCategories(product);
+    satisfiedCategories.forEach(cat => ownedCategories.add(cat));
+  });
+
   // 5) For each missing category, select products
   const missingByCategory: SuggestionResult['missingByCategory'] = [];
 
   missingNeeds.forEach((needed, category) => {
+    // Skip this category if user already owns a product from this category
+    // This prevents suggesting more items from categories they already have
+    if (ownedCategories.has(category)) {
+      // Don't add warning, user already owns something from this category
+      return;
+    }
     // Check if we have a locked suggestion for this category
     const locked = lockedSuggestions.get(category);
     if (locked && needed === 1) {
@@ -192,8 +206,13 @@ export function generateSuggestions(input: SuggestionInput): SuggestionResult {
       const satisfiedCategories = getSatisfiedCategories(product);
       if (!satisfiedCategories.includes(category)) return false;
 
-      // Tier matching: prefer exact match, allow if no tier specified
-      if (product.tier && product.tier !== tier) return false;
+      // Tier matching: Allow products if they're in preferredProducts OR if tier matches
+      // This handles cases where products are curated for specific tiers in aircraft-presets
+      // even if their individual tier tag differs (e.g., Business product in First class setup)
+      const isPreferred = preferredSlugs.has(product.slug) || preferredSlugs.has(product.id);
+      if (product.tier && product.tier !== tier && !isPreferred) {
+        return false;
+      }
 
       // Role filtering: only include products matching roleType or Universal
       if (roleType && product.roleType !== roleType && product.roleType !== 'Universal') {
@@ -290,7 +309,12 @@ function getReplacementCandidates(
     const satisfiedCategories = getSatisfiedCategories(product);
     if (!satisfiedCategories.includes(categoryToReplace)) return false;
 
-    if (product.tier && product.tier !== tier) return false;
+    // Tier matching: Allow products if they're in preferredProducts OR if tier matches
+    // Same logic as generateSuggestions to ensure consistency
+    const isPreferred = preferredSlugs.has(product.slug) || preferredSlugs.has(product.id);
+    if (product.tier && product.tier !== tier && !isPreferred) {
+      return false;
+    }
 
     // Role filtering: only include products matching roleType or Universal
     if (roleType && product.roleType !== roleType && product.roleType !== 'Universal') {

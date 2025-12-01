@@ -7,6 +7,9 @@ export interface DropdownOption {
   icon?: string;
   count?: number;
   group?: string; // Optional group label for optgroup-style sections
+  isGroupHeader?: boolean; // Mark as non-selectable group header
+  isDivider?: boolean; // Mark as visual divider
+  disabled?: boolean; // Mark as disabled/non-selectable
 }
 
 interface CustomDropdownProps {
@@ -17,6 +20,7 @@ interface CustomDropdownProps {
   className?: string;
   placeholder?: string;
   multiSelect?: boolean;
+  disabled?: boolean; // Disable the entire dropdown
 }
 
 export const CustomDropdown: React.FC<CustomDropdownProps> = ({
@@ -26,7 +30,8 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
   options,
   className = '',
   placeholder = '-- Select --',
-  multiSelect = false
+  multiSelect = false,
+  disabled = false
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
@@ -105,9 +110,11 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
   }, [focusedIndex, isOpen]);
 
   const handleToggle = () => {
+    if (disabled) return; // Don't open if disabled
     setIsOpen(!isOpen);
     if (!isOpen) {
-      // Set focused index to current selection when opening
+      // Set focused index to current selection when opening, skipping dividers and headers
+      const selectableOptions = options.filter(opt => !opt.isDivider && !opt.isGroupHeader && !opt.disabled);
       if (multiSelect) {
         setFocusedIndex(0);
       } else {
@@ -219,10 +226,14 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
         id={id}
         onClick={handleToggle}
         onKeyDown={handleKeyDown}
-        className="w-full bg-dropdown-bg text-dropdown-text border-2 border-dropdown-border rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-dropdown-focus-ring focus:border-transparent hover:bg-dropdown-hover-bg transition-colors cursor-pointer text-left flex items-center justify-between"
+        disabled={disabled}
+        className={`w-full bg-dropdown-bg text-dropdown-text border-2 border-dropdown-border rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-dropdown-focus-ring focus:border-transparent hover:bg-dropdown-hover-bg transition-colors text-left flex items-center justify-between ${
+          disabled ? 'opacity-50 cursor-not-allowed hover:bg-dropdown-bg' : 'cursor-pointer'
+        }`}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-labelledby={`${id}-label`}
+        aria-disabled={disabled}
       >
         <span className="flex items-center gap-2">
           {!multiSelect && (() => {
@@ -259,20 +270,49 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
           ref={listRef}
           role="listbox"
           aria-labelledby={`${id}-label`}
-          className="absolute z-50 w-full mt-2 bg-dropdown-bg border-2 border-dropdown-border rounded-lg shadow-lg max-h-60 overflow-y-auto"
+          className="absolute z-[60] w-full mt-2 bg-dropdown-bg border-2 border-dropdown-border rounded-lg shadow-lg max-h-60 overflow-y-auto"
           style={{
             scrollbarWidth: 'thin',
             scrollbarColor: 'rgb(148 163 184) transparent'
           }}
         >
           {options.map((option, index) => {
-            // Check if we need to render a group header
+            // Handle dividers
+            if (option.isDivider) {
+              return (
+                <li
+                  key={`divider-${index}`}
+                  role="separator"
+                  className="border-t border-dark-600 my-2"
+                  aria-hidden="true"
+                />
+              );
+            }
+
+            // Handle group headers
+            if (option.isGroupHeader) {
+              return (
+                <li
+                  key={`header-${index}`}
+                  className="px-4 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider bg-slate-800/40 pointer-events-none"
+                  role="presentation"
+                  aria-hidden="true"
+                >
+                  {option.label}
+                </li>
+              );
+            }
+
+            // Check if we need to render a group header (legacy support)
             const showGroupHeader = option.group && (index === 0 || options[index - 1]?.group !== option.group);
+
+            // Check if option is disabled
+            const isOptionDisabled = option.disabled || false;
 
             return (
               <React.Fragment key={option.value}>
-                {/* Group Header */}
-                {showGroupHeader && (
+                {/* Group Header (legacy) */}
+                {showGroupHeader && !option.isGroupHeader && (
                   <li
                     className="px-4 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider bg-slate-800/40 pointer-events-none"
                     role="presentation"
@@ -285,18 +325,25 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
                 <li
                   role="option"
                   aria-selected={isSelected(option.value)}
-                  onClick={() => handleSelect(option.value)}
+                  aria-disabled={isOptionDisabled}
+                  onClick={() => !isOptionDisabled && handleSelect(option.value)}
                   onMouseEnter={() => {
-                    navigationSourceRef.current = 'mouse';
-                    setFocusedIndex(index);
+                    if (!isOptionDisabled) {
+                      navigationSourceRef.current = 'mouse';
+                      setFocusedIndex(index);
+                    }
                   }}
                   className={`
-                    px-4 py-3 cursor-pointer flex items-center gap-2 transition-colors
-                    ${isSelected(option.value)
-                      ? 'bg-dropdown-focus-ring bg-opacity-20 text-dropdown-text font-medium'
-                      : 'text-dropdown-text hover:bg-dropdown-hover-bg'
+                    px-4 py-3 flex items-center gap-2 transition-colors
+                    ${isOptionDisabled
+                      ? 'cursor-not-allowed opacity-50 pointer-events-none'
+                      : 'cursor-pointer'
                     }
-                    ${focusedIndex === index
+                    ${!isOptionDisabled && isSelected(option.value)
+                      ? 'bg-dropdown-focus-ring bg-opacity-20 text-dropdown-text font-medium'
+                      : !isOptionDisabled ? 'text-dropdown-text hover:bg-dropdown-hover-bg' : 'text-dropdown-text'
+                    }
+                    ${!isOptionDisabled && focusedIndex === index
                       ? 'bg-dropdown-hover-bg'
                       : ''
                     }

@@ -26,13 +26,14 @@
           { "category": "Panel", "count": 1 },
           { "category": "Joystick", "count": 1 },
           { "category": "Throttle", "count": 1 },
-          { "category": "Pedals", "count": 1 }
+          { "category": "Rudder", "count": 1 }
         ],
         "preferredProducts": [
           "winwing-ursa-minor-joystick-l",
           "winwing-ursa-minor-joystick-r",
           "logi-flight-rudder-pedals",
           "ursa-minor-32-throttle-metal",
+          "orion-metal-rudder-pedals",
           "32-ecam",
           "efis-r",
           "efis-l"
@@ -65,6 +66,7 @@
           { "category": "Pedals", "count": 1 }
         ],
         "preferredProducts": [
+          "winwing-ursa-minor-joystick-l",
           "tm-tca-yoke-pack-boeing",
           "orion-metal-rudder-pedals",
           "winwing-3-glareshield-mag",

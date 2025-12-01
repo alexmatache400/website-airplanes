@@ -5,6 +5,13 @@ import { listProducts, searchProducts, highlightMatch, filterProductsByFamily, t
 import { listAircraft, type AircraftPreset } from '../lib/aircraft';
 import { generateSuggestions, replaceSuggestion, hasReplacementOptions, type SuggestionResult } from '../lib/suggestions';
 import { CustomDropdown, type DropdownOption } from '../components/CustomDropdown';
+import {
+  findAircraftFamiliesWithProduct,
+  findTiersWithProduct,
+  shouldAutoSelectRole,
+  getFirstOwnedProduct,
+  type TierSplit
+} from '../lib/setup-filters';
 
 type RoleType = '' | 'Pilot' | 'Copilot';
 
@@ -20,6 +27,12 @@ const CompleteSetup: React.FC = () => {
   const [result, setResult] = useState<SuggestionResult | null>(null);
   const [lockedProducts, setLockedProducts] = useState<Map<string, Product>>(new Map());
   const [seed, setSeed] = useState<string>('');
+
+  // New state for filtering logic
+  const [availableAircraft, setAvailableAircraft] = useState<AircraftPreset[]>([]);
+  const [availableTiers, setAvailableTiers] = useState<TierSplit>({ match: [], downgrade: [] });
+  const [isRoleAutoSelected, setIsRoleAutoSelected] = useState<boolean>(false);
+  const [isAircraftAutoSelected, setIsAircraftAutoSelected] = useState<boolean>(false);
 
   // Refs
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -64,9 +77,73 @@ const CompleteSetup: React.FC = () => {
 
   // Handlers
   const handleAddGear = (product: Product) => {
-    if (!ownedGear.find(g => g.id === product.id)) {
-      setOwnedGear([...ownedGear, product]);
+    // Check if product already exists
+    if (ownedGear.find(g => g.id === product.id)) {
+      // Clear search state and close dropdown
+      setSearchQuery('');
+      setSearchSuggestions([]);
+      setShowSuggestions(false);
+      searchInputRef.current?.focus();
+      return;
     }
+
+    // Add product to owned gear
+    const newOwnedGear = [...ownedGear, product];
+    setOwnedGear(newOwnedGear);
+
+    // If this is the first product, trigger filtering logic
+    if (ownedGear.length === 0) {
+      // Step 2: Filter aircraft families
+      const filteredAircraft = findAircraftFamiliesWithProduct(product.slug || product.id, allAircraft);
+
+      // If no matches, show all aircraft
+      const aircraftToShow = filteredAircraft.length > 0 ? filteredAircraft : allAircraft;
+      setAvailableAircraft(aircraftToShow);
+
+      // Auto-select aircraft if only one option
+      let autoSelectedAircraft: AircraftPreset | null = null;
+      if (filteredAircraft.length === 1) {
+        autoSelectedAircraft = filteredAircraft[0];
+        setSelectedAircraft(autoSelectedAircraft);
+        setIsAircraftAutoSelected(true);
+      } else {
+        setSelectedAircraft(null);
+        setIsAircraftAutoSelected(false);
+      }
+
+      // Step 3: Check if role should be auto-selected
+      const autoRole = shouldAutoSelectRole(product);
+      if (autoRole) {
+        setSelectedRole(autoRole);
+        setIsRoleAutoSelected(true);
+        localStorage.setItem('completesetup_selectedRole', autoRole);
+      } else {
+        // Universal product - user must manually select
+        setIsRoleAutoSelected(false);
+      }
+
+      // Calculate tier split if aircraft was auto-selected
+      if (autoSelectedAircraft) {
+        const tierSplit = findTiersWithProduct(autoSelectedAircraft.id, product.slug || product.id, allAircraft, allProducts);
+        setAvailableTiers(tierSplit);
+
+        // Auto-select first match tier if available, otherwise first downgrade tier
+        if (tierSplit.match.length > 0) {
+          setSelectedTier(tierSplit.match[0]);
+        } else if (tierSplit.downgrade.length > 0) {
+          setSelectedTier(tierSplit.downgrade[0]);
+        } else {
+          setSelectedTier('Business');
+        }
+      } else {
+        // No auto-select, reset tier
+        setSelectedTier('Business');
+        setAvailableTiers({ match: [], downgrade: [] });
+      }
+
+      setResult(null);
+    }
+
     // Clear search state and close dropdown
     setSearchQuery('');
     setSearchSuggestions([]);
@@ -75,7 +152,74 @@ const CompleteSetup: React.FC = () => {
   };
 
   const handleRemoveGear = (productId: string) => {
-    setOwnedGear(ownedGear.filter(g => g.id !== productId));
+    const newOwnedGear = ownedGear.filter(g => g.id !== productId);
+    setOwnedGear(newOwnedGear);
+
+    // If removing the first/only product, reset everything
+    if (newOwnedGear.length === 0) {
+      // Reset aircraft filter to show all
+      setAvailableAircraft(allAircraft);
+
+      // Reset role and aircraft auto-selection
+      setIsRoleAutoSelected(false);
+      setIsAircraftAutoSelected(false);
+
+      // Reset selections
+      setSelectedAircraft(null);
+      setSelectedRole('');
+      setSelectedTier('Business');
+      setAvailableTiers({ match: [], downgrade: [] });
+      setResult(null);
+      localStorage.setItem('completesetup_selectedRole', '');
+    } else if (newOwnedGear.length > 0) {
+      // If still have products, re-apply filtering based on first product
+      const firstProduct = newOwnedGear[0];
+      const filteredAircraft = findAircraftFamiliesWithProduct(firstProduct.slug || firstProduct.id, allAircraft);
+      const aircraftToShow = filteredAircraft.length > 0 ? filteredAircraft : allAircraft;
+      setAvailableAircraft(aircraftToShow);
+
+      // Auto-select aircraft if only one option
+      let autoSelectedAircraft: AircraftPreset | null = null;
+      if (filteredAircraft.length === 1) {
+        autoSelectedAircraft = filteredAircraft[0];
+        setSelectedAircraft(autoSelectedAircraft);
+        setIsAircraftAutoSelected(true);
+      } else {
+        setSelectedAircraft(null);
+        setIsAircraftAutoSelected(false);
+      }
+
+      // Re-check role auto-selection
+      const autoRole = shouldAutoSelectRole(firstProduct);
+      if (autoRole) {
+        setSelectedRole(autoRole);
+        setIsRoleAutoSelected(true);
+        localStorage.setItem('completesetup_selectedRole', autoRole);
+      } else {
+        setIsRoleAutoSelected(false);
+      }
+
+      // Calculate tier split if aircraft was auto-selected
+      if (autoSelectedAircraft) {
+        const tierSplit = findTiersWithProduct(autoSelectedAircraft.id, firstProduct.slug || firstProduct.id, allAircraft, allProducts);
+        setAvailableTiers(tierSplit);
+
+        // Auto-select first match tier if available
+        if (tierSplit.match.length > 0) {
+          setSelectedTier(tierSplit.match[0]);
+        } else if (tierSplit.downgrade.length > 0) {
+          setSelectedTier(tierSplit.downgrade[0]);
+        } else {
+          setSelectedTier('Business');
+        }
+      } else {
+        // No auto-select, reset tier
+        setSelectedTier('Business');
+        setAvailableTiers({ match: [], downgrade: [] });
+      }
+
+      setResult(null);
+    }
   };
 
   const handleGenerate = () => {
@@ -218,11 +362,18 @@ const CompleteSetup: React.FC = () => {
   }, []);
 
   // Role dropdown options with icons
-  const roleOptions: DropdownOption[] = useMemo(() => [
-    { value: '', label: '-- Select a role --' },
-    { value: 'Pilot', label: 'Pilot', icon: 'pilot' },
-    { value: 'Copilot', label: 'Copilot', icon: 'copilot' },
-  ], []);
+  const roleOptions: DropdownOption[] = useMemo(() => {
+    // When wizard is disabled (no owned gear), show only placeholder
+    if (ownedGear.length === 0) {
+      return [{ value: '', label: '-- Select a role --' }];
+    }
+
+    return [
+      { value: '', label: '-- Select a role --' },
+      { value: 'Pilot', label: 'Pilot', icon: 'pilot' },
+      { value: 'Copilot', label: 'Copilot', icon: 'copilot' },
+    ];
+  }, [ownedGear.length]);
 
   /**
    * Memoized map of product category to whether replacement options exist
@@ -259,28 +410,130 @@ const CompleteSetup: React.FC = () => {
     return replacementAvailability.get(product.category) ?? false;
   };
 
-  // Tier dropdown options with icons
-  const tierOptions: DropdownOption[] = useMemo(() => [
-    { value: 'First', label: 'First class (Premium)', icon: 'first' },
-    { value: 'Business', label: 'Business class (Mid-tier)', icon: 'business' },
-    { value: 'Economy', label: 'Economy (Budget-friendly)', icon: 'economy' },
-  ], []);
+  // Tier dropdown options with icons (dynamic based on owned product and aircraft)
+  const tierOptions: DropdownOption[] = useMemo(() => {
+    // If no owned gear or no aircraft selected, show default options
+    if (ownedGear.length === 0 || !selectedAircraft) {
+      return [
+        { value: 'First', label: 'First class (Premium)', icon: 'first' },
+        { value: 'Business', label: 'Business class (Mid-tier)', icon: 'business' },
+        { value: 'Economy', label: 'Economy (Budget-friendly)', icon: 'economy' },
+      ];
+    }
 
-  // Aircraft dropdown options (dynamic from allAircraft)
-  const aircraftOptions: DropdownOption[] = useMemo(() => [
-    { value: '', label: '-- Select an aircraft --' },
-    ...allAircraft.map(aircraft => ({
-      value: aircraft.id,
-      label: aircraft.name
-    }))
-  ], [allAircraft]);
+    // Build dynamic options using the tier split
+    const options: DropdownOption[] = [];
+
+    // Helper function to get tier label
+    const getTierLabel = (tier: Tier, isDowngrade: boolean = false): string => {
+      const baseLabel = tier === 'First' ? 'First class (Premium)'
+        : tier === 'Business' ? 'Business class (Mid-tier)'
+        : 'Economy (Budget-friendly)';
+      return isDowngrade ? `${baseLabel} (without your product)` : baseLabel;
+    };
+
+    // Add Match section
+    if (availableTiers.match.length > 0) {
+      options.push({
+        value: 'header-match',
+        label: 'Match Your Product Tier',
+        isGroupHeader: true,
+        disabled: true
+      });
+
+      availableTiers.match.forEach(tier => {
+        options.push({
+          value: tier,
+          label: getTierLabel(tier, false),
+          icon: tier.toLowerCase()
+        });
+      });
+    }
+
+    // Add divider if both sections exist
+    if (availableTiers.match.length > 0 && availableTiers.downgrade.length > 0) {
+      options.push({
+        value: 'divider-1',
+        label: '',
+        isDivider: true,
+        disabled: true
+      });
+    }
+
+    // Add Downgrade section
+    if (availableTiers.downgrade.length > 0) {
+      options.push({
+        value: 'header-downgrade',
+        label: 'Downgrade Options',
+        isGroupHeader: true,
+        disabled: true
+      });
+
+      availableTiers.downgrade.forEach(tier => {
+        options.push({
+          value: tier,
+          label: getTierLabel(tier, true),
+          icon: tier.toLowerCase()
+        });
+      });
+    }
+
+    // Fallback if no tiers available
+    if (options.length === 0) {
+      return [
+        { value: 'First', label: 'First class (Premium)', icon: 'first' },
+        { value: 'Business', label: 'Business class (Mid-tier)', icon: 'business' },
+        { value: 'Economy', label: 'Economy (Budget-friendly)', icon: 'economy' },
+      ];
+    }
+
+    return options;
+  }, [ownedGear, selectedAircraft, availableTiers]);
+
+  // Aircraft dropdown options (filtered based on owned product)
+  const aircraftOptions: DropdownOption[] = useMemo(() => {
+    // When wizard is disabled (no owned gear), show only placeholder
+    if (ownedGear.length === 0) {
+      return [{ value: '', label: '-- Select an aircraft --' }];
+    }
+
+    const sourceAircraft = availableAircraft.length > 0 ? availableAircraft : allAircraft;
+    return [
+      { value: '', label: '-- Select an aircraft --' },
+      ...sourceAircraft.map(aircraft => ({
+        value: aircraft.id,
+        label: `${aircraft.name} - Family`
+      }))
+    ];
+  }, [ownedGear.length, availableAircraft, allAircraft]);
 
   // Aircraft change handler
   const handleAircraftChange = (value: string | string[]) => {
     const stringValue = Array.isArray(value) ? value[0] : value;
-    const aircraft = allAircraft.find(a => a.id === stringValue);
+    const aircraft = (availableAircraft.length > 0 ? availableAircraft : allAircraft).find(a => a.id === stringValue);
     setSelectedAircraft(aircraft || null);
     setResult(null); // Reset results when aircraft changes
+
+    // User manually changed aircraft, clear auto-selection flag
+    setIsAircraftAutoSelected(false);
+
+    // Calculate tier split based on first owned product
+    const firstProduct = getFirstOwnedProduct(ownedGear);
+    if (firstProduct && aircraft) {
+      const tierSplit = findTiersWithProduct(aircraft.id, firstProduct.slug || firstProduct.id, allAircraft, allProducts);
+      setAvailableTiers(tierSplit);
+
+      // Auto-select first match tier if available, otherwise first downgrade tier
+      if (tierSplit.match.length > 0) {
+        setSelectedTier(tierSplit.match[0]);
+      } else if (tierSplit.downgrade.length > 0) {
+        setSelectedTier(tierSplit.downgrade[0]);
+      }
+    } else {
+      // No owned gear, reset to default
+      setAvailableTiers({ match: [], downgrade: [] });
+      setSelectedTier('Business');
+    }
   };
 
   // Tier change handler
@@ -316,56 +569,20 @@ const CompleteSetup: React.FC = () => {
               Complete your setup
             </h1>
             <p className="text-lg text-dark-300 max-w-3xl mx-auto">
-              Pick your aircraft, select a role, add the gear you already own, select a class, then we'll fill
+              Add the gear you already own, choose your aircraft family and role, select your budget tier, then we'll fill
               the gaps with smart suggestions.
             </p>
           </div>
 
           {/* Configuration Panel */}
           <div className="bg-dark-800/40 backdrop-blur-sm rounded-2xl border border-dark-700/50 p-8 mb-8">
-            {/* Row A: Aircraft Selector */}
-            <div className="mb-6">
-              <label
-                id="aircraft-select-label"
-                htmlFor="aircraft-select"
-                className="block text-sm font-medium text-dark-200 mb-2"
-              >
-                1. Choose your aircraft
-              </label>
-              <CustomDropdown
-                id="aircraft-select"
-                value={selectedAircraft?.id || ''}
-                onChange={handleAircraftChange}
-                options={aircraftOptions}
-                placeholder="-- Select an aircraft --"
-              />
-            </div>
-
-            {/* Row B: Role Selector */}
-            <div className="mb-6">
-              <label
-                id="role-select-label"
-                htmlFor="role-select"
-                className="block text-sm font-medium text-dark-200 mb-2"
-              >
-                2. Select your role
-              </label>
-              <CustomDropdown
-                id="role-select"
-                value={selectedRole}
-                onChange={handleRoleChange}
-                options={roleOptions}
-                placeholder="-- Select a role --"
-              />
-            </div>
-
-            {/* Row C: Add Current Gear */}
+            {/* Step 1: Add Current Gear (Always enabled) */}
             <div className="mb-6">
               <label
                 htmlFor="gear-search"
                 className="block text-sm font-medium text-dark-200 mb-2"
               >
-                3. Add your current gear
+                1. Add your current gear
               </label>
 
               {/* Search Input */}
@@ -468,14 +685,67 @@ const CompleteSetup: React.FC = () => {
               </div>
             </div>
 
-            {/* Row D: Class Tier Selector */}
-            <div className="mb-6">
+            {/* Step 2: Aircraft Selector (Disabled until step 1 complete) */}
+            <div className={`mb-6 ${ownedGear.length === 0 ? 'opacity-50' : ''}`}>
+              <label
+                id="aircraft-select-label"
+                htmlFor="aircraft-select"
+                className="block text-sm font-medium text-dark-200 mb-2"
+              >
+                2. Choose your aircraft family
+                {ownedGear.length === 0 && (
+                  <span className="ml-2 text-xs text-dark-400 italic">(Complete step 1 first)</span>
+                )}
+                {isAircraftAutoSelected && ownedGear.length > 0 && (
+                  <span className="ml-2 text-xs text-green-400 italic">(Auto-selected - only one match found)</span>
+                )}
+              </label>
+              <CustomDropdown
+                id="aircraft-select"
+                value={selectedAircraft?.id || ''}
+                onChange={handleAircraftChange}
+                options={aircraftOptions}
+                placeholder="-- Select an aircraft --"
+                disabled={ownedGear.length === 0}
+              />
+            </div>
+
+            {/* Step 3: Role Selector (Disabled until step 1 complete) */}
+            <div className={`mb-6 ${ownedGear.length === 0 ? 'opacity-50' : ''}`}>
+              <label
+                id="role-select-label"
+                htmlFor="role-select"
+                className="block text-sm font-medium text-dark-200 mb-2"
+              >
+                3. Select your role
+                {ownedGear.length === 0 && (
+                  <span className="ml-2 text-xs text-dark-400 italic">(Complete step 1 first)</span>
+                )}
+                {isRoleAutoSelected && ownedGear.length > 0 && (
+                  <span className="ml-2 text-xs text-green-400 italic">(Auto-selected based on your product)</span>
+                )}
+              </label>
+              <CustomDropdown
+                id="role-select"
+                value={selectedRole}
+                onChange={handleRoleChange}
+                options={roleOptions}
+                placeholder="-- Select a role --"
+                disabled={ownedGear.length === 0}
+              />
+            </div>
+
+            {/* Step 4: Class Tier Selector (Disabled until step 1 complete) */}
+            <div className={`mb-6 ${ownedGear.length === 0 ? 'opacity-50' : ''}`}>
               <label
                 id="tier-select-label"
                 htmlFor="tier-select"
                 className="block text-sm font-medium text-dark-200 mb-2"
               >
-                4. Select class tier
+                4. Select class tier (budget)
+                {ownedGear.length === 0 && (
+                  <span className="ml-2 text-xs text-dark-400 italic">(Complete step 1 first)</span>
+                )}
               </label>
               <CustomDropdown
                 id="tier-select"
@@ -483,6 +753,7 @@ const CompleteSetup: React.FC = () => {
                 onChange={handleTierChange}
                 options={tierOptions}
                 placeholder="-- Select tier --"
+                disabled={ownedGear.length === 0}
               />
             </div>
 
