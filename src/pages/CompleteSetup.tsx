@@ -7,10 +7,8 @@ import { generateSuggestions, replaceSuggestion, hasReplacementOptions, type Sug
 import { CustomDropdown, type DropdownOption } from '../components/CustomDropdown';
 import {
   findAircraftFamiliesWithProduct,
-  findTiersWithProduct,
   shouldAutoSelectRole,
-  getFirstOwnedProduct,
-  type TierSplit
+  getFirstOwnedProduct
 } from '../lib/setup-filters';
 
 type RoleType = '' | 'Pilot' | 'Copilot';
@@ -30,7 +28,6 @@ const CompleteSetup: React.FC = () => {
 
   // New state for filtering logic
   const [availableAircraft, setAvailableAircraft] = useState<AircraftPreset[]>([]);
-  const [availableTiers, setAvailableTiers] = useState<TierSplit>({ match: [], downgrade: [] });
   const [isRoleAutoSelected, setIsRoleAutoSelected] = useState<boolean>(false);
   const [isAircraftAutoSelected, setIsAircraftAutoSelected] = useState<boolean>(false);
 
@@ -122,23 +119,12 @@ const CompleteSetup: React.FC = () => {
         setIsRoleAutoSelected(false);
       }
 
-      // Calculate tier split if aircraft was auto-selected
-      if (autoSelectedAircraft) {
-        const tierSplit = findTiersWithProduct(autoSelectedAircraft.id, product.slug || product.id, allAircraft, allProducts);
-        setAvailableTiers(tierSplit);
-
-        // Auto-select first match tier if available, otherwise first downgrade tier
-        if (tierSplit.match.length > 0) {
-          setSelectedTier(tierSplit.match[0]);
-        } else if (tierSplit.downgrade.length > 0) {
-          setSelectedTier(tierSplit.downgrade[0]);
-        } else {
-          setSelectedTier('Business');
-        }
+      // Auto-select tier based on product's tier tag
+      if (product.tier) {
+        setSelectedTier(product.tier);
       } else {
-        // No auto-select, reset tier
+        // Default to Business if product has no tier tag
         setSelectedTier('Business');
-        setAvailableTiers({ match: [], downgrade: [] });
       }
 
       setResult(null);
@@ -168,7 +154,6 @@ const CompleteSetup: React.FC = () => {
       setSelectedAircraft(null);
       setSelectedRole('');
       setSelectedTier('Business');
-      setAvailableTiers({ match: [], downgrade: [] });
       setResult(null);
       localStorage.setItem('completesetup_selectedRole', '');
     } else if (newOwnedGear.length > 0) {
@@ -199,23 +184,12 @@ const CompleteSetup: React.FC = () => {
         setIsRoleAutoSelected(false);
       }
 
-      // Calculate tier split if aircraft was auto-selected
-      if (autoSelectedAircraft) {
-        const tierSplit = findTiersWithProduct(autoSelectedAircraft.id, firstProduct.slug || firstProduct.id, allAircraft, allProducts);
-        setAvailableTiers(tierSplit);
-
-        // Auto-select first match tier if available
-        if (tierSplit.match.length > 0) {
-          setSelectedTier(tierSplit.match[0]);
-        } else if (tierSplit.downgrade.length > 0) {
-          setSelectedTier(tierSplit.downgrade[0]);
-        } else {
-          setSelectedTier('Business');
-        }
+      // Auto-select tier based on first product's tier tag
+      if (firstProduct.tier) {
+        setSelectedTier(firstProduct.tier);
       } else {
-        // No auto-select, reset tier
+        // Default to Business if product has no tier tag
         setSelectedTier('Business');
-        setAvailableTiers({ match: [], downgrade: [] });
       }
 
       setResult(null);
@@ -410,10 +384,13 @@ const CompleteSetup: React.FC = () => {
     return replacementAvailability.get(product.category) ?? false;
   };
 
-  // Tier dropdown options with icons (dynamic based on owned product and aircraft)
-  const tierOptions: DropdownOption[] = useMemo(() => {
-    // If no owned gear or no aircraft selected, show default options
-    if (ownedGear.length === 0 || !selectedAircraft) {
+  /**
+   * Helper function to generate tier dropdown options based on owned product's tier
+   * Always returns exactly 3 options with appropriate upgrade/downgrade labels
+   */
+  const getTierDropdownOptions = (productTier: Tier | undefined): DropdownOption[] => {
+    // Default case: no owned product, show all 3 tiers with standard labels
+    if (!productTier) {
       return [
         { value: 'First', label: 'First class (Premium)', icon: 'first' },
         { value: 'Business', label: 'Business class (Mid-tier)', icon: 'business' },
@@ -421,74 +398,43 @@ const CompleteSetup: React.FC = () => {
       ];
     }
 
-    // Build dynamic options using the tier split
+    // Based on product tier, generate options with upgrade/downgrade labels
     const options: DropdownOption[] = [];
 
-    // Helper function to get tier label
-    const getTierLabel = (tier: Tier, isDowngrade: boolean = false): string => {
-      const baseLabel = tier === 'First' ? 'First class (Premium)'
-        : tier === 'Business' ? 'Business class (Mid-tier)'
-        : 'Economy (Budget-friendly)';
-      return isDowngrade ? `${baseLabel} (without your product)` : baseLabel;
-    };
-
-    // Add Match section
-    if (availableTiers.match.length > 0) {
-      options.push({
-        value: 'header-match',
-        label: 'Match Your Product Tier',
-        isGroupHeader: true,
-        disabled: true
-      });
-
-      availableTiers.match.forEach(tier => {
-        options.push({
-          value: tier,
-          label: getTierLabel(tier, false),
-          icon: tier.toLowerCase()
-        });
-      });
-    }
-
-    // Add divider if both sections exist
-    if (availableTiers.match.length > 0 && availableTiers.downgrade.length > 0) {
-      options.push({
-        value: 'divider-1',
-        label: '',
-        isDivider: true,
-        disabled: true
-      });
-    }
-
-    // Add Downgrade section
-    if (availableTiers.downgrade.length > 0) {
-      options.push({
-        value: 'header-downgrade',
-        label: 'Downgrade Options',
-        isGroupHeader: true,
-        disabled: true
-      });
-
-      availableTiers.downgrade.forEach(tier => {
-        options.push({
-          value: tier,
-          label: getTierLabel(tier, true),
-          icon: tier.toLowerCase()
-        });
-      });
-    }
-
-    // Fallback if no tiers available
-    if (options.length === 0) {
-      return [
-        { value: 'First', label: 'First class (Premium)', icon: 'first' },
-        { value: 'Business', label: 'Business class (Mid-tier)', icon: 'business' },
+    if (productTier === 'Economy') {
+      // Product is Economy tier: Show Economy first, then upgrade options
+      options.push(
         { value: 'Economy', label: 'Economy (Budget-friendly)', icon: 'economy' },
-      ];
+        { value: 'Business', label: 'Upgrade to Business class tier', icon: 'business' },
+        { value: 'First', label: 'Upgrade to First class tier', icon: 'first' }
+      );
+    } else if (productTier === 'Business') {
+      // Product is Business tier: Show Business first, then upgrade and downgrade
+      options.push(
+        { value: 'Business', label: 'Business class (Mid-tier)', icon: 'business' },
+        { value: 'First', label: 'Upgrade to First class tier', icon: 'first' },
+        { value: 'Economy', label: 'Downgrade to Economy tier', icon: 'economy' }
+      );
+    } else if (productTier === 'First') {
+      // Product is First tier: Show First first, then downgrade options
+      options.push(
+        { value: 'First', label: 'First class (Premium)', icon: 'first' },
+        { value: 'Business', label: 'Downgrade to Business tier', icon: 'business' },
+        { value: 'Economy', label: 'Downgrade to Economy tier', icon: 'economy' }
+      );
     }
 
     return options;
-  }, [ownedGear, selectedAircraft, availableTiers]);
+  };
+
+  // Tier dropdown options with icons (always shows 3 options based on owned product's tier)
+  const tierOptions: DropdownOption[] = useMemo(() => {
+    // Get first owned product's tier
+    const firstProduct = getFirstOwnedProduct(ownedGear);
+    const productTier = firstProduct?.tier;
+
+    return getTierDropdownOptions(productTier);
+  }, [ownedGear]);
 
   // Aircraft dropdown options (filtered based on owned product)
   const aircraftOptions: DropdownOption[] = useMemo(() => {
@@ -517,21 +463,12 @@ const CompleteSetup: React.FC = () => {
     // User manually changed aircraft, clear auto-selection flag
     setIsAircraftAutoSelected(false);
 
-    // Calculate tier split based on first owned product
+    // Auto-select tier based on first owned product's tier tag
     const firstProduct = getFirstOwnedProduct(ownedGear);
-    if (firstProduct && aircraft) {
-      const tierSplit = findTiersWithProduct(aircraft.id, firstProduct.slug || firstProduct.id, allAircraft, allProducts);
-      setAvailableTiers(tierSplit);
-
-      // Auto-select first match tier if available, otherwise first downgrade tier
-      if (tierSplit.match.length > 0) {
-        setSelectedTier(tierSplit.match[0]);
-      } else if (tierSplit.downgrade.length > 0) {
-        setSelectedTier(tierSplit.downgrade[0]);
-      }
+    if (firstProduct && firstProduct.tier) {
+      setSelectedTier(firstProduct.tier);
     } else {
-      // No owned gear, reset to default
-      setAvailableTiers({ match: [], downgrade: [] });
+      // Default to Business if no product or product has no tier tag
       setSelectedTier('Business');
     }
   };

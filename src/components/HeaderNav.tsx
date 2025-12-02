@@ -12,6 +12,9 @@ const HeaderNav: React.FC = () => {
   const navigate = useNavigate();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
+  const mobileSearchInputRef = useRef<HTMLInputElement>(null);
+  const mobileSuggestionsRef = useRef<HTMLDivElement>(null);
+  const suggestionButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const navLinks = [
     { label: 'Products', href: '/products' },
@@ -36,20 +39,42 @@ const HeaderNav: React.FC = () => {
 
   // Close suggestions when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        suggestionsRef.current &&
-        !suggestionsRef.current.contains(event.target as Node) &&
-        searchInputRef.current &&
-        !searchInputRef.current.contains(event.target as Node)
-      ) {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as Node;
+
+      // Check if click is inside desktop search
+      const isDesktopSearch =
+        (suggestionsRef.current && suggestionsRef.current.contains(target)) ||
+        (searchInputRef.current && searchInputRef.current.contains(target));
+
+      // Check if click is inside mobile search
+      const isMobileSearch =
+        (mobileSuggestionsRef.current && mobileSuggestionsRef.current.contains(target)) ||
+        (mobileSearchInputRef.current && mobileSearchInputRef.current.contains(target));
+
+      // Close only if clicked outside both desktop and mobile search
+      if (!isDesktopSearch && !isMobileSearch) {
         setShowSuggestions(false);
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
   }, []);
+
+  // Scroll selected item to center when navigating with arrow keys
+  useEffect(() => {
+    if (selectedIndex >= 0 && selectedIndex < suggestionButtonRefs.current.length) {
+      const selectedButton = suggestionButtonRefs.current[selectedIndex];
+      if (selectedButton) {
+        selectedButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }, [selectedIndex]);
 
   // Update suggestions when search query changes
   const handleSearchChange = (value: string) => {
@@ -210,6 +235,7 @@ const HeaderNav: React.FC = () => {
                   {suggestions.map((product, index) => (
                     <button
                       key={product.id}
+                      ref={(el) => { suggestionButtonRefs.current[index] = el; }}
                       type="button"
                       onClick={() => handleSuggestionClick(product)}
                       className={`w-full text-left px-4 py-3 text-sm transition-colors border-b border-slate-700/50 last:border-0 ${
@@ -218,7 +244,7 @@ const HeaderNav: React.FC = () => {
                           : 'text-slate-300 hover:bg-slate-700/70'
                       }`}
                     >
-                      <div className="font-medium">{highlightMatch(product.name, searchQuery)}</div>
+                      <div className="font-medium !text-black dark:!text-inherit">{highlightMatch(product.name, searchQuery)}</div>
                       <div className="text-xs text-slate-500 mt-1">
                         {product.brand} · {product.category}
                       </div>
@@ -271,13 +297,15 @@ const HeaderNav: React.FC = () => {
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-dark-700/50">
               {/* Mobile Search */}
-              <form onSubmit={handleSearchSubmit} className="relative mb-4">
+              <div className="relative z-50 mb-4">
+                <form onSubmit={handleSearchSubmit} className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <svg className="h-5 w-5 text-dark-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </div>
                 <input
+                  ref={mobileSearchInputRef}
                   type="text"
                   placeholder="Search products..."
                   value={searchQuery}
@@ -289,10 +317,11 @@ const HeaderNav: React.FC = () => {
 
                 {/* Mobile Suggestions Dropdown */}
                 {showSuggestions && suggestions.length > 0 && (
-                  <div className="absolute top-full mt-2 w-full bg-slate-800 border border-slate-700 rounded-lg shadow-lg max-h-[280px] overflow-y-auto z-50">
+                  <div ref={mobileSuggestionsRef} className="absolute top-full mt-2 w-full bg-slate-800 border border-slate-700 rounded-lg shadow-lg max-h-[280px] overflow-y-auto z-[60]">
                     {suggestions.map((product, index) => (
                       <button
                         key={product.id}
+                        ref={(el) => { suggestionButtonRefs.current[index] = el; }}
                         type="button"
                         onClick={() => {
                           handleSuggestionClick(product);
@@ -304,7 +333,7 @@ const HeaderNav: React.FC = () => {
                             : 'text-slate-300 hover:bg-slate-700/70'
                         }`}
                       >
-                        <div className="font-medium">{highlightMatch(product.name, searchQuery)}</div>
+                        <div className="font-medium !text-black dark:!text-inherit">{highlightMatch(product.name, searchQuery)}</div>
                         <div className="text-xs text-slate-500 mt-1">
                           {product.brand} · {product.category}
                         </div>
@@ -313,6 +342,7 @@ const HeaderNav: React.FC = () => {
                   </div>
                 )}
               </form>
+            </div>
 
               {/* Mobile Navigation Links */}
               {navLinks.map((link) => (
