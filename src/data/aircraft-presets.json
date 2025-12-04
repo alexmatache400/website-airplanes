@@ -6,10 +6,11 @@
     "tiers": {
       "First": {
         "needs": [
-          { "category": "Panel", "count": 1 },
+          { "category": "Panel", "count": 3 },
           { "category": "Joystick", "count": 1 },
           { "category": "Throttle", "count": 1 },
-          { "category": "Rudder", "count": 1 }
+          { "category": "Rudder", "count": 1 },
+          { "category": "Bundle", "count": 1 }
         ],
         "preferredProducts": [
           "winwing-ursa-minor-joystick-l",
@@ -17,13 +18,14 @@
           "ursa-minor-32-throttle-metal-32-pac-metal",
           "orion-metal-rudder-pedals",
           "winwing-glareshield-3x0",
+          "winwing-mcdu-fullsize",
           "32-agp-metal",
           "32-ecam"
         ]
       },
       "Business": {
         "needs": [
-          { "category": "Panel", "count": 1 },
+          { "category": "Panel", "count": 3 },
           { "category": "Joystick", "count": 1 },
           { "category": "Throttle", "count": 1 },
           { "category": "Rudder", "count": 1 }
@@ -34,6 +36,7 @@
           "logi-flight-rudder-pedals",
           "ursa-minor-32-throttle-metal",
           "orion-metal-rudder-pedals",
+          "winwing-mcdu-fullsize",
           "32-ecam",
           "efis-r",
           "efis-l"
@@ -41,8 +44,9 @@
       },
       "Economy": {
         "needs": [
-          { "category": "HOTAS", "count": 1 },
-          { "category": "Pedals", "count": 1 }
+          { "category": "Panel", "count": 1 },
+          { "category": "Rudder", "count": 1 },
+          { "category": "Bundle", "count": 1 }
         ],
         "preferredProducts": [
           "tm-tfrp-rudder-pedals",
@@ -66,7 +70,6 @@
           { "category": "Pedals", "count": 1 }
         ],
         "preferredProducts": [
-          "winwing-ursa-minor-joystick-l",
           "tm-tca-yoke-pack-boeing",
           "orion-metal-rudder-pedals",
           "winwing-3-glareshield-mag",

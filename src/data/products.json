@@ -13,7 +13,7 @@
     ],
     "tier": "First",
     "aircraftFamily": "f16-viper",
-    "price_eur": 489,
+    "price_label": "~€489",
     "images": [
       "/photoForProductPage/1.png"
     ],
@@ -44,7 +44,7 @@
     ],
     "tier": "First",
     "aircraftFamily": "fa18-hornet",
-    "price_eur": 529,
+    "price_label": "~€529",
     "images": [
       "/photoForProductPage/2.png"
     ],
@@ -75,7 +75,7 @@
     ],
     "tier": "First",
     "aircraftFamily": "f16-viper",
-    "price_eur": null,
+    "price_label": "~€250",
     "images": [
       "/photoForProductPage/6.png"
     ],
@@ -104,7 +104,7 @@
     ],
     "tier": "First",
     "aircraftFamily": "general",
-    "price_eur": null,
+    "price_label": "~€385",
     "images": [
       "/photoForProductPage/7.png"
     ],
@@ -132,7 +132,7 @@
     ],
     "tier": "First",
     "aircraftFamily": "general",
-    "price_eur": null,
+    "price_label": "~$600",
     "images": [
       "/photoForProductPage/8.png"
     ],
@@ -161,7 +161,7 @@
     ],
     "tier": "First",
     "aircraftFamily": "general",
-    "price_eur": null,
+    "price_label": "~$420",
     "images": [
       "/photoForProductPage/9.png"
     ],
@@ -190,7 +190,7 @@
     ],
     "tier": "Business",
     "aircraftFamily": "general",
-    "price_eur": 119.99,
+    "price_label": "~€120",
     "images": [
       "/photoForProductPage/10.png"
     ],
@@ -219,7 +219,7 @@
     ],
     "tier": "Economy",
     "aircraftFamily": "general",
-    "price_eur": 99.99,
+    "price_label": "~€100",
     "images": [
       "/photoForProductPage/15.png"
     ],
@@ -249,7 +249,7 @@
     ],
     "tier": "Business",
     "aircraftFamily": "airbus-a32f",
-    "price_label": "Mid-tier full-size MCDU",
+    "price_label": "~$575",
     "images": [
       "/photoForProductPage/16.png"
     ],
@@ -278,7 +278,7 @@
     ],
     "tier": "Business",
     "aircraftFamily": "airbus-a32f",
-    "price_label": "Mid-tier aluminum FCU",
+    "price_label": "~$220",
     "images": [
       "/photoForProductPage/17.png"
     ],
@@ -307,9 +307,9 @@
       "XPL11",
       "XPL12"
     ],
-    "tier": "Business",
+    "tier": "Economy",
     "aircraftFamily": "airbus-a32f",
-    "price_label": "Licensed Airbus bundle",
+    "price_label": "~$300",
     "images": [
       "/photoForProductPage/18.png"
     ],
@@ -341,7 +341,7 @@
     ],
     "tier": "Economy",
     "aircraftFamily": "boeing-737",
-    "price_label": "Licensed Boeing bundle",
+    "price_label": "~€430",
     "images": [
       "/photoForProductPage/19.png"
     ],
@@ -373,7 +373,7 @@
     ],
     "tier": "Business",
     "aircraftFamily": "boeing-737",
-    "price_label": "Premium",
+    "price_label": "~€130",
     "images": [
       "/photoForProductPage/21.png"
     ],
@@ -402,7 +402,7 @@
     ],
     "tier": "Business",
     "aircraftFamily": "boeing-737",
-    "price_label": "Premium",
+    "price_label": "~€420",
     "images": [
       "/photoForProductPage/22.png"
     ],
@@ -431,7 +431,7 @@
       "XPL11",
       "XPL12"
     ],
-    "tier": "Business",
+    "tier": "First",
     "aircraftFamily": "airbus-a32f",
     "price_label": "~$82",
     "images": [
@@ -463,7 +463,7 @@
       "XPL11",
       "XPL12"
     ],
-    "tier": "Business",
+    "tier": "First",
     "aircraftFamily": "airbus-a32f",
     "price_label": "~$82",
     "images": [
@@ -496,7 +496,7 @@
     ],
     "tier": "Business",
     "aircraftFamily": "airbus-a32f",
-    "price_label": "Mid-tier metal throttle",
+    "price_label": "~$130",
     "images": [
       "/photoForProductPage/24.png"
     ],
@@ -525,9 +525,9 @@
       "XPL11",
       "XPL12"
     ],
-    "tier": "Business",
+    "tier": "First",
     "aircraftFamily": "airbus-a32f",
-    "price_label": "Mid-tier metal throttle",
+    "price_label": "~$240",
     "images": [
       "/photoForProductPage/12.png"
     ],
@@ -556,9 +556,9 @@
       "XPL11",
       "XPL12"
     ],
-    "tier": "Business",
+    "tier": "First",
     "aircraftFamily": "general",
-    "price_eur": 325,
+    "price_label": "~€325",
     "images": [
       "/photoForProductPage/3.png"
     ],
@@ -589,7 +589,7 @@
     ],
     "tier": "Business",
     "aircraftFamily": "general",
-    "price_eur": 286,
+    "price_label": "~€285",
     "images": [
       "/photoForProductPage/26.png"
     ],
@@ -620,7 +620,7 @@
     ],
     "tier": "Business",
     "aircraftFamily": "general",
-    "price_eur": 220,
+    "price_label": "~€220",
     "images": [
       "/photoForProductPage/27.png"
     ],
@@ -650,7 +650,7 @@
     ],
     "tier": "Business",
     "aircraftFamily": "general",
-    "price_eur": 35,
+    "price_label": "~€35",
     "images": [
       "/photoForProductPage/28.png"
     ],
@@ -677,7 +677,7 @@
     ],
     "tier": "Business",
     "aircraftFamily": "general",
-    "price_eur": 35,
+    "price_label": "~€35",
     "images": [
       "/photoForProductPage/29.png"
     ],
@@ -704,7 +704,7 @@
     ],
     "tier": "Business",
     "aircraftFamily": "general",
-    "price_eur": 40,
+    "price_label": "~€40",
     "images": [
       "/photoForProductPage/30.png"
     ],
@@ -733,7 +733,7 @@
     ],
     "tier": "Business",
     "aircraftFamily": "general",
-    "price_eur": 189,
+    "price_label": "~€190",
     "images": [
       "/photoForProductPage/4.png"
     ],
@@ -764,7 +764,7 @@
     ],
     "tier": "Panel",
     "aircraftFamily": "boeing-737",
-    "price_label": "Premium",
+    "price_label": "~€365",
     "images": [
       "/photoForProductPage/20.png"
     ],
@@ -794,7 +794,7 @@
       "MSFS2024"
     ],
     "tier": "First",
-    "aircraftFamily": "general",
+    "price_label": "~€165",
     "images": [
       "/photoForProductPage/31.png"
     ],
@@ -825,7 +825,7 @@
     ],
     "tier": "First",
     "aircraftFamily": "airbus-a32f",
-    "price_label": "Premium 1:1 FCU/EFIS",
+    "price_label": "~$320",
     "images": [
       "/photoForProductPage/13.png"
     ],
@@ -854,7 +854,7 @@
     ],
     "tier": "Business",
     "aircraftFamily": "general",
-    "price_eur": 80,
+    "price_label": "~€80",
     "images": [
       "/photoForProductPage/5.png"
     ],
@@ -883,7 +883,7 @@
     ],
     "tier": "Business",
     "aircraftFamily": "general",
-    "price_eur": 80,
+    "price_label": "~€80",
     "images": [
       "/photoForProductPage/32.png"
     ],
@@ -914,7 +914,7 @@
     ],
     "tier": "Business",
     "aircraftFamily": "airbus-a32f",
-    "price_label": "Mid-tier metal throttle",
+    "price_label": "~$110",
     "images": [
       "/photoForProductPage/25.png"
     ],
@@ -945,7 +945,7 @@
     ],
     "tier": "Business",
     "aircraftFamily": "boeing-737",
-    "price_label": 84,
+    "price_label": "~€84",
     "images": [
       "/photoForProductPage/33.png"
     ],
@@ -975,7 +975,7 @@
     ],
     "tier": "Business",
     "aircraftFamily": "boeing-737",
-    "price_label": 84,
+    "price_label": "~€84",
     "images": [
       "/photoForProductPage/34.png"
     ],
@@ -1003,9 +1003,9 @@
       "XPL11",
       "XPL12"
     ],
-    "tier": "Business",
+    "tier": "First",
     "aircraftFamily": "airbus-a32f",
-    "price_label": 130,
+    "price_label": "~€130",
     "images": [
       "/photoForProductPage/35.png"
     ],
@@ -1032,9 +1032,9 @@
       "XPL11",
       "XPL12"
     ],
-    "tier": "Business",
+    "tier": "First",
     "aircraftFamily": "airbus-a32f",
-    "price_label": 130,
+    "price_label": "~€130",
     "images": [
       "/photoForProductPage/36.png"
     ],
@@ -1061,7 +1061,7 @@
     ],
     "tier": "First",
     "aircraftFamily": "airbus-a32f",
-    "price_label": "Premium full-size MCDU",
+    "price_label": "~$145",
     "images": [
       "/photoForProductPage/14.png"
     ],
@@ -1090,7 +1090,7 @@
     ],
     "tier": "First",
     "aircraftFamily": "boeing-737",
-    "price_label": 130,
+    "price_label": "~€130",
     "images": [
       "/photoForProductPage/37.png"
     ],
@@ -1119,7 +1119,7 @@
     ],
     "tier": "First",
     "aircraftFamily": "boeing-737",
-    "price_label": 130,
+    "price_label": "~€130",
     "images": [
       "/photoForProductPage/38.png"
     ],
@@ -1148,7 +1148,7 @@
     ],
     "tier": "First",
     "aircraftFamily": "boeing-737",
-    "price_label": 130,
+    "price_label": "~€130",
     "images": [
       "/photoForProductPage/39.png"
     ],
@@ -1177,7 +1177,7 @@
     ],
     "tier": "First",
     "aircraftFamily": "general",
-    "price_label": 25,
+    "price_label": "~€25",
     "images": [
       "/photoForProductPage/40.png"
     ],
@@ -1203,7 +1203,7 @@
     ],
     "tier": "First",
     "aircraftFamily": "boeing-737",
-    "price_label": 50,
+    "price_label": "~€50",
     "images": [
       "/photoForProductPage/41.png"
     ],
