@@ -18,8 +18,7 @@
       "/photoForProductPage/1.png"
     ],
     "affiliate_urls": {
-      "eu": "https://eu.winwingsim.com/view/goods-details.html?id=340&sku_id=36",
-      "us": "https://www.amazon.com/s?k=winwing+orion2+viperace"
+      "winwingsim": "https://eu.winwingsim.com/view/goods-details.html?id=340&sku_id=36"
     },
     "description": "Premium F-16 replica HOTAS with hall-effect sensors, metal construction, and full detachable design for maximum flexibility.",
     "key_specs": {
@@ -49,8 +48,7 @@
       "/photoForProductPage/2.png"
     ],
     "affiliate_urls": {
-      "eu": "https://eu.winwingsim.com/view/goods-details.html?id=303&sku_id=47",
-      "us": "https://www.amazon.com/s?k=winwing+orion2+strikeace"
+      "uk": "https://eu.winwingsim.com/view/goods-details.html?id=303&sku_id=47"
     },
     "description": "F/A-18 inspired dual-throttle HOTAS system with modular design, RGB lighting, and precision hall-effect sensors throughout.",
     "key_specs": {
@@ -80,7 +78,7 @@
       "/photoForProductPage/6.png"
     ],
     "affiliate_urls": {
-      "eu": "https://eu.winwingsim.com/view/goods-details.html?id=374&sku_id=21"
+      "winwingsim": "https://eu.winwingsim.com/view/goods-details.html?id=374&sku_id=21"
     },
     "description": "Orion2 base with Viper-style grip; multiple cam/spring options for tailored feel.",
     "key_specs": {
@@ -109,7 +107,7 @@
       "/photoForProductPage/7.png"
     ],
     "affiliate_urls": {
-      "eu": "https://eu.winwingsim.com/mobileview/goods-details.html?id=373"
+      "winwingsim": "https://eu.winwingsim.com/mobileview/goods-details.html?id=373"
     },
     "description": "Force-sensing side-stick base option for ultra-precise input; modular ecosystem compatibility.",
     "key_specs": {
@@ -137,7 +135,8 @@
       "/photoForProductPage/8.png"
     ],
     "affiliate_urls": {
-      "us": "https://www.thrustmaster.com/en-us/products/hotas-warthog/"
+      "winwingsim": "https://www.thrustmaster.com/en-us/products/hotas-warthog/",
+      "uk": "https://www.amazon.co.uk/Thrustmaster-Hotas-Warthog-Joystick-Throttle/dp/B00371R8P4?crid=1S4JO4LM2DZWT&dib=eyJ2IjoiMSJ9.WQ2QbpE5gTloPEFEWtwZzaXgW9rWbU5Yd7TP6zpB9rd56l2ksdLUGQoGo2AdX6IRUxUTXoLCYRE1EFxpmmVo_0VliVxBUJVH7DYmj_p0J2yjZd8W8OVw_WnKUM1b36jBVtY0zSEO3W8XN0yXZLYkyy5Xu-ZyKLPTNSqsJEFvy_GMt6u7tgFtDmptDxqe2_tiOQgeSPfSe9DfRHOBj0Gcwwqk9IjoyDHDIxcBQnQQDyg.uwWc37Hkk0Dg5gM9rRX9NYGhrBrReJzXx3pYmwHr0nA&dib_tag=se&keywords=thrustmaster%2Bhotas%2Bwarthog&qid=1764869408&sprefix=thrustmaster%2Bhotas%2Bwa%2Caps%2C124&sr=8-2&th=1&linkCode=ll1&tag=alexmatache-21&linkId=289dab4587597b3822e060738495f038&language=en_GB&ref_=as_li_ss_tl"
     },
     "description": "Replica A-10C joystick + dual throttle + control panel; metal construction and community-proven precision.",
     "key_specs": {
@@ -166,7 +165,8 @@
       "/photoForProductPage/9.png"
     ],
     "affiliate_urls": {
-      "us": "https://www.thrustmaster.com/en-us/products/hotas-warthog-dual-throttle/"
+      "uk": "https://www.amazon.co.uk/Thrustmaster-Hotas-Warthog-Joystick-Throttle/dp/B01C3NSD6E?crid=1S4JO4LM2DZWT&dib=eyJ2IjoiMSJ9.WQ2QbpE5gTloPEFEWtwZzaXgW9rWbU5Yd7TP6zpB9rd56l2ksdLUGQoGo2AdX6IRUxUTXoLCYRE1EFxpmmVo_0VliVxBUJVH7DYmj_p0J2yjZd8W8OVw_WnKUM1b36jBVtY0zSEO3W8XN0yXZLYkyy5Xu-ZyKLPTNSqsJEFvy_GMt6u7tgFtDmptDxqe2_tiOQgeSPfSe9DfRHOBj0Gcwwqk9IjoyDHDIxcBQnQQDyg.uwWc37Hkk0Dg5gM9rRX9NYGhrBrReJzXx3pYmwHr0nA&dib_tag=se&keywords=thrustmaster%2Bhotas%2Bwarthog&qid=1764869408&sprefix=thrustmaster%2Bhotas%2Bwa%2Caps%2C124&sr=8-2&th=1&linkCode=ll1&tag=alexmatache-21&linkId=73ab95d08920a16680bbb81375ed4c34&language=en_GB&ref_=as_li_ss_tl",
+      "us": "https://www.amazon.com/Thrustmaster-HOTAS-Warthog-Dual-Throttles/dp/B00T5X3Z2S?crid=1BHGWD5BJXPZ3&dib=eyJ2IjoiMSJ9.wyAIZWRtPXfdA_M2-8mqgnj837KMdM4Ahs2M8TdbS3uhWHu10SW3LVoZujiiCwIbNWFBvX2zs2mdMUhwLIuzPeiv6SnQ8TOoR9rF4HVWDua2lmhL1FJlQfxiGKe4akQSc3EEI8dSRM46DuPnIx7WHUX-5YYvQ4K1T0SDRInK_VcJd1uG0mxInYEWbZhNsueXhhMVXoq7lSHmNr6wfRvBwIl6TlB_TtAvOAi1s2j8FXU.zUArQNjzzC2ZponRcSITmvBXKcdlKtH4Q4n7CQUfDIc&dib_tag=se&keywords=Thrustmaster%2BHOTAS%2BWARTHOG%2BDual%2BThrottle&qid=1764868432&sprefix=thrustmaster%2Bhotas%2Bwarthog%2Bdual%2Bthrottle%2Caps%2C251&sr=8-2&th=1&linkCode=ll1&tag=alexmatache-20&linkId=03cd250215d135d773a1c7d16b01bf02&language=en_US&ref_=as_li_ss_tl"
     },
     "description": "A-10C dual-throttle replica with integrated control panel for advanced engine management.",
     "key_specs": {
@@ -195,7 +195,8 @@
       "/photoForProductPage/10.png"
     ],
     "affiliate_urls": {
-      "eu": "https://www.logitechg.com/en-eu/products/flight/flight-simulator-rudder-pedals.html"
+      "us": "https://www.amazon.com/Logitech-Flight-Rudder-Pedals-Renewed/dp/B08Z8H55GZ?crid=3UB0S7AFRVMAS&dib=eyJ2IjoiMSJ9.93dLfZPd1VKFK4qHKentlGL5ONg8UFUTC2F1tY1ZhmbyUqxLu63bLAIiMbMgd3ONW-Or_4WUl0fC08J5SoI8Hg5v6Wu7FVhJ1p8njE94orkCiMjBcPsGEjlJQVmGKm6NhfWwf8FYHlo8BfQm1gsFL6egZIH1M-0yRZLMppF2cniu2hPaKvdxklKzF2NCRw7NuIRtfUMXPvzEanGxRmDzQ5aoDM6u3-6niA8lFiJ6Swk.DjkidQjboRjd4__eBnGI7u-97tn6o5vRhgtAucXiVjA&dib_tag=se&keywords=Logitech+G+Flight+Rudder+Pedals&qid=1764869600&sprefix=logitech+g+flight+rudder+pedals%2Caps%2C316&sr=8-1&linkCode=ll1&tag=alexmatache-20&linkId=9ac8de240be5b63ac0faad0307758bd9&language=en_US&ref_=as_li_ss_tl",
+      "uk": "https://www.amazon.co.uk/Logitech-Professional-Simulation-Non-Slip-Ajustable/dp/B01MQ0N57Q?crid=2MMXQL7G6E7WL&dib=eyJ2IjoiMSJ9.UmqS8XBNSm6RhMlXCiiDQDa8h2MZ6z1mJ0njbUiA_z61F78Od1bOqxOQg0rZ8IafX-hylIA0CnAeSa8Be9wkqgRuqY9fCGSvmDWYuNrbZ0CZVC0OefZ_pinebdl2hG6DYle_2G8pbBUPl1MK2t4RRPQyC0c_m5yKCrJllmuGTLk5CSaw8v9-bp7t8BOdLke4AKPw_JVLlAjoSl4NTwKKcYSWDgkNF72ZDL7lNsBHTQs.Qsti7UnC9WqRWCAGGrKl4jh-PPvesMt7VMk6J1Bc0fI&dib_tag=se&keywords=Logitech+G+Flight+Rudder+Pedals&qid=1764868578&sprefix=logitech+g+flight+rudder+pedals%2Caps%2C177&sr=8-1&linkCode=ll1&tag=alexmatache-21&linkId=64240bea9fc9e36c714fcbdf35489cc2&language=en_GB&ref_=as_li_ss_tl"
     },
     "description": "Self-centering pedals with adjustable damping; precise rudder and toe-brake control; widely compatible.",
     "key_specs": {
@@ -224,8 +225,9 @@
       "/photoForProductPage/15.png"
     ],
     "affiliate_urls": {
-      "us": "https://www.thrustmaster.com/en-us/products/t-flight-rudder-pedals/",
-      "eu": "https://www.amazon.com/ThrustMaster-2960764-Thrustmaster-TFRP-Rudder/dp/B015PII6YI"
+      "winwingsim": "https://www.thrustmaster.com/en-us/products/t-flight-rudder-pedals/",
+      "us": "https://www.amazon.com/ThrustMaster-2960764-Thrustmaster-TFRP-Rudder/dp/B015PII6YI?th=1&linkCode=ll1&tag=alexmatache-20&linkId=26c98d22ed7de6595855404680d515a5&language=en_US&ref_=as_li_ss_tl",
+      "uk": "https://www.amazon.co.uk/Thrustmaster-TFRP-T-Flight-Rudder-Pedals/dp/B01649IVI8?crid=2BZZDVT4E4PK5&dib=eyJ2IjoiMSJ9.6T5aN7YcSxM3VFPZcWfjlq91Ks6a9MVdhXloPTIlVXcSa3SkAcCxwruVwkr_R3EvU0WYA426aS--yZg-ZKJlSV1aRdgrW_XuhO4EiR3SwO-lsLt25VSi-r0SKPQBoB44BATtietKq6-m2JEOHtdToolqjyQATrfM4JGtS-ze-Nol_qfCWa3KKvGma435YAj2hC4spxQS6c2O9ckYs0480Xb9M8y9nCzmhUUPK2RCexI.GvEIqaVzmkQ-jV-rFBHk1xs_g0zLHgUcau9tjyG_fTI&dib_tag=se&keywords=Thrustmaster+T.Flight+Rudder+Pedals&qid=1764869785&sprefix=thrustmaster+t.flight+rudder+pedals%2Caps%2C123&sr=8-1&linkCode=ll1&tag=alexmatache-21&linkId=cbd018678e1546bedffeaaaad902815c&language=en_GB&ref_=as_li_ss_tl"
     },
     "description": "Entry-level rudder pedals featuring S.M.A.R.T. slide-rail system, self-centering rudder axis, and differential brakes with long travel.",
     "key_specs": {
@@ -254,7 +256,8 @@
       "/photoForProductPage/16.png"
     ],
     "affiliate_urls": {
-      "us": "https://www.amazon.com/WINGFLEX-Full-Size-MCDU-Brightness-A32WX/dp/B0DT3SLPHB"
+      "uk": "https://www.amazon.co.uk/WINGFLEX-Full-Size-MCDU-Brightness-A32WX/dp/B0DT3SLPHB?crid=1RBZ54UY8816K&dib=eyJ2IjoiMSJ9.ZzccTF04bie_ykMaaekvMg.C-0CRh05Ds1IK1RxFTtUhpk8ICbMW-HWf1xcBc9uo8Y&dib_tag=se&keywords=WingFlex%2BFull-Size%2BAirbus%2BA32F%2BMCDU&qid=1764869843&sprefix=wingflex%2Bfull-size%2Bairbus%2Ba32f%2Bmcdu%2Caps%2C193&sr=8-1&th=1&linkCode=ll1&tag=alexmatache-21&linkId=39733f7b7f79a61b7a7ace2baefbcbfa&language=en_GB&ref_=as_li_ss_tl",
+      "us": "https://www.amazon.com/WINGFLEX-Full-Size-MCDU-Brightness-A32WX/dp/B0DT3SLPHB?th=1&linkCode=ll1&tag=alexmatache-20&linkId=63124ee0a40dc2e3964108b2e6330449&language=en_US&ref_=as_li_ss_tl"
     },
     "description": "Full-size Airbus A320-family MCDU with IPS HD screen and crisp fonts. Plug-and-play design for streamlined cockpit integration.",
     "key_specs": {
@@ -263,7 +266,7 @@
       "Size": "Full-size A320 format",
       "Setup": "Plug-and-play"
     },
-    "source_url": "https://www.amazon.com/WINGFLEX-Full-Size-MCDU-Brightness-A32WX/dp/B0DT3SLPHB",
+    "source_url": "https://www.amazon.com/WINGFLEX-Full-Size-MCDU-Brightness-A32WX/dp/B0DT3SLPHB?th=1&linkCode=ll1&tag=alexmatache-20&linkId=83567424018007f206a4618ee924bd78&language=en_US&ref_=as_li_ss_tl",
     "roleType": "Universal"
   },
   {
@@ -283,7 +286,8 @@
       "/photoForProductPage/17.png"
     ],
     "affiliate_urls": {
-      "us": "https://www.amazon.com/WINGFLEX-A320-FCU-Plug-Play-Compatibility/dp/B0F8H5D8N5"
+      "uk": "https://www.amazon.co.uk/Simulator-WINGFLEX-Supports-Compatibility-Enthusiasts/dp/B0FGW8VX85?crid=2FAHASYG3UF06&dib=eyJ2IjoiMSJ9.uGD0AoiIjTmCgW9yUfgSaItFg1n1haoG9PTSPy1Y6TiDws6xwT5m-tQ9i83r7z2X2-m4ZuP00mPGJMPOpArQOQIDiMYngCv1_pXpptSP96hRpyLJFAczBe45LcD03J5XgqeVJ4ZWd9zAoNF4kv6-hspEbpX2y1mnPl-kYskYvPdqEQlNkwWc_0ETcqbaEO_MVLWM4HvGqU733IVdKQVs-A.2UZsoQxv9cpyomP4MV6Me2C70Vpc2c3ZRnmVjkwu_dk&dib_tag=se&keywords=WingFlex+Flight+Simulator+FCU&qid=1764869895&sprefix=wingflex+flight+simulator+fcu%2Caps%2C151&sr=8-2&linkCode=ll1&tag=alexmatache-21&linkId=d07e6d5feddc5a3920b29b5a7aa79e92&language=en_GB&ref_=as_li_ss_tl",
+      "us": "https://www.amazon.com/WINGFLEX-A320-FCU-Plug-Play-Compatibility/dp/B0F8H5D8N5?th=1&linkCode=ll1&tag=alexmatache-20&linkId=b07bd392661524ee49740aa5adf3b51f&language=en_US&ref_=as_li_ss_tl"
     },
     "description": "Airbus-style FCU with aluminum construction and push/pull knobs. Plug-and-play functionality for quick setup and realistic flight control.",
     "key_specs": {
@@ -314,8 +318,8 @@
       "/photoForProductPage/18.png"
     ],
     "affiliate_urls": {
-      "us": "https://www.thrustmaster.com/en-us/products/tca-captain-pack-x-airbus-edition/",
-      "eu": "https://www.amazon.com/Thrustmaster-Captains-Pack-Airbus-XBOX-PC/dp/B0BG3DQLDD"
+      "uk": "https://www.amazon.co.uk/Thrustmaster-TCA-Captain-Pack-Airbus-blue/dp/B0B4SS2DNS?crid=2M293J2E558G8&dib=eyJ2IjoiMSJ9.cpSTgEkTbc9OdhJSGcJC4S1WOpM6AHkupfFKl1YxXrFgaSa6XXOM7zsvVNnSXGpSUMJLp5vXHyycaSk0Bc0JCl1NfESanyBIVTTIjD5bjqx8NSbF0WM_zRst7USCVA21Biu93S5TvwyQl3hgKRvhfUTf59XOgxuIc7LHAybYXgXvJW2RvPpmMUba9eagJhM5YUxpB7QkoHUAs0sHYIQs9bGL7BFK63FYAI3CB2FVRDo.r0VC2tp6p2mlj9BltptCcjWCdlZRGytismJhalO00I0&dib_tag=se&keywords=Thrustmaster%2BTCA%2BCaptain%2BPack%2BX%2B-%2BAirbus%2BEdition&qid=1764869962&sprefix=wingflex%2Bflight%2Bsimulator%2Bfcu%2Caps%2C179&sr=8-2&th=1&linkCode=ll1&tag=alexmatache-21&linkId=474a62a32a1ae87edbdc41fcce133dde&language=en_GB&ref_=as_li_ss_tl",
+      "us": "https://www.amazon.com/Thrustmaster-Captains-Pack-Airbus-XBOX-PC/dp/B0BG3DQLDD?th=1&linkCode=ll1&tag=alexmatache-20&linkId=09e2b64b9a8adbed8f89c304092ee316&language=en_US&ref_=as_li_ss_tl"
     },
     "description": "1:1 Airbus-inspired sidestick and quadrant bundle. Officially licensed for Xbox Series X|S and PC with authentic ergonomics.",
     "key_specs": {
@@ -346,8 +350,8 @@
       "/photoForProductPage/19.png"
     ],
     "affiliate_urls": {
-      "us": "https://www.thrustmaster.com/products/tca-yoke-pack-boeing-edition",
-      "uk": "https://www.amazon.co.uk/Thrustmaster-TCA-Yoke-Pack-Boeing-black/dp/B09GRLDWV2/ref=pd_rhf_se_s_ci_mcx_mr_hp_d_d_sccl_2_9/521-1212737-4101808?pd_rd_w=BqgOs&content-id=amzn1.sym.a9750e23-15f2-4034-9ecc-e6dd38907891:amzn1.symc.206c6295-3b43-4a2b-9d15-273ba17f7025&pf_rd_p=a9750e23-15f2-4034-9ecc-e6dd38907891&pf_rd_r=2JB3MGCWWQCCATF5CABG&pd_rd_wg=ifEiS&pd_rd_r=586b5999-8b6a-498e-8184-506127993462&pd_rd_i=B09GRLDWV2&psc=1"
+      "us": "https://www.amazon.com/Thrustmaster-Yoke-PACK-Boeing-Xbox-x/dp/B09DPYHM55?crid=SZGJM6RIK6QJ&dib=eyJ2IjoiMSJ9.OAKueZoL0pEuZltpUkK9Hw20eePBij-SneFWfzP1pkQVH-xHlYF6p5B9AqdeVyo6FGh-Sb4E_HBkYQt79JCdDg0J8fU8wzDh0XnXvgPNhndRFvPLesh6EYKRtgAC1SmohW22GeUpO8eWs6bVxDrAY8TtWGsu3WHdcPTwsnXOtwFrOw9v1-wSXyoo_yUrPAVFLMCEDrDQw_ZzPolEtouhHip8og-5JkDkoOEMSLeSlLA.2szdH1AQUFNsl33jV_mUV2SVwRLaJuwLE_Poxxr0NJA&dib_tag=se&keywords=Thrustmaster%2BTCA%2BYoke%2BPack%2B-%2BBoeing&qid=1764870082&sprefix=thrustmaster%2Btca%2Byoke%2Bpack%2B-%2Bboeing%2Caps%2C230&sr=8-2&th=1&linkCode=ll1&tag=alexmatache-20&linkId=b14a084263b7cfa6d2fcd0392585668d&language=en_US&ref_=as_li_ss_tl",
+      "uk": "https://www.amazon.co.uk/Thrustmaster-TCA-Yoke-Pack-Boeing-black/dp/B09GRLDWV2?pd_rd_w=BqgOs&content-id=amzn1.sym.a9750e23-15f2-4034-9ecc-e6dd38907891%3Aamzn1.symc.206c6295-3b43-4a2b-9d15-273ba17f7025&pf_rd_p=a9750e23-15f2-4034-9ecc-e6dd38907891&pf_rd_r=2JB3MGCWWQCCATF5CABG&pd_rd_wg=ifEiS&pd_rd_r=586b5999-8b6a-498e-8184-506127993462&pd_rd_i=B09GRLDWV2&th=1&linkCode=ll1&tag=alexmatache-21&linkId=e7433ea857ffbc9612fa2d85adf6d60e&language=en_GB&ref_=as_li_ss_tl"
     },
     "description": "Thrustmaster TCA Yoke Pack - High-Precision Flight Controller and Throttle Quadrant with Official Boeing License for PC and Xbox Series X|S",
     "key_specs": {
@@ -378,7 +382,7 @@
       "/photoForProductPage/21.png"
     ],
     "affiliate_urls": {
-      "eu": "https://eu.winwingsim.com/view/goods-details.html?id=965"
+      "winwingsim": "https://eu.winwingsim.com/view/goods-details.html?id=965"
     },
     "description": "1:1 full-structure molded design, 3D surface detailing.",
     "key_specs": {
@@ -407,7 +411,7 @@
       "/photoForProductPage/22.png"
     ],
     "affiliate_urls": {
-      "uk": "https://www.amazon.co.uk/Simulator-Controls-simulator-Operation-Compatibl/dp/B0DPM612X3/ref=sr_1_202?crid=UM2U8UZEBE0M&dib=eyJ2IjoiMSJ9.B7IIoIMdnJOGfBckI7-2dnrefxtaDneWM5bvTA5lnMBzeIttQKSgw8GX8zsGUTTKgD5q3PtnFx1GiXsBKIuVRqgad2T0l_53ytHshKDu_hUD7UDsA_2ue0pbn7-zk2HK5PVWhukVg9UxPtxUGHXZJwwhE5KrC5PBkPhYCI97wRPwF1lh02uei__AcJ1VTzCvU3nadPUG8YJbz8ylDNJ21qGdEQgyFkD5OiQW2Ncv9sxucB8bahmvRAa4TtMyhlZKGpIKZ8Hjg36UqBIYzT4X4ZjQLdi3KQjkvTG0ZpSMZh4.ALF8lEyucQcGAZZF2J8YCOC29A9TkJwENSbX4rLNNGI&dib_tag=se&keywords=boeing&qid=1761496935&sprefix=boein%2Caps%2C102&sr=8-202&xpid=pmZfs0fQmIwub"
+      "uk": "https://www.amazon.co.uk/Simulator-Controls-simulator-Operation-Compatibl/dp/B0DPM612X3?crid=UM2U8UZEBE0M&dib=eyJ2IjoiMSJ9.B7IIoIMdnJOGfBckI7-2dnrefxtaDneWM5bvTA5lnMBzeIttQKSgw8GX8zsGUTTKgD5q3PtnFx1GiXsBKIuVRqgad2T0l_53ytHshKDu_hUD7UDsA_2ue0pbn7-zk2HK5PVWhukVg9UxPtxUGHXZJwwhE5KrC5PBkPhYCI97wRPwF1lh02uei__AcJ1VTzCvU3nadPUG8YJbz8ylDNJ21qGdEQgyFkD5OiQW2Ncv9sxucB8bahmvRAa4TtMyhlZKGpIKZ8Hjg36UqBIYzT4X4ZjQLdi3KQjkvTG0ZpSMZh4.ALF8lEyucQcGAZZF2J8YCOC29A9TkJwENSbX4rLNNGI&dib_tag=se&keywords=boeing&qid=1761496935&sprefix=boein%2Caps%2C102&sr=8-202&xpid=pmZfs0fQmIwub&linkCode=ll1&tag=alexmatache-21&linkId=35ff77fe2595465fcfbe47b3c9b93de4&language=en_GB&ref_=as_li_ss_tl"
     },
     "description": "1:1 full-structure molded design, 3D surface detailing.",
     "key_specs": {
@@ -416,7 +420,7 @@
       "Components": "Glareshield",
       "Platform": "PC"
     },
-    "source_url": "https://www.amazon.co.uk/Simulator-Controls-simulator-Operation-Compatibl/dp/B0DPM612X3/ref=sr_1_202?crid=UM2U8UZEBE0M&dib=eyJ2IjoiMSJ9.B7IIoIMdnJOGfBckI7-2dnrefxtaDneWM5bvTA5lnMBzeIttQKSgw8GX8zsGUTTKgD5q3PtnFx1GiXsBKIuVRqgad2T0l_53ytHshKDu_hUD7UDsA_2ue0pbn7-zk2HK5PVWhukVg9UxPtxUGHXZJwwhE5KrC5PBkPhYCI97wRPwF1lh02uei__AcJ1VTzCvU3nadPUG8YJbz8ylDNJ21qGdEQgyFkD5OiQW2Ncv9sxucB8bahmvRAa4TtMyhlZKGpIKZ8Hjg36UqBIYzT4X4ZjQLdi3KQjkvTG0ZpSMZh4.ALF8lEyucQcGAZZF2J8YCOC29A9TkJwENSbX4rLNNGI&dib_tag=se&keywords=boeing&qid=1761496935&sprefix=boein%2Caps%2C102&sr=8-202&xpid=pmZfs0fQmIwub",
+    "source_url": "https://www.amazon.co.uk/Simulator-Controls-simulator-Operation-Compatibl/dp/B0DPM612X3?crid=UM2U8UZEBE0M&dib=eyJ2IjoiMSJ9.B7IIoIMdnJOGfBckI7-2dnrefxtaDneWM5bvTA5lnMBzeIttQKSgw8GX8zsGUTTKgD5q3PtnFx1GiXsBKIuVRqgad2T0l_53ytHshKDu_hUD7UDsA_2ue0pbn7-zk2HK5PVWhukVg9UxPtxUGHXZJwwhE5KrC5PBkPhYCI97wRPwF1lh02uei__AcJ1VTzCvU3nadPUG8YJbz8ylDNJ21qGdEQgyFkD5OiQW2Ncv9sxucB8bahmvRAa4TtMyhlZKGpIKZ8Hjg36UqBIYzT4X4ZjQLdi3KQjkvTG0ZpSMZh4.ALF8lEyucQcGAZZF2J8YCOC29A9TkJwENSbX4rLNNGI&dib_tag=se&keywords=boeing&qid=1761496935&sprefix=boein%2Caps%2C102&sr=8-202&xpid=pmZfs0fQmIwub&linkCode=ll1&tag=alexmatache-21&linkId=35ff77fe2595465fcfbe47b3c9b93de4&language=en_GB&ref_=as_li_ss_tl",
     "roleType": "Universal"
   },
   {
@@ -438,8 +442,7 @@
       "/photoForProductPage/11.png"
     ],
     "affiliate_urls": {
-      "winwingsim": "https://winwingsim.com/view/goods-details.html?id=559",
-      "us": "https://www.amazon.com/WINWING-URSA-MINOR-Airline-Joystick-PC/dp/B0DCYCR4TV"
+      "winwingsim": "https://winwingsim.com/view/goods-details.html?id=559"
     },
     "description": "Entry-level Airbus-style sidestick with ABS pincer gimbal and data-driven haptic vibration motor for immersive feedback.",
     "key_specs": {
@@ -563,8 +566,8 @@
       "/photoForProductPage/3.png"
     ],
     "affiliate_urls": {
-      "eu": "https://eu.winwingsim.com/mobileview/goods-details.html?id=785",
-      "us": "https://www.amazon.com/s?k=winwing+rudder+pedals"
+      "winwingsim": "https://eu.winwingsim.com/mobileview/goods-details.html?id=785",
+      "us": "https://www.amazon.com/WINWING-Flight-Rudder-Pedals-Damper/dp/B0DQ76HFSR?dib=eyJ2IjoiMSJ9.McDnQtGctkQV-esCPkELHBCm-vwZu1GC3jgf3YSE9z8FT8-A1skf-fl6UsJhWDJ9CnGNrSf1gSQZ6i5a_jS7zD790DVimBIq-56Oe0J19p9H9wCJ9cHvebSsPJ7ytU7ieuUB2-V8EQMWnDecskLbUrOQZCLjazkEcy-X4ap9_YL-PpUJGLxemZitANLTe00X2eYYKNDkaOZNEbOSzC_pFPYlpiDKRaA_RBEG7EHAVWo.TDTgW3ooC-LZomJ0aVAkBU_IeMtzlS3Vqc6NVsq1Ca8&dib_tag=se&keywords=winwing+rudder+pedals&qid=1764868895&sr=8-7&linkCode=ll1&tag=alexmatache-20&linkId=ca89f0be25ad773b97dca868cede92a3&language=en_US&ref_=as_li_ss_tl"
     },
     "description": "Full metal construction rudder pedals with integrated damper system, adjustable tension, and realistic toe brake action.",
     "key_specs": {
@@ -594,8 +597,7 @@
       "/photoForProductPage/26.png"
     ],
     "affiliate_urls": {
-      "eu": "https://eu.winwingsim.com/mobileview/goods-details.html?id=605",
-      "us": "https://www.amazon.com/s?k=winwing+rudder+pedals"
+      "winwingsim": "https://eu.winwingsim.com/mobileview/goods-details.html?id=605"
     },
     "description": "Full metal construction rudder pedals with integrated damper system, adjustable tension, and realistic toe brake action.",
     "key_specs": {
@@ -625,7 +627,7 @@
       "/photoForProductPage/27.png"
     ],
     "affiliate_urls": {
-      "eu": "https://eu.winwingsim.com/mobileview/goods-details.html?id=685"
+      "winwingsim": "https://eu.winwingsim.com/mobileview/goods-details.html?id=685"
     },
     "description": "All-metal flight control base featuring smooth cam-driven movement and precise Hall sensor tracking. With adjustable tension and broad simulator compatibility.",
     "key_specs": {
@@ -655,7 +657,7 @@
       "/photoForProductPage/28.png"
     ],
     "affiliate_urls": {
-      "eu": "https://eu.winwingsim.com/mobileview/goods-details.html?id=1205"
+      "winwingsim": "https://eu.winwingsim.com/mobileview/goods-details.html?id=1205"
     },
     "description": "Throttle Desk Mount with Profile Bar 1.",
     "key_specs": {
@@ -682,7 +684,7 @@
       "/photoForProductPage/29.png"
     ],
     "affiliate_urls": {
-      "eu": "https://eu.winwingsim.com/mobileview/goods-details.html?id=1165"
+      "winwingsim": "https://eu.winwingsim.com/mobileview/goods-details.html?id=1165"
     },
     "description": "Throttle Desk Mount with Profile Bar 1.",
     "key_specs": {
@@ -709,8 +711,7 @@
       "/photoForProductPage/30.png"
     ],
     "affiliate_urls": {
-      "eu": "https://eu.winwingsim.com/mobileview/goods-details.html?id=625",
-      "us": "https://www.amazon.com/s?k=winwing+rudder+pedals"
+      "winwingsim": "https://eu.winwingsim.com/mobileview/goods-details.html?id=625"
     },
     "description": "Full metal construction rudder pedals with integrated damper system, adjustable tension, and realistic toe brake action.",
     "key_specs": {
@@ -738,8 +739,7 @@
       "/photoForProductPage/4.png"
     ],
     "affiliate_urls": {
-      "eu": "https://eu.winwingsim.com/mobileview/goods-details.html?id=1245",
-      "us": "https://www.amazon.com/s?k=winwing+3m+pdc"
+      "winwingsim": "https://eu.winwingsim.com/mobileview/goods-details.html?id=1245"
     },
     "description": "Three-module programmable display controller with customizable screens, rotary encoders, and tactile switches for complete cockpit integration.",
     "key_specs": {
@@ -769,7 +769,7 @@
       "/photoForProductPage/20.png"
     ],
     "affiliate_urls": {
-      "eu": "https://eu.winwingsim.com/view/goods-details.html?id=1485"
+      "winwingsim": "https://eu.winwingsim.com/view/goods-details.html?id=1485"
     },
     "description": "1:1 full-structure molded design, 3D surface detailing.",
     "key_specs": {
@@ -859,8 +859,7 @@
       "/photoForProductPage/5.png"
     ],
     "affiliate_urls": {
-      "eu": "https://eu.winwingsim.com/mobileview/goods-details.html?id=865",
-      "us": "https://www.amazon.com/s?k=winwing+efis"
+      "winwingsim": "https://eu.winwingsim.com/mobileview/goods-details.html?id=865"
     },
     "description": "Electronic Flight Instrument System panel with realistic rotary knobs, push buttons, and direct aircraft system control for maximum immersion.",
     "key_specs": {
@@ -888,8 +887,7 @@
       "/photoForProductPage/32.png"
     ],
     "affiliate_urls": {
-      "eu": "https://eu.winwingsim.com/mobileview/goods-details.html?id=845",
-      "us": "https://www.amazon.com/s?k=winwing+efis"
+      "winwingsim": "https://eu.winwingsim.com/mobileview/goods-details.html?id=845"
     },
     "description": "Electronic Flight Instrument System panel with realistic rotary knobs, push buttons, and direct aircraft system control for maximum immersion.",
     "key_specs": {

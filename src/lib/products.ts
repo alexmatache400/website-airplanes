@@ -19,7 +19,7 @@ export type Product = {
   price_eur?: number;
   price_label?: string;
   images: string[];
-  affiliate_urls: { eu?: string; us?: string; winwingsim?: string };
+  affiliate_urls: { uk?: string; us?: string; winwingsim?: string };
   description: string;
   key_specs?: Record<string, string | number>;
   source_url?: string;

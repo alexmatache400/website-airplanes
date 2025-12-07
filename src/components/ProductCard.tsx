@@ -134,9 +134,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 Winwing
               </a>
             )}
-            {product.affiliate_urls.eu && (
+            {product.affiliate_urls.uk && (
               <a
-                href={product.affiliate_urls.eu}
+                href={product.affiliate_urls.uk}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-accent-500 hover:bg-accent-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
@@ -328,9 +328,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
                   Winwing
                 </a>
               )}
-              {product.affiliate_urls.eu && (
+              {product.affiliate_urls.uk && (
                 <a
-                  href={product.affiliate_urls.eu}
+                  href={product.affiliate_urls.uk}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 bg-accent-500 hover:bg-accent-600 text-white py-3 px-6 rounded-lg text-sm font-medium transition-colors duration-200 text-center focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-800"
