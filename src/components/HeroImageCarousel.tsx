@@ -2,10 +2,10 @@ import React, { useEffect, useState, useRef } from 'react';
 
 // Carousel images configuration - Easy to add more images!
 const CAROUSEL_IMAGES = [
-  { src: '/landingPaige/carousel-setups/carousel-image-1.jpeg', alt: 'Professional flight simulator setup 1' },
-  { src: '/landingPaige/carousel-setups/carousel-image-2.jpeg', alt: 'Professional flight simulator setup 2' },
-  { src: '/landingPaige/carousel-setups/carousel-image-3.jpeg', alt: 'Professional flight simulator setup 3' },
-  { src: '/landingPaige/carousel-setups/carousel-image-4.jpeg', alt: 'Professional flight simulator setup 4' },
+  { src: '/landingPaige/carousel-setups/carousel-image-1.png', alt: 'Professional flight simulator setup 1' },
+  { src: '/landingPaige/carousel-setups/carousel-image-2.jpg', alt: 'Professional flight simulator setup 2' },
+  { src: '/landingPaige/carousel-setups/carousel-image-3.jpg', alt: 'Professional flight simulator setup 3' },
+  { src: '/landingPaige/carousel-setups/carousel-image-4.jpg', alt: 'Professional flight simulator setup 4' },
 ];
 
 // Fisher-Yates shuffle algorithm for random start order

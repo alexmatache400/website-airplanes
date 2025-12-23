@@ -1,25 +1,5 @@
 [
   {
-    "aircraft": "F-16 Viper",
-    "description": "Single-engine multirole fighter: agile, advanced avionics, proven combat performance.",
-    "tiers": {
-      "First": [ "2", "4", "6", "7" ],
-      "Business": [ "1", "7" ],
-      "Economy": [ "3", "5" ]
-    }
-  },
-
-  {
-    "aircraft": "F/A-18 Hornet",
-    "description": "Single-engine multirole fighter: agile, advanced avionics, proven combat performance.",
-    "tiers": {
-      "First": [ "2", "4", "6", "7" ],
-      "Business": [ "1", "7" ],
-      "Economy": [ "3", "5" ]
-    }
-  },
-
-  {
     "aircraft": "A318",
     "description": "Compact Airbus for short-haul operations. Perfect starter setup for single-aisle cockpit training.",
     "tiers": {
@@ -28,67 +8,201 @@
       "Economy": [ "8", "11", "29", "30" ]
     }
   },
-  {
-    "aircraft": "A319",
-    "description": "Versatile short-to-medium range Airbus. Ideal for pilots transitioning to A320 family.",
-    "tiers": {
-      "First": [ "15", "16", "36", "18", "19", "27", "34", "35" ],
-      "Business": [ "15", "16", "7", "17", "35", "29", "30" ],
-      "Economy": [ "8", "11", "29", "30" ]
+    {
+      "aircraft": "A319",
+      "description": "Versatile short-to-medium range Airbus. Ideal for pilots transitioning to A320 family.",
+      "tiers": {
+        "First": [
+          "7",
+          "5",
+          "6",
+          "34"
+        ],
+        "Business": [
+          "7",
+          "6",
+          "5",
+          "3"
+        ],
+        "Economy": [
+          "23",
+          "4"
+        ]
+      }
+    },
+    {
+      "aircraft": "A319neo",
+      "description": "New Engine Option variant with modern avionics. Enhanced cockpit for next-gen simulation.",
+      "tiers": {
+        "First": [
+          "7",
+          "5",
+          "6",
+          "34"
+        ],
+        "Business": [
+          "7",
+          "6",
+          "5",
+          "3"
+        ],
+        "Economy": [
+          "23",
+          "4"
+        ]
+      }
+    },
+    {
+      "aircraft": "A320",
+      "description": "Most popular single-aisle airliner. Industry-standard cockpit for commercial flight sim.",
+      "tiers": {
+        "First": [
+          "7",
+          "5",
+          "6",
+          "34"
+        ],
+        "Business": [
+          "7",
+          "6",
+          "5",
+          "3"
+        ],
+        "Economy": [
+          "23",
+          "4"
+        ]
+      }
+    },
+    {
+      "aircraft": "A320neo",
+      "description": "New engine, reduced fuel burn, quieter operations. Modern standard for A320 family training.",
+      "tiers": {
+        "First": [
+          "7",
+          "5",
+          "6",
+          "34"
+        ],
+        "Business": [
+          "7",
+          "6",
+          "5",
+          "3"
+        ],
+        "Economy": [
+          "23",
+          "4"
+        ]
+      }
+    },
+    {
+      "aircraft": "A321",
+      "description": "Stretched A320 for higher capacity routes. Full-featured cockpit for long-range single-aisle ops.",
+      "tiers": {
+        "First": [
+          "7",
+          "5",
+          "6",
+          "34"
+        ],
+        "Business": [
+          "7",
+          "6",
+          "5",
+          "3"
+        ],
+        "Economy": [
+          "23",
+          "4"
+        ]
+      }
+    },
+    {
+      "aircraft": "A321neo",
+      "description": "Longest-range single-aisle with advanced tech. Premium setup for pro-level A321 XLR simulation.",
+      "tiers": {
+        "First": [
+          "7",
+          "5",
+          "6",
+          "34"
+        ],
+        "Business": [
+          "7",
+          "6",
+          "5",
+          "3"
+        ],
+        "Economy": [
+          "23",
+          "4"
+        ]
+      }
+    },
+    {
+      "aircraft": "Boeing 737",
+      "description": "A popular narrow-body, twin-engine jet airliner designed for short to medium-haul flights.",
+      "tiers": {
+        "First": [
+          "8",
+          "9",
+          "34"
+        ],
+        "Business": [
+          "8",
+          "9",
+          "3"
+        ],
+        "Economy": [
+          "8",
+          "4"
+        ]
+      }
+    },
+    {
+      "aircraft": "F-16 Viper",
+      "description": "Single-engine multirole fighter: agile, advanced avionics, proven combat performance.",
+      "tiers": {
+        "First": [
+          "1",
+          "12",
+          "35",
+          "34"
+        ],
+        "Business": [
+          "2",
+          "10",
+          "12",
+          "35",
+          "3"
+        ],
+        "Economy": [
+          "23",
+          "4"
+        ]
+      }
+    },
+    {
+      "aircraft": "F/A-18 Hornet",
+      "description": "Single-engine multirole fighter: agile, advanced avionics, proven combat performance.",
+      "tiers": {
+        "First": [
+          "11",
+          "2",
+          "14",
+          "34"
+        ],
+        "Business": [
+          "1",
+          "13",
+          "14",
+          "3"
+        ],
+        "Economy": [
+          "23",
+          "4"
+        ]
+      }
     }
-  },
-  {
-    "aircraft": "A319neo",
-    "description": "New Engine Option variant with modern avionics. Enhanced cockpit for next-gen simulation.",
-    "tiers": {
-      "First": [ "15", "16", "36", "18", "19", "27", "34", "35" ],
-      "Business": [ "15", "16", "7", "17", "35", "29", "30" ],
-      "Economy": [ "8", "11", "29", "30" ]
-    }
-  },
-  {
-    "aircraft": "A320",
-    "description": "Most popular single-aisle airliner. Industry-standard cockpit for commercial flight sim.",
-    "tiers": {
-      "First": [ "15", "16", "36", "18", "19", "27", "34", "35" ],
-      "Business": [ "15", "16", "7", "17", "35", "29", "30" ],
-      "Economy": [ "8", "11", "29", "30" ]
-    }
-  },
-  {
-    "aircraft": "A320neo",
-    "description": "New engine, reduced fuel burn, quieter operations. Modern standard for A320 family training.",
-    "tiers": {
-      "First": [ "15", "16", "36", "18", "19", "27", "34", "35" ],
-      "Business": [ "15", "16", "7", "17", "35", "29", "30" ],
-      "Economy": [ "8", "11", "29", "30" ]
-    }
-  },
-  {
-    "aircraft": "A321",
-    "description": "Stretched A320 for higher capacity routes. Full-featured cockpit for long-range single-aisle ops.",
-    "tiers": {
-      "First": [ "15", "16", "36", "18", "19", "27", "34", "35" ],
-      "Business": [ "15", "16", "7", "17", "35", "29", "30" ],
-      "Economy": [ "8", "11", "29", "30" ]
-    }
-  },
-  {
-    "aircraft": "A321neo",
-    "description": "Longest-range single-aisle with advanced tech. Premium setup for pro-level A321 XLR simulation.",
-    "tiers": {
-      "First": [ "15", "16", "36", "18", "19", "27", "34", "35" ],
-      "Business": [ "15", "16", "7", "17", "35", "29", "30" ],
-      "Economy": [ "8", "11", "29", "30" ]
-    }
-  },
-  {
-    "aircraft": "Boeing 737",
-    "description": "A popular narrow-body, twin-engine jet airliner designed for short to medium-haul flights.",
-    "tiers": {
-      "First": [ "12", "19", "25", "37" ],
-      "Business": [ "12", "8", "24" ],
-      "Economy": [ "12", "7" ]
-    }
-  }
 ]

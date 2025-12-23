@@ -8,7 +8,7 @@ export type Tier = 'First' | 'Business' | 'Economy';
 
 export type Product = {
   id: string;
-  brand: 'Winwing' | 'Thrustmaster' | 'Honeycomb' | 'Logitech' | 'WingFlex' | 'Other';
+  brand: 'Thrustmaster' | 'Honeycomb' | 'Logitech' | 'WingFlex' | 'Other';
   name: string;
   slug: string;
   category: 'HOTAS' | 'Throttle' | 'Joystick' | 'Pedals' | 'Panel' | 'Bundle' | 'MCDU' | 'Rudder' | 'Base' | 'Accessories';
@@ -19,7 +19,7 @@ export type Product = {
   price_eur?: number;
   price_label?: string;
   images: string[];
-  affiliate_urls: { uk?: string; us?: string; winwingsim?: string };
+  affiliate_urls: { thuk?: string; thus?: string; theu?: string; de?: string; uk?: string; us?: string };
   description: string;
   key_specs?: Record<string, string | number>;
   source_url?: string;

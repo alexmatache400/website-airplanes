@@ -6,53 +6,73 @@
     "tiers": {
       "First": {
         "needs": [
-          { "category": "Panel", "count": 3 },
-          { "category": "Joystick", "count": 1 },
-          { "category": "Throttle", "count": 1 },
-          { "category": "Rudder", "count": 1 },
-          { "category": "Bundle", "count": 1 }
+          {
+            "category": "Joystick",
+            "count": 1
+          },
+          {
+            "category": "Pedals",
+            "count": 1
+          },
+          {
+            "category": "Panel",
+            "count": 2
+          },
+          {
+            "category": "Bundle",
+            "count": 1
+          }
         ],
         "preferredProducts": [
-          "winwing-ursa-minor-joystick-l",
-          "winwing-ursa-minor-joystick-r",
-          "ursa-minor-32-throttle-metal-32-pac-metal",
-          "orion-metal-rudder-pedals",
-          "winwing-glareshield-3x0",
-          "winwing-mcdu-fullsize",
-          "32-agp-metal",
-          "32-ecam"
+          "wingflex-fcu-airbus",
+          "wingflex-mcdu-a32f",
+          "tm-tca-sidestick-x-airbus",
+          "tm-tca-captain-pack-airbus",
+          "tm-tpr-rudder"
         ]
       },
       "Business": {
         "needs": [
-          { "category": "Panel", "count": 3 },
-          { "category": "Joystick", "count": 1 },
-          { "category": "Throttle", "count": 1 },
-          { "category": "Rudder", "count": 1 }
+          {
+            "category": "Joystick",
+            "count": 1
+          },
+          {
+            "category": "Pedals",
+            "count": 1
+          },
+          {
+            "category": "Panel",
+            "count": 2
+          },
+          {
+            "category": "Bundle",
+            "count": 1
+          }
         ],
         "preferredProducts": [
-          "winwing-ursa-minor-joystick-l",
-          "winwing-ursa-minor-joystick-r",
+          "wingflex-fcu-airbus",
+          "tm-tca-sidestick-x-airbus",
+          "tm-tca-captain-pack-airbus",
           "logi-flight-rudder-pedals",
-          "ursa-minor-32-throttle-metal",
-          "orion-metal-rudder-pedals",
-          "winwing-mcdu-fullsize",
-          "32-ecam",
-          "efis-r",
-          "efis-l"
+          "wingflex-mcdu-a32f"
         ]
       },
       "Economy": {
         "needs": [
-          { "category": "Panel", "count": 1 },
-          { "category": "Rudder", "count": 1 },
-          { "category": "Bundle", "count": 1 }
+          {
+            "category": "Joystick",
+            "count": 1
+          },
+          {
+            "category": "Pedals",
+            "count": 1
+          }
         ],
         "preferredProducts": [
+          "tm-tca-sidestick-x-airbus",
           "tm-tfrp-rudder-pedals",
-          "tm-tca-captain-pack-airbus",
-          "efis-r",
-          "efis-l"
+          "logi-flight-rudder-pedals"
         ]
       }
     },
@@ -65,36 +85,67 @@
     "tiers": {
       "First": {
         "needs": [
-          { "category": "Panel", "count": 2 },
-          { "category": "Throttle", "count": 1 },
-          { "category": "Pedals", "count": 1 }
+          {
+            "category": "Panel",
+            "count": 2
+          },
+          {
+            "category": "Throttle",
+            "count": 1
+          },
+          {
+            "category": "Pedals",
+            "count": 1
+          }
         ],
         "preferredProducts": [
+          "fscp-pmdg-737-zibo",
+          "tm-mfd-cougar-pack",
+          "tm-tca-quadrant-boeing-xbox-addon",
+          "tm-tca-yoke-boeing-xbox",
           "tm-tca-yoke-pack-boeing",
-          "orion-metal-rudder-pedals",
-          "winwing-3-glareshield-mag",
-          "pfp-3n"
+          "tm-tpr-rudder",
+          "logi-flight-rudder-pedals"
         ]
       },
       "Business": {
         "needs": [
-          { "category": "Panel", "count": 1 },
-          { "category": "Throttle", "count": 1 },
-          { "category": "Pedals", "count": 1 }
+          {
+            "category": "Panel",
+            "count": 1
+          },
+          {
+            "category": "Throttle",
+            "count": 1
+          },
+          {
+            "category": "Pedals",
+            "count": 1
+          }
         ],
         "preferredProducts": [
+          "fscp-pmdg-737-zibo",
+          "tm-tca-quadrant-boeing-xbox-addon",
           "tm-tca-yoke-pack-boeing",
-          "tm-tfrp-rudder-pedals",
-          "3m-pdc-panel"
+          "logi-flight-rudder-pedals",
+          "tm-tfrp-rudder-pedals"
         ]
       },
       "Economy": {
         "needs": [
-          { "category": "Throttle", "count": 1 },
-          { "category": "Pedals", "count": 1 }
+          {
+            "category": "Throttle",
+            "count": 1
+          },
+          {
+            "category": "Pedals",
+            "count": 1
+          }
         ],
         "preferredProducts": [
           "tm-tca-yoke-pack-boeing",
+          "tm-tca-quadrant-boeing-xbox-addon",
+          "tm-tfrp-rudder-pedals",
           "logi-flight-rudder-pedals"
         ]
       }
@@ -108,33 +159,64 @@
     "tiers": {
       "First": {
         "needs": [
-          { "category": "HOTAS", "count": 1 },
-          { "category": "Pedals", "count": 1 },
-          { "category": "Panel", "count": 1 }
+          {
+            "category": "HOTAS",
+            "count": 1
+          },
+          {
+            "category": "Pedals",
+            "count": 1
+          },
+          {
+            "category": "Panel",
+            "count": 1
+          }
         ],
         "preferredProducts": [
-          "orion2-hotas-viperace",
-          "orion-metal-rudder-pedals",
-          "3m-pdc-panel"
+          "tm-hotas-warthog",
+          "tm-viper-hotas-add-on-grip",
+          "tm-viper-panel",
+          "tm-tpr-rudder",
+          "logi-flight-rudder-pedals"
         ]
       },
       "Business": {
         "needs": [
-          { "category": "HOTAS", "count": 1 },
-          { "category": "Pedals", "count": 1 }
+          {
+            "category": "HOTAS",
+            "count": 1
+          },
+          {
+            "category": "Pedals",
+            "count": 1
+          },
+          {
+            "category": "Panel",
+            "count": 1
+          }
         ],
         "preferredProducts": [
-          "orion2-hotas-viperace",
-          "logi-flight-rudder-pedals"
+          "tm-sol-r-4-hotas",
+          "tm-viper-panel",
+          "logi-flight-rudder-pedals",
+          "tm-tfrp-rudder-pedals",
+          "tm-viper-hotas-add-on-grip"
         ]
       },
       "Economy": {
         "needs": [
-          { "category": "HOTAS", "count": 1 },
-          { "category": "Pedals", "count": 1 }
+          {
+            "category": "HOTAS",
+            "count": 1
+          },
+          {
+            "category": "Pedals",
+            "count": 1
+          }
         ],
         "preferredProducts": [
-          "orion2-hotas-viperace",
+          "tm-t-16000m-fcs-hotas",
+          "tm-t-flight-hotas-one",
           "tm-tfrp-rudder-pedals"
         ]
       }
@@ -148,36 +230,64 @@
     "tiers": {
       "First": {
         "needs": [
-          { "category": "HOTAS", "count": 1 },
-          { "category": "Pedals", "count": 1 },
-          { "category": "Panel", "count": 2 }
+          {
+            "category": "HOTAS",
+            "count": 1
+          },
+          {
+            "category": "Pedals",
+            "count": 1
+          },
+          {
+            "category": "Panel",
+            "count": 2
+          }
         ],
         "preferredProducts": [
-          "orion2-hotas-strikeace",
-          "orion-metal-rudder-pedals",
-          "3m-pdc-panel",
-          "efis-r"
+          "tm-ava-fa-18-super-hornet-flightstick",
+          "tm-hotas-warthog-dual-throttle",
+          "tm-mfd-cougar-pack",
+          "tm-tpr-rudder",
+          "logi-flight-rudder-pedals"
         ]
       },
       "Business": {
         "needs": [
-          { "category": "HOTAS", "count": 1 },
-          { "category": "Rudder", "count": 1 },
-          { "category": "Panel", "count": 1 }
+          {
+            "category": "HOTAS",
+            "count": 1
+          },
+          {
+            "category": "Pedals",
+            "count": 1
+          },
+          {
+            "category": "Panel",
+            "count": 1
+          }
         ],
         "preferredProducts": [
-          "orion2-hotas-strikeace",
+          "tm-hotas-warthog",
+          "tm-fa-18c-hornet-hotas-add-on-grip",
+          "tm-mfd-cougar-pack",
           "logi-flight-rudder-pedals",
-          "3m-pdc-panel"
+          "tm-tfrp-rudder-pedals"
         ]
       },
       "Economy": {
         "needs": [
-          { "category": "HOTAS", "count": 1 },
-          { "category": "Pedals", "count": 1 }
+          {
+            "category": "HOTAS",
+            "count": 1
+          },
+          {
+            "category": "Pedals",
+            "count": 1
+          }
         ],
         "preferredProducts": [
-          "orion2-hotas-strikeace",
+          "tm-t-16000m-fcs-hotas",
+          "tm-t-flight-hotas-4",
           "tm-tfrp-rudder-pedals"
         ]
       }
