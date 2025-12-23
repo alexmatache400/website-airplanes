@@ -531,6 +531,7 @@
     "category": "Bundle",
     "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
     "tier": "Economy",
+    "tier": "Economy",
     "aircraftFamily": "general",
     "price_label": "~$240",
     "affiliate_urls": {

@@ -45,19 +45,24 @@ const Products: React.FC = () => {
   });
 
   // Category dropdown options with icons
-  const categoryOptions: DropdownOption[] = useMemo(() => [
-    { value: 'All', label: 'All Products', count: allProducts.length },
-    { value: 'HOTAS', label: 'HOTAS', icon: 'hotas', count: allProducts.filter(p => p.category === 'HOTAS').length },
-    { value: 'Throttle', label: 'Throttle', icon: 'throttle', count: allProducts.filter(p => p.category === 'Throttle').length },
-    { value: 'Joystick', label: 'Joystick', icon: 'joystick', count: allProducts.filter(p => p.category === 'Joystick').length },
-    { value: 'Pedals', label: 'Pedals', icon: 'pedals', count: allProducts.filter(p => p.category === 'Pedals').length },
-    { value: 'Panel', label: 'Panel', icon: 'panel', count: allProducts.filter(p => p.category === 'Panel').length },
-    { value: 'MCDU', label: 'MCDU', icon: 'mcdu', count: allProducts.filter(p => p.category === 'MCDU').length },
-    { value: 'Rudder', label: 'Rudder', icon: 'rudder', count: allProducts.filter(p => p.category === 'Rudder').length },
-    { value: 'Base', label: 'Base', icon: 'base', count: allProducts.filter(p => p.category === 'Base').length },
-    { value: 'Accessories', label: 'Accessories', icon: 'accessories', count: allProducts.filter(p => p.category === 'Accessories').length },
-    { value: 'Bundle', label: 'Bundle', icon: 'bundles', count: allProducts.filter(p => p.category === 'Bundle').length },
-  ], [allProducts]);
+  const categoryOptions: DropdownOption[] = useMemo(() => {
+    const allOptions = [
+      { value: 'All', label: 'All Products', count: allProducts.length },
+      { value: 'HOTAS', label: 'HOTAS', icon: 'hotas', count: allProducts.filter(p => p.category === 'HOTAS').length },
+      { value: 'Throttle', label: 'Throttle', icon: 'throttle', count: allProducts.filter(p => p.category === 'Throttle').length },
+      { value: 'Joystick', label: 'Joystick', icon: 'joystick', count: allProducts.filter(p => p.category === 'Joystick').length },
+      { value: 'Pedals', label: 'Pedals', icon: 'pedals', count: allProducts.filter(p => p.category === 'Pedals').length },
+      { value: 'Panel', label: 'Panel', icon: 'panel', count: allProducts.filter(p => p.category === 'Panel').length },
+      { value: 'MCDU', label: 'MCDU', icon: 'mcdu', count: allProducts.filter(p => p.category === 'MCDU').length },
+      { value: 'Rudder', label: 'Rudder', icon: 'rudder', count: allProducts.filter(p => p.category === 'Rudder').length },
+      { value: 'Base', label: 'Base', icon: 'base', count: allProducts.filter(p => p.category === 'Base').length },
+      { value: 'Accessories', label: 'Accessories', icon: 'accessories', count: allProducts.filter(p => p.category === 'Accessories').length },
+      { value: 'Bundle', label: 'Bundle', icon: 'bundles', count: allProducts.filter(p => p.category === 'Bundle').length },
+    ];
+
+    // Filter out categories with 0 products (keep "All" option)
+    return allOptions.filter(opt => opt.value === 'All' || (opt.count && opt.count > 0));
+  }, [allProducts]);
 
   // Role dropdown options with icons
   const roleOptions: DropdownOption[] = useMemo(() => {

@@ -123,67 +123,77 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
         {/* Hover Overlay - Affiliate Buttons */}
         {isHovered && (
-          <div className="absolute inset-0 bg-dark-900/80 grid grid-cols-3 gap-x-2 gap-y-[10px] content-center place-items-center p-4 transition-opacity duration-200">
-            {product.affiliate_urls.theu && (
-              <a
-                href={product.affiliate_urls.theu}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-accent-500 hover:bg-accent-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
-              >
-                Thrustmaster EU
-              </a>
+          <div className="absolute inset-0 bg-dark-900/80 flex flex-col gap-[10px] items-center justify-center p-4 transition-opacity duration-200">
+            {/* Row 1: Amazon US, Amazon UK, Amazon DE */}
+            {(product.affiliate_urls.us || product.affiliate_urls.uk || product.affiliate_urls.de) && (
+              <div className="flex justify-center gap-[10px]">
+                {product.affiliate_urls.us && (
+                  <a
+                    href={product.affiliate_urls.us}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 text-center"
+                  >
+                    Amazon US
+                  </a>
+                )}
+                {product.affiliate_urls.uk && (
+                  <a
+                    href={product.affiliate_urls.uk}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 text-center"
+                  >
+                    Amazon UK
+                  </a>
+                )}
+                {product.affiliate_urls.de && (
+                  <a
+                    href={product.affiliate_urls.de}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 text-center"
+                  >
+                    Amazon DE
+                  </a>
+                )}
+              </div>
             )}
-            
-            {product.affiliate_urls.thus && (
-              <a
-                href={product.affiliate_urls.thus}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-accent-500 hover:bg-accent-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
-              >
-                Thrustmaster US
-              </a>
-            )}
-            {product.affiliate_urls.thuk && (
-              <a
-                href={product.affiliate_urls.thuk}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-accent-500 hover:bg-accent-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
-              >
-                Thrustmaster UK
-              </a>
-            )}
-            {product.affiliate_urls.de && (
-              <a
-                href={product.affiliate_urls.de}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-accent-500 hover:bg-accent-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
-              >
-                Amazon DE
-              </a>
-            )}
-            {product.affiliate_urls.uk && (
-              <a
-                href={product.affiliate_urls.uk}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-accent-500 hover:bg-accent-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
-              >
-                Amazon UK
-              </a>
-            )}
-            {product.affiliate_urls.us && (
-              <a
-                href={product.affiliate_urls.us}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-accent-500 hover:bg-accent-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
-              >
-                Amazon US
-              </a>
+
+            {/* Row 2: Thrustmaster US, Thrustmaster UK, Thrustmaster EU */}
+            {(product.affiliate_urls.thus || product.affiliate_urls.thuk || product.affiliate_urls.theu) && (
+              <div className="flex justify-center gap-[10px]">
+                {product.affiliate_urls.thus && (
+                  <a
+                    href={product.affiliate_urls.thus}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 text-center"
+                  >
+                    Thrustmaster US
+                  </a>
+                )}
+                {product.affiliate_urls.thuk && (
+                  <a
+                    href={product.affiliate_urls.thuk}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 text-center"
+                  >
+                    Thrustmaster UK
+                  </a>
+                )}
+                {product.affiliate_urls.theu && (
+                  <a
+                    href={product.affiliate_urls.theu}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 text-center"
+                  >
+                    Thrustmaster EU
+                  </a>
+                )}
+              </div>
             )}
           </div>
         )}
@@ -348,67 +358,78 @@ const ProductCard: React.FC<ProductCardProps> = ({
           {/* Affiliate Buttons */}
           <div className="space-y-3">
             <h3 className="text-lg font-semibold text-dark-100">Purchase</h3>
-            <div className="flex flex-col sm:flex-row gap-3">
-            {product.affiliate_urls.theu && (
-              <a
-                href={product.affiliate_urls.theu}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 bg-accent-500 hover:bg-accent-600 text-white py-3 px-6 rounded-lg text-sm font-medium transition-colors duration-200 text-center focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-800"
-              >
-                Thrustmaster EU
-              </a>
-            )}
-            {product.affiliate_urls.thus && (
-              <a
-                href={product.affiliate_urls.thus}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 bg-accent-500 hover:bg-accent-600 text-white py-3 px-6 rounded-lg text-sm font-medium transition-colors duration-200 text-center focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-800"
-              >
-                Thrustmaster US
-              </a>
-            )}
-            {product.affiliate_urls.thuk && (
-              <a
-                href={product.affiliate_urls.thuk}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 bg-accent-500 hover:bg-accent-600 text-white py-3 px-6 rounded-lg text-sm font-medium transition-colors duration-200 text-center focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-800"
-              >
-                Thrustmaster UK
-              </a>
-            )}
-            {product.affiliate_urls.de && (
-              <a
-                href={product.affiliate_urls.de}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 bg-accent-500 hover:bg-accent-600 text-white py-3 px-6 rounded-lg text-sm font-medium transition-colors duration-200 text-center focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-800"
-              >
-                Amazon DE
-              </a>
-            )}
-            {product.affiliate_urls.uk && (
-              <a
-                href={product.affiliate_urls.uk}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 bg-accent-500 hover:bg-accent-600 text-white py-3 px-6 rounded-lg text-sm font-medium transition-colors duration-200 text-center focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-800"
-              >
-                Amazon UK
-              </a>
-            )}
-            {product.affiliate_urls.us && (
-              <a
-                href={product.affiliate_urls.us}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 bg-accent-500 hover:bg-accent-600 text-white py-3 px-6 rounded-lg text-sm font-medium transition-colors duration-200 text-center focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-800"
-              >
-                Amazon US
-              </a>
-            )}
+            <div className="flex flex-col gap-[10px] items-start">
+              {/* Row 1: Amazon US, Amazon UK, Amazon DE */}
+              {(product.affiliate_urls.us || product.affiliate_urls.uk || product.affiliate_urls.de) && (
+                <div className="flex justify-start gap-[10px]">
+                  {product.affiliate_urls.us && (
+                    <a
+                      href={product.affiliate_urls.us}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white py-3 px-6 rounded-lg text-sm font-medium transition-colors duration-200 text-center focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-800"
+                    >
+                      Amazon US
+                    </a>
+                  )}
+                  {product.affiliate_urls.uk && (
+                    <a
+                      href={product.affiliate_urls.uk}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white py-3 px-6 rounded-lg text-sm font-medium transition-colors duration-200 text-center focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-800"
+                    >
+                      Amazon UK
+                    </a>
+                  )}
+                  {product.affiliate_urls.de && (
+                    <a
+                      href={product.affiliate_urls.de}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white py-3 px-6 rounded-lg text-sm font-medium transition-colors duration-200 text-center focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-800"
+                    >
+                      Amazon DE
+                    </a>
+                  )}
+                </div>
+              )}
+
+              {/* Row 2: Thrustmaster US, Thrustmaster UK, Thrustmaster EU */}
+              {(product.affiliate_urls.thus || product.affiliate_urls.thuk || product.affiliate_urls.theu) && (
+                <div className="flex justify-start gap-[10px]">
+                  {product.affiliate_urls.thus && (
+                    <a
+                      href={product.affiliate_urls.thus}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white py-3 px-6 rounded-lg text-sm font-medium transition-colors duration-200 text-center focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-800"
+                    >
+                      Thrustmaster US
+                    </a>
+                  )}
+                  {product.affiliate_urls.thuk && (
+                    <a
+                      href={product.affiliate_urls.thuk}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white py-3 px-6 rounded-lg text-sm font-medium transition-colors duration-200 text-center focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-800"
+                    >
+                      Thrustmaster UK
+                    </a>
+                  )}
+                  {product.affiliate_urls.theu && (
+                    <a
+                      href={product.affiliate_urls.theu}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white py-3 px-6 rounded-lg text-sm font-medium transition-colors duration-200 text-center focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-800"
+                    >
+                      Thrustmaster EU
+                    </a>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

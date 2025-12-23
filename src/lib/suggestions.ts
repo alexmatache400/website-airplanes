@@ -85,12 +85,51 @@ function shuffleArray<T>(array: T[], random: () => number): T[] {
 
 /**
  * Calculate which categories a product satisfies based on equivalence rules
+ * BIDIRECTIONAL - Used for owned products in calculateMissingNeeds
  *
  * @param product - Product to evaluate
  * @returns Array of categories this product satisfies
  */
 function getSatisfiedCategories(product: Product): Product['category'][] {
   return CATEGORY_EQUIVALENCE[product.category] || [product.category];
+}
+
+/**
+ * Check if a product category can satisfy a needed category
+ * UNIDIRECTIONAL - Used for filtering candidate products in suggestions
+ *
+ * Key distinction from getSatisfiedCategories:
+ * - HOTAS products can ONLY satisfy explicit "HOTAS" needs
+ * - They cannot satisfy separate "Joystick" or "Throttle" needs
+ * - But owned HOTAS can still satisfy both (via getSatisfiedCategories in calculateMissingNeeds)
+ *
+ * Example:
+ * - Airbus A32F needs separate "Joystick" → Only show Joystick products, NOT HOTAS
+ * - F-16 Viper needs "HOTAS" → Show HOTAS products ✓
+ * - User owns HOTAS → Satisfies both Joystick AND Throttle needs ✓
+ *
+ * @param productCategory - Category of the candidate product
+ * @param neededCategory - Category being searched for
+ * @returns true if product can satisfy the need
+ */
+function canProductSatisfyNeed(
+  productCategory: Product['category'],
+  neededCategory: Product['category']
+): boolean {
+  // Direct match always works
+  if (productCategory === neededCategory) return true;
+
+  // Pedals/Rudder are bidirectionally equivalent (they're truly interchangeable)
+  if ((productCategory === 'Pedals' && neededCategory === 'Rudder') ||
+      (productCategory === 'Rudder' && neededCategory === 'Pedals')) {
+    return true;
+  }
+
+  // HOTAS can ONLY satisfy explicit HOTAS needs
+  // NOT separate Joystick or Throttle needs
+  // This prevents HOTAS from appearing in Airbus/Boeing setups that use separate controls
+
+  return false;
 }
 
 /**
@@ -203,8 +242,9 @@ export function generateSuggestions(input: SuggestionInput): SuggestionResult {
       if (ownedIds.has(product.id)) return false;
       if (suggestedIds.has(product.id)) return false;
 
-      const satisfiedCategories = getSatisfiedCategories(product);
-      if (!satisfiedCategories.includes(category)) return false;
+      // Use unidirectional matching: only show products that match the exact category
+      // This prevents HOTAS from appearing when aircraft needs separate Joystick/Throttle
+      if (!canProductSatisfyNeed(product.category, category)) return false;
 
       // Tier matching: Allow products if they're in preferredProducts OR if tier matches
       // This handles cases where products are curated for specific tiers in aircraft-presets
@@ -306,8 +346,9 @@ function getReplacementCandidates(
   const candidates = allProducts.filter(product => {
     if (allExcludedIds.has(product.id)) return false;
 
-    const satisfiedCategories = getSatisfiedCategories(product);
-    if (!satisfiedCategories.includes(categoryToReplace)) return false;
+    // Use unidirectional matching: only show products that match the exact category
+    // This prevents HOTAS from appearing when aircraft needs separate Joystick/Throttle
+    if (!canProductSatisfyNeed(product.category, categoryToReplace)) return false;
 
     // Tier matching: Allow products if they're in preferredProducts OR if tier matches
     // Same logic as generateSuggestions to ensure consistency
