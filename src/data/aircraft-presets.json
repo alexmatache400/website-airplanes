@@ -7,9 +7,27 @@
       "First": {
         "needs": [
           {
-            "category": "Joystick",
+            "category": "Pedals",
             "count": 1
           },
+          {
+            "category": "Panel",
+            "count": 2
+          },
+          {
+            "category": "Bundle",
+            "count": 1
+          }
+        ],
+        "preferredProducts": [
+          "wingflex-fcu-airbus",
+          "wingflex-mcdu-a32f",
+          "tm-tca-captain-pack-airbus",
+          "tm-tpr-rudder"
+        ]
+      },
+      "Business": {
+        "needs": [
           {
             "category": "Pedals",
             "count": 1
@@ -26,36 +44,8 @@
         "preferredProducts": [
           "wingflex-fcu-airbus",
           "wingflex-mcdu-a32f",
-          "tm-tca-sidestick-x-airbus",
           "tm-tca-captain-pack-airbus",
-          "tm-tpr-rudder"
-        ]
-      },
-      "Business": {
-        "needs": [
-          {
-            "category": "Joystick",
-            "count": 1
-          },
-          {
-            "category": "Pedals",
-            "count": 1
-          },
-          {
-            "category": "Panel",
-            "count": 2
-          },
-          {
-            "category": "Bundle",
-            "count": 1
-          }
-        ],
-        "preferredProducts": [
-          "wingflex-fcu-airbus",
-          "tm-tca-sidestick-x-airbus",
-          "tm-tca-captain-pack-airbus",
-          "logi-flight-rudder-pedals",
-          "wingflex-mcdu-a32f"
+          "logi-flight-rudder-pedals"
         ]
       },
       "Economy": {
@@ -76,7 +66,7 @@
         ]
       }
     },
-    "notes": "Airbus A320 family configuration with sidestick control. First class includes premium glareshield, Business focuses on mid-tier panels, Economy uses the TCA bundle."
+    "notes": "Airbus A320 family sidestick configuration. Higher tiers add FCU + MCDU panels; Economy keeps it simple with sidestick + pedals."
   },
   {
     "id": "boeing-737",
@@ -85,6 +75,32 @@
     "tiers": {
       "First": {
         "needs": [
+          {
+            "category": "Bundle",
+            "count": 1
+          },
+          {
+            "category": "Panel",
+            "count": 2
+          },
+          {
+            "category": "Pedals",
+            "count": 1
+          }
+        ],
+        "preferredProducts": [
+          "fscp-pmdg-737-zibo",
+          "tm-mfd-cougar-pack",
+          "tm-tca-yoke-pack-boeing-xbox",
+          "tm-tpr-rudder"
+        ]
+      },
+      "Business": {
+        "needs": [
+          {
+            "category": "Joystick",
+            "count": 1
+          },
           {
             "category": "Panel",
             "count": 2
@@ -100,33 +116,8 @@
         ],
         "preferredProducts": [
           "fscp-pmdg-737-zibo",
-          "tm-mfd-cougar-pack",
-          "tm-tca-quadrant-boeing-xbox-addon",
           "tm-tca-yoke-boeing-xbox",
-          "tm-tca-yoke-pack-boeing",
-          "tm-tpr-rudder",
-          "logi-flight-rudder-pedals"
-        ]
-      },
-      "Business": {
-        "needs": [
-          {
-            "category": "Panel",
-            "count": 1
-          },
-          {
-            "category": "Throttle",
-            "count": 1
-          },
-          {
-            "category": "Pedals",
-            "count": 1
-          }
-        ],
-        "preferredProducts": [
-          "fscp-pmdg-737-zibo",
           "tm-tca-quadrant-boeing-xbox-addon",
-          "tm-tca-yoke-pack-boeing",
           "logi-flight-rudder-pedals",
           "tm-tfrp-rudder-pedals"
         ]
@@ -143,14 +134,13 @@
           }
         ],
         "preferredProducts": [
-          "tm-tca-yoke-pack-boeing",
-          "tm-tca-quadrant-boeing-xbox-addon",
+          "tm-tca-yoke-pack-boeing-xbox",
           "tm-tfrp-rudder-pedals",
           "logi-flight-rudder-pedals"
         ]
       }
     },
-    "notes": "Boeing 737 yoke-style configuration. Focuses on throttle quadrant and overhead panels rather than joystick."
+    "notes": "Boeing 737 yoke-style setup. Higher tiers add MCP/glareshield hardware and Boeing throttle quadrant; entry tiers rely on yoke+quadrant bundles."
   },
   {
     "id": "f16-viper",
@@ -175,9 +165,9 @@
         "preferredProducts": [
           "tm-hotas-warthog",
           "tm-viper-hotas-add-on-grip",
+          "tm-viper-tqs-mission-pack",
           "tm-viper-panel",
-          "tm-tpr-rudder",
-          "logi-flight-rudder-pedals"
+          "tm-tpr-rudder"
         ]
       },
       "Business": {
@@ -196,11 +186,11 @@
           }
         ],
         "preferredProducts": [
-          "tm-sol-r-4-hotas",
+          "tm-hotas-warthog",
+          "tm-viper-hotas-add-on-grip",
           "tm-viper-panel",
           "logi-flight-rudder-pedals",
-          "tm-tfrp-rudder-pedals",
-          "tm-viper-hotas-add-on-grip"
+          "tm-tfrp-rudder-pedals"
         ]
       },
       "Economy": {
@@ -221,7 +211,7 @@
         ]
       }
     },
-    "notes": "F-16 Viper replica setup centered around the ViperAce HOTAS system."
+    "notes": "F-16 Viper setup focused on Viper-specific grip + TQS + panel for top tier, with accessible HOTAS options for lower tiers."
   },
   {
     "id": "fa18-hornet",
@@ -245,7 +235,7 @@
         ],
         "preferredProducts": [
           "tm-ava-fa-18-super-hornet-flightstick",
-          "tm-hotas-warthog-dual-throttle",
+          "tm-ava-base",
           "tm-mfd-cougar-pack",
           "tm-tpr-rudder",
           "logi-flight-rudder-pedals"
@@ -292,6 +282,94 @@
         ]
       }
     },
-    "notes": "F/A-18 Hornet replica setup centered around the StrikeAce HOTAS system with dual throttles."
+    "notes": "F/A-18 Hornet setup using Hornet grips and MFDs; top tier adds AVA ecosystem with premium rudder."
+  },
+  {
+    "id": "convenient-plane",
+    "name": "Convenient Plane",
+    "slug": "convenient-plane",
+    "tiers": {
+      "First": {
+        "needs": [
+          {
+            "category": "Base",
+            "count": 1
+          },
+          {
+            "category": "Joystick",
+            "count": 1
+          },
+          {
+            "category": "Throttle",
+            "count": 1
+          },
+          {
+            "category": "Pedals",
+            "count": 1
+          },
+          {
+            "category": "Panel",
+            "count": 1
+          }
+        ],
+        "preferredProducts": [
+          "tm-ava-base",
+          "tm-sol-r-3-ava-add-on-grip",
+          "tm-sol-r-6-throttle",
+          "tm-tpr-rudder",
+          "tm-mfd-cougar-pack"
+        ]
+      },
+      "Business": {
+        "needs": [
+          {
+            "category": "HOTAS",
+            "count": 1
+          },
+          {
+            "category": "Base",
+            "count": 1
+          },
+          {
+            "category": "Joystick",
+            "count": 1
+          },
+          {
+            "category": "Pedals",
+            "count": 1
+          }
+        ],
+        "preferredProducts": [
+          "tm-sol-r-4-hotas",
+          "tm-sol-r-5-base",
+          "tm-sol-r-1-flightstick",
+          "tm-sol-r-2-hosas-space-sim-duo",
+          "logi-flight-rudder-pedals"
+        ]
+      },
+      "Economy": {
+        "needs": [
+          {
+            "category": "Bundle",
+            "count": 1
+          },
+          {
+            "category": "Joystick",
+            "count": 1
+          },
+          {
+            "category": "HOTAS",
+            "count": 1
+          }
+        ],
+        "preferredProducts": [
+          "tm-t-16000m-fcs-flight-pack",
+          "tm-t-16000m-fcs",
+          "tm-t-16000m-fcs-space-sim-duo",
+          "tm-t-flight-hotas-one-msfs-ed"
+        ]
+      }
+    },
+    "notes": "Universal preset for a 'convenient' all-rounder aircraft (and flexible sim use). It intentionally hosts the more universal / modular products that aren't tied to a single cockpit."
   }
 ]

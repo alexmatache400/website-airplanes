@@ -38,9 +38,9 @@
     "aircraftFamily": "general",
     "price_label": "~$160",
     "affiliate_urls": {
-      "uk": "",
-      "us": "",
-      "de": ""
+      "uk": "https://amzn.to/4s7Vu3X",
+      "us": "https://amzn.to/4paDiDV",
+      "de": "https://amzn.to/4jb9UvT"
     },
     "images": [ "/photoForProductPage/3.png" ],
     "description": "Self-centering pedals with adjustable damping; precise rudder and toe-brake control; widely compatible.",
@@ -301,13 +301,13 @@
     "source_url": ""
   },
   {
-    "id": 14,
+    "id": "14",
     "brand": "Thrustmaster",
     "name": "Thrustmaster MFD Cougar Pack",
     "slug": "tm-mfd-cougar-pack",
     "category": "Panel",
     "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
-    "tier": "Panel",
+    "tier": "First",
     "aircraftFamily": "general",
     "price_label": "~$100",
     "affiliate_urls": {
@@ -329,7 +329,7 @@
     "source_url": ""
   },
   {
-    "id": 15,
+    "id": "15",
     "brand": "Thrustmaster",
     "name": "Thrustmaster SOL-R 1 Flightstick",
     "slug": "tm-sol-r-1-flightstick",
@@ -357,7 +357,7 @@
     "source_url": ""
   },
   {
-    "id": 16,
+    "id": "16",
     "brand": "Thrustmaster",
     "name": "Thrustmaster SOL-R 2 HOSAS Space Sim Duo",
     "slug": "tm-sol-r-2-hosas-space-sim-duo",
@@ -384,7 +384,7 @@
     "source_url": ""
   },
   {
-    "id": 17,
+    "id": "17",
     "brand": "Thrustmaster",
     "name": "Thrustmaster SOL-R 3 AVA Add-On Grip",
     "slug": "tm-sol-r-3-ava-add-on-grip",
@@ -412,7 +412,7 @@
     "source_url": ""
   },
   {
-    "id": 18,
+    "id": "18",
     "brand": "Thrustmaster",
     "name": "Thrustmaster SOL-R 4 HOTAS",
     "slug": "tm-sol-r-4-hotas",
@@ -440,7 +440,7 @@
     "source_url": ""
   },
   {
-    "id": 19,
+    "id": "19",
     "brand": "Thrustmaster",
     "name": "Thrustmaster SOL-R 5 Base",
     "slug": "tm-sol-r-5-base",
@@ -468,7 +468,7 @@
     "source_url": ""
   },
   {
-    "id": 20,
+    "id": "20",
     "brand": "Thrustmaster",
     "name": "Thrustmaster SOL-R 6 Throttle",
     "slug": "tm-sol-r-6-throttle",
@@ -496,7 +496,7 @@
     "source_url": ""
   },
   {
-    "id": 21,
+    "id": "21",
     "brand": "Thrustmaster",
     "name": "Thrustmaster T.16000M FCS",
     "slug": "tm-t-16000m-fcs",
@@ -524,13 +524,12 @@
     "source_url": ""
   },
   {
-    "id": 22,
+    "id": "22",
     "brand": "Thrustmaster",
     "name": "Thrustmaster T.16000M FCS Flight Pack",
     "slug": "tm-t-16000m-fcs-flight-pack",
     "category": "Bundle",
     "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
-    "tier": "Economy",
     "tier": "Economy",
     "aircraftFamily": "general",
     "price_label": "~$240",
@@ -549,7 +548,7 @@
     "source_url": ""
   },
   {
-    "id": 23,
+    "id": "23",
     "brand": "Thrustmaster",
     "name": "Thrustmaster T.16000M FCS HOTAS",
     "slug": "tm-t-16000m-fcs-hotas",
@@ -577,7 +576,7 @@
     "source_url": ""
   },
   {
-    "id": 24,
+    "id": "24",
     "brand": "Thrustmaster",
     "name": "Thrustmaster T.16000M FCS Space Sim Duo",
     "slug": "tm-t-16000m-fcs-space-sim-duo",
@@ -605,7 +604,7 @@
     "source_url": ""
   },
   {
-    "id": 25,
+    "id": "25",
     "brand": "Thrustmaster",
     "name": "Thrustmaster T.Flight Hotas 4",
     "slug": "tm-t-flight-hotas-4",
@@ -632,7 +631,7 @@
     "source_url": ""
   },
   {
-    "id": 27,
+    "id": "27",
     "brand": "Thrustmaster",
     "name": "Thrustmaster T.Flight Hotas One",
     "slug": "tm-t-flight-hotas-one",
@@ -658,7 +657,7 @@
     "source_url": ""
   },
   {
-    "id": 29,
+    "id": "29",
     "brand": "Thrustmaster",
     "name": "Thrustmaster T.Flight HOTAS One MSFS Edition",
     "slug": "tm-t-flight-hotas-one-msfs-ed",
@@ -685,7 +684,7 @@
     "source_url": ""
   },
   {
-    "id": 30,
+    "id": "30",
     "brand": "Thrustmaster",
     "name": "Thrustmaster TCA Quadrant Boeing Edition (Xbox Series X|S) Addon",
     "slug": "tm-tca-quadrant-boeing-xbox-addon",
@@ -713,7 +712,7 @@
     "source_url": ""
   },
   {
-    "id": 31,
+    "id": "31",
     "brand": "Thrustmaster",
     "name": "Thrustmaster TCA Sidestick X Airbus Edition",
     "slug": "tm-tca-sidestick-x-airbus",
@@ -742,7 +741,7 @@
     "source_url": ""
   },
   {
-    "id": 32,
+    "id": "32",
     "brand": "Thrustmaster",
     "name": "Thrustmaster TCA Yoke Boeing Edition (Xbox Series X|S)",
     "slug": "tm-tca-yoke-boeing-xbox",
@@ -770,7 +769,7 @@
     "source_url": ""
   },
   {
-    "id": 33,
+    "id": "33",
     "brand": "Thrustmaster",
     "name": "Thrustmaster TCA Yoke Pack Boeing Edition (Xbox Series X|S)",
     "slug": "tm-tca-yoke-pack-boeing-xbox",
@@ -798,7 +797,7 @@
     "source_url": ""
   },
   {
-    "id": 34,
+    "id": "34",
     "brand": "Thrustmaster",
     "name": "Thrustmaster TPR Pendular Rudder",
     "slug": "tm-tpr-rudder",
@@ -826,13 +825,13 @@
     "source_url": ""
   },
   {
-    "id": 35,
+    "id": "35",
     "brand": "Thrustmaster",
     "name": "Thrustmaster Viper Panel",
     "slug": "tm-viper-panel",
     "category": "Panel",
     "sim_support": [ "MSFS2020", "MSFS2024", "XPL11", "XPL12" ],
-    "tier": "Panel",
+    "tier": "First",
     "aircraftFamily": "f16-viper",
     "price_label": "~$230",
     "affiliate_urls": {
@@ -853,7 +852,7 @@
     "source_url": ""
   },
   {
-    "id": 36,
+    "id": "36",
     "brand": "Thrustmaster",
     "name": "Thrustmaster Viper TQS Mission Pack",
     "slug": "tm-viper-tqs-mission-pack",
