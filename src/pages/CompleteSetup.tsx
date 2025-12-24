@@ -755,7 +755,7 @@ const CompleteSetup: React.FC = () => {
                   {ownedGear.map((product) => (
                     <div key={`owned-${product.id}`} className="relative">
                       {/* Product Card */}
-                      <ProductCard product={product} />
+                      <ProductCard product={product} context="grid" />
 
                       {/* Owned Badge - Top Center */}
                       <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
@@ -770,7 +770,7 @@ const CompleteSetup: React.FC = () => {
                   {result.suggestions.map((product) => (
                     <div key={product.id} className="relative">
                       {/* Product Card */}
-                      <ProductCard product={product} />
+                      <ProductCard product={product} context="grid" />
 
                       {/* Controls Overlay - Top Center (only show if replacement options exist) */}
                       {canBeReplaced(product) && (

@@ -574,6 +574,45 @@
   animation: productPulse 5s ease-in-out 1;
 }
 
+/* Affiliate Dropdown Slide Animations */
+@keyframes slideInFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  0% {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-left {
+  animation: slideInFromLeft 200ms ease-out forwards;
+}
+
+.animate-slide-right {
+  animation: slideInFromRight 200ms ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-slide-left,
+  .animate-slide-right {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+}
+
 /* Light Mode Theme Overrides */
 .light {
   /* CSS Variables for Light Mode */

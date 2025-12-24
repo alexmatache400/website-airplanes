@@ -80,6 +80,7 @@ export const InfiniteCarousel = forwardRef<InfiniteCarouselHandle, InfiniteCarou
     const dragStartXRef = useRef(0);
     const dragStartOffsetRef = useRef(0);
     const autoplayResumeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const activePointerIdRef = useRef<number | null>(null);
 
     // Initialize marquee hook with laneRef
     const {
@@ -273,11 +274,18 @@ export const InfiniteCarousel = forwardRef<InfiniteCarouselHandle, InfiniteCarou
       (e: React.PointerEvent) => {
         if (e.button !== 0) return;
 
+        // Don't capture pointer if clicking on interactive elements
+        const target = e.target as HTMLElement;
+        if (target.closest('button, a, [role="button"], input, select, textarea')) {
+          return;
+        }
+
         isDraggingRef.current = true;
         dragStartXRef.current = e.clientX;
         dragStartOffsetRef.current = offset;
         pause();
 
+        activePointerIdRef.current = e.pointerId;
         (e.target as HTMLElement).setPointerCapture(e.pointerId);
       },
       [offset, pause]
@@ -303,7 +311,10 @@ export const InfiniteCarousel = forwardRef<InfiniteCarouselHandle, InfiniteCarou
         if (!isDraggingRef.current) return;
 
         isDraggingRef.current = false;
-        (e.target as HTMLElement).releasePointerCapture(e.pointerId);
+        if (activePointerIdRef.current !== null) {
+          (e.target as HTMLElement).releasePointerCapture(activePointerIdRef.current);
+          activePointerIdRef.current = null;
+        }
 
         // Snap to nearest card
         snapToNearest();
@@ -351,6 +362,21 @@ export const InfiniteCarousel = forwardRef<InfiniteCarouselHandle, InfiniteCarou
       return () => {
         if (autoplayResumeTimeoutRef.current) {
           clearTimeout(autoplayResumeTimeoutRef.current);
+        }
+      };
+    }, []);
+
+    // Cleanup: Release pointer capture on unmount
+    useEffect(() => {
+      return () => {
+        if (activePointerIdRef.current !== null && laneRef.current) {
+          try {
+            laneRef.current.releasePointerCapture(activePointerIdRef.current);
+          } catch {
+            // Ignore if already released
+          }
+          activePointerIdRef.current = null;
+          isDraggingRef.current = false;
         }
       };
     }, []);

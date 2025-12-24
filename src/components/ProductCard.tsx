@@ -8,18 +8,23 @@ import { CategoryIcon } from './CategoryIcon';
 interface ProductCardProps {
   product: Product;
   className?: string;
+  context?: 'hover' | 'modal' | 'grid';
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
   product,
-  className = ''
+  className = '',
+  context = 'hover'
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<'amazon' | 'thrustmaster' | null>(null);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const didPushStateRef = useRef(false);
+  const amazonDropdownRef = useRef<HTMLDivElement>(null);
+  const thrustmasterDropdownRef = useRef<HTMLDivElement>(null);
 
   // Helper function to truncate text to specified length
   const truncateText = (text: string, maxLength: number = 100): string => {
@@ -81,6 +86,28 @@ const ProductCard: React.FC<ProductCardProps> = ({
     }
   }, [isModalOpen]);
 
+  // Click outside to close dropdowns
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+
+      if (
+        amazonDropdownRef.current && !amazonDropdownRef.current.contains(target) &&
+        thrustmasterDropdownRef.current && !thrustmasterDropdownRef.current.contains(target)
+      ) {
+        setOpenDropdown(null);
+      }
+    };
+
+    if (openDropdown !== null) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [openDropdown]);
+
   const formatPrice = (price: number | null | undefined) => {
     if (!price) return null;
     return new Intl.NumberFormat('en-EU', {
@@ -102,6 +129,180 @@ const ProductCard: React.FC<ProductCardProps> = ({
     </div>
   );
 
+  // Affiliate Dropdown Component
+  interface AffiliateDropdownProps {
+    type: 'amazon' | 'thrustmaster';
+    isOpen: boolean;
+    onToggle: () => void;
+    links: {
+      us?: string;
+      uk?: string;
+      de?: string;
+      eu?: string;
+    };
+    dropdownRef: React.RefObject<HTMLDivElement | null>;
+    context?: 'hover' | 'modal' | 'grid';
+  }
+
+  const AffiliateDropdown: React.FC<AffiliateDropdownProps> = ({
+    type,
+    isOpen,
+    onToggle,
+    links,
+    dropdownRef,
+    context = 'hover',
+  }) => {
+    // All hooks must be called before any conditional returns
+    const [position, setPosition] = useState<'center' | 'left' | 'right' | 'above'>('center');
+    const buttonRef = useRef<HTMLButtonElement>(null);
+
+    // Calculate values needed for hooks
+    const hasLinks = !!(links.us || links.uk || links.de || links.eu);
+    const label = type === 'amazon' ? 'Amazon' : 'Thrustmaster';
+    const visibleLinksCount = Object.values(links).filter(Boolean).length;
+    const estimatedDropdownWidth = visibleLinksCount * 88 + 32; // ~88px per button + padding
+
+    // Smart positioning logic
+    useEffect(() => {
+      if (!isOpen || !buttonRef.current || !dropdownRef.current) return;
+
+      const button = buttonRef.current.getBoundingClientRect();
+      const viewport = {
+        width: window.innerWidth,
+        height: window.innerHeight,
+      };
+
+      // Find closest parent card (.glass)
+      const card = dropdownRef.current.closest('.glass');
+      const cardBounds = card?.getBoundingClientRect();
+
+      // Calculate available space
+      const spaceBelow = viewport.height - button.bottom;
+      const spaceAbove = button.top;
+
+      let horizontalPos: 'center' | 'left' | 'right' = 'center';
+
+      if (context === 'modal' || context === 'grid') {
+        // Modal/Grid: align based on button type
+        // Amazon (left button) → left-aligned, Thrustmaster (right button) → right-aligned
+        horizontalPos = type === 'amazon' ? 'left' : 'right';
+      } else {
+        // Hover overlay: check if centered dropdown fits within card bounds
+        const halfDropdownWidth = estimatedDropdownWidth / 2;
+        const buttonCenter = button.left + button.width / 2;
+
+        const leftEdge = buttonCenter - halfDropdownWidth;
+        const rightEdge = buttonCenter + halfDropdownWidth;
+
+        if (cardBounds) {
+          // Check overflow against card boundaries
+          const cardPadding = 16; // Account for card padding
+          if (leftEdge < cardBounds.left + cardPadding) {
+            horizontalPos = 'left'; // Align to left edge of button
+          } else if (rightEdge > cardBounds.right - cardPadding) {
+            horizontalPos = 'right'; // Align to right edge of button
+          }
+        }
+      }
+
+      // Determine vertical position (position above if no space below)
+      // Force below in modal/grid context, smart positioning in hover context
+      const verticalPos = (context === 'modal' || context === 'grid')
+        ? 'center' // Always show below buttons in modal/grid
+        : (spaceBelow < 150 && spaceAbove > 150 ? 'above' : 'center');
+
+      setPosition(verticalPos === 'above' ? 'above' : horizontalPos);
+    }, [isOpen, estimatedDropdownWidth, context]);
+
+    // ResizeObserver for live updates on window resize
+    useEffect(() => {
+      if (!dropdownRef.current) return;
+
+      const resizeObserver = new ResizeObserver(() => {
+        if (isOpen) {
+          // Trigger recalculation on resize
+          requestAnimationFrame(() => {
+            // The positioning effect will re-run due to dependency on isOpen
+          });
+        }
+      });
+
+      resizeObserver.observe(dropdownRef.current);
+
+      return () => resizeObserver.disconnect();
+    }, [isOpen]);
+
+    // Position class mapping
+    const positionClasses = {
+      center: 'left-1/2 -translate-x-1/2',
+      left: 'left-0',
+      right: 'right-0',
+      above: 'bottom-full mb-2 left-1/2 -translate-x-1/2',
+    };
+
+    // Region flags for displaying with country codes
+    const regionFlags: Record<string, string> = {
+      us: '🇺🇸',
+      uk: '🇬🇧',
+      de: '🇩🇪',
+      eu: '🇪🇺',
+    };
+
+    // Early return if no links available (after all hooks)
+    if (!hasLinks) return null;
+
+    return (
+      <div ref={dropdownRef} className="relative">
+        <button
+          ref={buttonRef}
+          onClick={(e) => {
+            e.preventDefault();
+            onToggle();
+          }}
+          className="bg-accent-500 hover:bg-accent-600 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 whitespace-nowrap"
+          aria-expanded={isOpen}
+          aria-haspopup="menu"
+          aria-label={`${label} purchase options`}
+        >
+          {label}
+          <svg
+            className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+            viewBox="0 0 12 12"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M2 4l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+
+        {isOpen && (
+          <div
+            className={`absolute ${position === 'above' ? '' : 'top-full mt-2'} ${positionClasses[position]} flex gap-2 z-20 bg-dark-800/95 backdrop-blur-sm p-3 rounded-lg border border-dark-700/50 shadow-xl ${type === 'amazon' ? 'animate-slide-left' : 'animate-slide-right'}`}
+            role="menu"
+            aria-label={`${label} regions`}
+          >
+            {Object.entries(links).map(
+              ([region, url]) =>
+                url && (
+                  <a
+                    key={region}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    role="menuitem"
+                    className="px-4 py-2 bg-accent-500 hover:bg-accent-600 text-white rounded text-sm font-medium transition-colors whitespace-nowrap"
+                  >
+                    {regionFlags[region]} {region.toUpperCase()}
+                  </a>
+                )
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div
       className={`glass rounded-xl overflow-hidden hover:bg-dark-800/60 transition-all duration-300 group ${className}`}
@@ -121,80 +322,35 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <FallbackAvatar />
         )}
 
-        {/* Hover Overlay - Affiliate Buttons */}
+        {/* Hover Overlay - Affiliate Dropdown Buttons */}
         {isHovered && (
-          <div className="absolute inset-0 bg-dark-900/80 flex flex-col gap-[10px] items-center justify-center p-4 transition-opacity duration-200">
-            {/* Row 1: Amazon US, Amazon UK, Amazon DE */}
-            {(product.affiliate_urls.us || product.affiliate_urls.uk || product.affiliate_urls.de) && (
-              <div className="flex justify-center gap-[10px]">
-                {product.affiliate_urls.us && (
-                  <a
-                    href={product.affiliate_urls.us}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 text-center"
-                  >
-                    Amazon US
-                  </a>
-                )}
-                {product.affiliate_urls.uk && (
-                  <a
-                    href={product.affiliate_urls.uk}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 text-center"
-                  >
-                    Amazon UK
-                  </a>
-                )}
-                {product.affiliate_urls.de && (
-                  <a
-                    href={product.affiliate_urls.de}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 text-center"
-                  >
-                    Amazon DE
-                  </a>
-                )}
-              </div>
-            )}
-
-            {/* Row 2: Thrustmaster US, Thrustmaster UK, Thrustmaster EU */}
-            {(product.affiliate_urls.thus || product.affiliate_urls.thuk || product.affiliate_urls.theu) && (
-              <div className="flex justify-center gap-[10px]">
-                {product.affiliate_urls.thus && (
-                  <a
-                    href={product.affiliate_urls.thus}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 text-center"
-                  >
-                    Thrustmaster US
-                  </a>
-                )}
-                {product.affiliate_urls.thuk && (
-                  <a
-                    href={product.affiliate_urls.thuk}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 text-center"
-                  >
-                    Thrustmaster UK
-                  </a>
-                )}
-                {product.affiliate_urls.theu && (
-                  <a
-                    href={product.affiliate_urls.theu}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 text-center"
-                  >
-                    Thrustmaster EU
-                  </a>
-                )}
-              </div>
-            )}
+          <div className="absolute inset-0 bg-dark-900/80 flex items-center justify-center p-4 transition-opacity duration-200">
+            <div className="flex gap-3">
+              <AffiliateDropdown
+                type="amazon"
+                isOpen={openDropdown === 'amazon'}
+                onToggle={() => setOpenDropdown(openDropdown === 'amazon' ? null : 'amazon')}
+                links={{
+                  us: product.affiliate_urls.us,
+                  uk: product.affiliate_urls.uk,
+                  de: product.affiliate_urls.de,
+                }}
+                dropdownRef={amazonDropdownRef}
+                context={context}
+              />
+              <AffiliateDropdown
+                type="thrustmaster"
+                isOpen={openDropdown === 'thrustmaster'}
+                onToggle={() => setOpenDropdown(openDropdown === 'thrustmaster' ? null : 'thrustmaster')}
+                links={{
+                  us: product.affiliate_urls.thus,
+                  uk: product.affiliate_urls.thuk,
+                  eu: product.affiliate_urls.theu,
+                }}
+                dropdownRef={thrustmasterDropdownRef}
+                context={context}
+              />
+            </div>
           </div>
         )}
 
@@ -355,81 +511,34 @@ const ProductCard: React.FC<ProductCardProps> = ({
             </div>
           )}
 
-          {/* Affiliate Buttons */}
+          {/* Affiliate Dropdown Buttons */}
           <div className="space-y-3">
             <h3 className="text-lg font-semibold text-dark-100">Purchase</h3>
-            <div className="flex flex-col gap-[10px] items-start">
-              {/* Row 1: Amazon US, Amazon UK, Amazon DE */}
-              {(product.affiliate_urls.us || product.affiliate_urls.uk || product.affiliate_urls.de) && (
-                <div className="flex justify-start gap-[10px]">
-                  {product.affiliate_urls.us && (
-                    <a
-                      href={product.affiliate_urls.us}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white py-3 px-6 rounded-lg text-sm font-medium transition-colors duration-200 text-center focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-800"
-                    >
-                      Amazon US
-                    </a>
-                  )}
-                  {product.affiliate_urls.uk && (
-                    <a
-                      href={product.affiliate_urls.uk}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white py-3 px-6 rounded-lg text-sm font-medium transition-colors duration-200 text-center focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-800"
-                    >
-                      Amazon UK
-                    </a>
-                  )}
-                  {product.affiliate_urls.de && (
-                    <a
-                      href={product.affiliate_urls.de}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white py-3 px-6 rounded-lg text-sm font-medium transition-colors duration-200 text-center focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-800"
-                    >
-                      Amazon DE
-                    </a>
-                  )}
-                </div>
-              )}
-
-              {/* Row 2: Thrustmaster US, Thrustmaster UK, Thrustmaster EU */}
-              {(product.affiliate_urls.thus || product.affiliate_urls.thuk || product.affiliate_urls.theu) && (
-                <div className="flex justify-start gap-[10px]">
-                  {product.affiliate_urls.thus && (
-                    <a
-                      href={product.affiliate_urls.thus}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white py-3 px-6 rounded-lg text-sm font-medium transition-colors duration-200 text-center focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-800"
-                    >
-                      Thrustmaster US
-                    </a>
-                  )}
-                  {product.affiliate_urls.thuk && (
-                    <a
-                      href={product.affiliate_urls.thuk}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white py-3 px-6 rounded-lg text-sm font-medium transition-colors duration-200 text-center focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-800"
-                    >
-                      Thrustmaster UK
-                    </a>
-                  )}
-                  {product.affiliate_urls.theu && (
-                    <a
-                      href={product.affiliate_urls.theu}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-[180px] bg-accent-500 hover:bg-accent-600 text-white py-3 px-6 rounded-lg text-sm font-medium transition-colors duration-200 text-center focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-800"
-                    >
-                      Thrustmaster EU
-                    </a>
-                  )}
-                </div>
-              )}
+            <div className="flex gap-3 justify-start">
+              <AffiliateDropdown
+                type="amazon"
+                isOpen={openDropdown === 'amazon'}
+                onToggle={() => setOpenDropdown(openDropdown === 'amazon' ? null : 'amazon')}
+                links={{
+                  us: product.affiliate_urls.us,
+                  uk: product.affiliate_urls.uk,
+                  de: product.affiliate_urls.de,
+                }}
+                dropdownRef={amazonDropdownRef}
+                context="modal"
+              />
+              <AffiliateDropdown
+                type="thrustmaster"
+                isOpen={openDropdown === 'thrustmaster'}
+                onToggle={() => setOpenDropdown(openDropdown === 'thrustmaster' ? null : 'thrustmaster')}
+                links={{
+                  us: product.affiliate_urls.thus,
+                  uk: product.affiliate_urls.thuk,
+                  eu: product.affiliate_urls.theu,
+                }}
+                dropdownRef={thrustmasterDropdownRef}
+                context="modal"
+              />
             </div>
           </div>
         </div>

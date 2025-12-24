@@ -132,23 +132,26 @@ const Modal: React.FC<ModalProps> = ({
 
   // Safety cleanup: Ensure scroll is unlocked when component unmounts
   useEffect(() => {
+    // Capture the current ref value to use in cleanup
+    const scrollLock = scrollLockRef.current;
+
     return () => {
       // Force unlock scroll on unmount - be very aggressive
       setTimeout(() => {
-        if (scrollLockRef.current.isLocked) {
-          if (scrollLockRef.current.originalOverflow) {
-            document.body.style.overflow = scrollLockRef.current.originalOverflow;
+        if (scrollLock.isLocked) {
+          if (scrollLock.originalOverflow) {
+            document.body.style.overflow = scrollLock.originalOverflow;
           } else {
             document.body.style.removeProperty('overflow');
           }
 
-          if (scrollLockRef.current.originalPaddingRight) {
-            document.body.style.paddingRight = scrollLockRef.current.originalPaddingRight;
+          if (scrollLock.originalPaddingRight) {
+            document.body.style.paddingRight = scrollLock.originalPaddingRight;
           } else {
             document.body.style.removeProperty('padding-right');
           }
 
-          scrollLockRef.current.isLocked = false;
+          scrollLock.isLocked = false;
         } else {
           // Even if we think it's not locked, force remove overflow: hidden just in case
           const currentOverflow = document.body.style.overflow;

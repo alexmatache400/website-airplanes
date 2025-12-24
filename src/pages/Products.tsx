@@ -207,7 +207,7 @@ const Products: React.FC = () => {
                 highlightedId === product.id ? 'pulse-5s' : ''
               }`}
             >
-              <ProductCard product={product} />
+              <ProductCard product={product} context="grid" />
             </div>
           ))}
         </div>
