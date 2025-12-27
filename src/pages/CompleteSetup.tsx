@@ -39,22 +39,6 @@ const CompleteSetup: React.FC = () => {
   const allAircraft = listAircraft();
   const allProducts = listProducts();
 
-  // Load role from localStorage on mount
-  useEffect(() => {
-    const savedRole = localStorage.getItem('completesetup_selectedRole');
-    if (savedRole && (savedRole === '' || savedRole === 'Pilot' || savedRole === 'Copilot')) {
-      setSelectedRole(savedRole as RoleType);
-    }
-  }, []);
-
-  // Role change handler
-  const handleRoleChange = (value: string | string[]) => {
-    const stringValue = Array.isArray(value) ? value[0] : value;
-    const roleValue = stringValue as RoleType;
-    setSelectedRole(roleValue);
-    localStorage.setItem('completesetup_selectedRole', roleValue);
-  };
-
   // Close suggestions when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -108,14 +92,13 @@ const CompleteSetup: React.FC = () => {
         setIsAircraftAutoSelected(false);
       }
 
-      // Step 3: Check if role should be auto-selected
+      // Step 3: Check if role should be auto-selected (kept for backend logic)
+      // NOTE: Role UI is hidden, but backend logic preserved for future re-enablement
       const autoRole = shouldAutoSelectRole(product);
       if (autoRole) {
         setSelectedRole(autoRole);
         setIsRoleAutoSelected(true);
-        localStorage.setItem('completesetup_selectedRole', autoRole);
       } else {
-        // Universal product - user must manually select
         setIsRoleAutoSelected(false);
       }
 
@@ -155,7 +138,6 @@ const CompleteSetup: React.FC = () => {
       setSelectedRole('');
       setSelectedTier('Business');
       setResult(null);
-      localStorage.setItem('completesetup_selectedRole', '');
     } else if (newOwnedGear.length > 0) {
       // If still have products, re-apply filtering based on first product
       const firstProduct = newOwnedGear[0];
@@ -174,12 +156,11 @@ const CompleteSetup: React.FC = () => {
         setIsAircraftAutoSelected(false);
       }
 
-      // Re-check role auto-selection
+      // Re-check role auto-selection (backend logic preserved)
       const autoRole = shouldAutoSelectRole(firstProduct);
       if (autoRole) {
         setSelectedRole(autoRole);
         setIsRoleAutoSelected(true);
-        localStorage.setItem('completesetup_selectedRole', autoRole);
       } else {
         setIsRoleAutoSelected(false);
       }
@@ -549,12 +530,8 @@ const CompleteSetup: React.FC = () => {
                       selectedAircraft?.id || null
                     );
 
-                    // Then apply role filter to ensure 10 relevant results
-                    const roleFiltered = selectedRole === ''
-                      ? familyFiltered
-                      : familyFiltered.filter(p => p.roleType === selectedRole || p.roleType === 'Universal');
-
-                    const results = searchProducts(roleFiltered, value);
+                    // NOTE: Role filtering temporarily disabled - showing all products
+                    const results = searchProducts(familyFiltered, value);
 
                     setSearchSuggestions(results);
                     setShowSuggestions(results.length > 0);
@@ -605,7 +582,7 @@ const CompleteSetup: React.FC = () => {
                     className="inline-flex items-center gap-2 bg-dark-700/80 border border-dark-600/50 rounded-lg px-3 py-2 group"
                   >
                     <span className="text-xs font-medium text-dark-200">
-                      {gear.brand} {gear.name}
+                       {gear.name}
                     </span>
                     <span className="text-xs text-dark-400">
                       ({gear.category})
@@ -647,39 +624,14 @@ const CompleteSetup: React.FC = () => {
               />
             </div>
 
-            {/* Step 3: Role Selector (Disabled until step 1 complete) */}
-            <div className={`mb-6 ${ownedGear.length === 0 ? 'opacity-50' : ''}`}>
-              <label
-                id="role-select-label"
-                htmlFor="role-select"
-                className="block text-sm font-medium text-dark-200 mb-2"
-              >
-                3. Select your role
-                {ownedGear.length === 0 && (
-                  <span className="ml-2 text-xs text-dark-400 italic">(Complete step 1 first)</span>
-                )}
-                {isRoleAutoSelected && ownedGear.length > 0 && (
-                  <span className="ml-2 text-xs text-green-400 italic">(Auto-selected based on your product)</span>
-                )}
-              </label>
-              <CustomDropdown
-                id="role-select"
-                value={selectedRole}
-                onChange={handleRoleChange}
-                options={roleOptions}
-                placeholder="-- Select a role --"
-                disabled={ownedGear.length === 0}
-              />
-            </div>
-
-            {/* Step 4: Class Tier Selector (Disabled until step 1 complete) */}
+            {/* Step 3: Class Tier Selector (Disabled until step 1 complete) */}
             <div className={`mb-6 ${ownedGear.length === 0 ? 'opacity-50' : ''}`}>
               <label
                 id="tier-select-label"
                 htmlFor="tier-select"
                 className="block text-sm font-medium text-dark-200 mb-2"
               >
-                4. Select class tier (budget)
+                3. Select class tier (budget)
                 {ownedGear.length === 0 && (
                   <span className="ml-2 text-xs text-dark-400 italic">(Complete step 1 first)</span>
                 )}

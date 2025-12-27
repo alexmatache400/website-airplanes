@@ -43,7 +43,7 @@ export const FeaturedProductsCarousel: React.FC<FeaturedProductsCarouselProps> =
   const productCards = useMemo(
     () =>
       products.map((product) => (
-        <ProductCard key={product.id} product={product} />
+        <ProductCard key={product.id} product={product} fromCarousel={true} />
       )),
     [products]
   );
@@ -111,7 +111,7 @@ export const FeaturedProductsCarousel: React.FC<FeaturedProductsCarouselProps> =
         <noscript>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.slice(0, 3).map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={product} fromCarousel={true} />
             ))}
           </div>
         </noscript>

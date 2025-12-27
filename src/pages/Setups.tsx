@@ -60,17 +60,11 @@ const Setups: React.FC = () => {
   // Load saved selections from localStorage on mount
   useEffect(() => {
     const savedAircraft = localStorage.getItem('setups_selectedAircraft');
-    const savedRole = localStorage.getItem('setups_selectedRole');
     const savedTier = localStorage.getItem('setups_selectedTier');
 
     // Validate and restore aircraft
     if (savedAircraft && setup.find(s => s.aircraft === savedAircraft)) {
       setSelectedAircraft(savedAircraft as AircraftModel);
-    }
-
-    // Validate and restore role
-    if (savedRole && (savedRole === '' || savedRole === 'Pilot' || savedRole === 'Copilot')) {
-      setSelectedRole(savedRole as RoleType);
     }
 
     // Validate and restore tier
@@ -86,7 +80,6 @@ const Setups: React.FC = () => {
     localStorage.setItem('setups_selectedAircraft', aircraftValue);
     setSelectedTier('All'); // Reset tier filter when aircraft changes
     localStorage.setItem('setups_selectedTier', 'All');
-    // Note: selectedRole persists across aircraft changes (per user preference)
   };
 
   const handleTierChange = (value: string | string[]) => {
@@ -94,13 +87,6 @@ const Setups: React.FC = () => {
     const tierValue = stringValue as Tier | 'All';
     setSelectedTier(tierValue);
     localStorage.setItem('setups_selectedTier', tierValue);
-  };
-
-  const handleRoleChange = (value: string | string[]) => {
-    const stringValue = Array.isArray(value) ? value[0] : value;
-    const roleValue = stringValue as RoleType;
-    setSelectedRole(roleValue);
-    localStorage.setItem('setups_selectedRole', roleValue);
   };
 
   // Get setup data for selected aircraft
@@ -111,15 +97,11 @@ const Setups: React.FC = () => {
   };
 
   // Filter products by role
-  // Universal products always show regardless of Pilot/Copilot selection
-  // Returns empty array if no role is selected (empty string)
+  // NOTE: Role filtering temporarily disabled - showing all products (Universal behavior)
+  // Backend logic preserved for future re-enablement
   const filterProductsByRole = (products: Product[]): Product[] => {
-    if (selectedRole === '') {
-      return []; // No role selected, show empty state instead
-    }
-    return products.filter(
-      product => product.roleType === selectedRole || product.roleType === 'Universal'
-    );
+    // Hardcoded to show all products regardless of roleType
+    return products;
   };
 
   // Aircraft dropdown options with optgroups
@@ -180,15 +162,25 @@ const Setups: React.FC = () => {
       <div className="relative z-10 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-white mb-3">
-            Full Setups
-          </h1>
-          <p className="text-slate-400 text-lg">
-            Pre-configured hardware bundles for specific aircraft
-          </p>
+          <div className="flex items-center justify-center gap-6">
+            <div>
+              <h1 className="text-4xl font-bold text-white mb-3">
+                Full Setups
+              </h1>
+              <p className="text-slate-400 text-lg">
+                Pre-configured hardware bundles for specific aircraft
+              </p>
+            </div>
+            {/* Airplane Animation (Dark Mode Only) */}
+            {!isLightMode && (
+              <div className="hidden md:block">
+                <AirplaneAnimation />
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Aircraft and Role Selection - 2 Column Layout */}
+        {/* Aircraft and Equipment Tier Selection - 2 Column Layout */}
         <div className="mb-8 max-w-4xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Aircraft Dropdown */}
@@ -209,63 +201,29 @@ const Setups: React.FC = () => {
               />
             </div>
 
-            {/* Your Role Dropdown */}
+            {/* Equipment Tier Dropdown */}
             <div>
               <label
-                id="role-select-label"
-                htmlFor="role-select"
+                id="tier-select-label"
+                htmlFor="tier-select"
                 className="block text-lg font-medium text-dropdown-text mb-3"
               >
-                Your Role
+                Equipment Tier
               </label>
               <CustomDropdown
-                id="role-select"
-                value={selectedRole}
-                onChange={handleRoleChange}
-                options={roleOptions}
-                placeholder="-- Select a role --"
+                id="tier-select"
+                value={selectedTier}
+                onChange={handleTierChange}
+                options={tierOptions}
+                placeholder="-- Select tier --"
               />
             </div>
           </div>
         </div>
 
-        {/* Equipment Tier Dropdown + Animation (2-Column Layout) */}
-        {selectedAircraft && selectedRole && currentSetup && (
-          <div className="mb-8 max-w-4xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Left: Equipment Tier Dropdown */}
-              <div className={isLightMode ? 'md:col-span-2' : ''}>
-                <div className={isLightMode ? 'max-w-md mx-auto' : ''}>
-                  <label
-                    id="tier-select-label"
-                    htmlFor="tier-select"
-                    className="block text-lg font-medium text-dropdown-text mb-3"
-                  >
-                    Equipment Tier
-                  </label>
-                  <CustomDropdown
-                    id="tier-select"
-                    value={selectedTier}
-                    onChange={handleTierChange}
-                    options={tierOptions}
-                    placeholder="-- Select tier --"
-                  />
-                </div>
-              </div>
-
-              {/* Right: Airplane Animation (Dark Mode Only) */}
-              {!isLightMode && (
-                <div>
-                  <AirplaneAnimation />
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
 
         {/* Product Cards - Airbus (Tiered) */}
-        {selectedAircraft && selectedRole && currentSetup && 'tiers' in currentSetup && (
+        {selectedAircraft && currentSetup && 'tiers' in currentSetup && (
           <>
             {selectedTier === 'All' ? (
               // Show all tiers as separate sections
@@ -372,7 +330,7 @@ const Setups: React.FC = () => {
           </div>
         )} */}
 
-        {/* Empty State 1: No Aircraft Selected */}
+        {/* Empty State: No Aircraft Selected */}
         {!selectedAircraft && (
           <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-12 text-center max-w-2xl mx-auto">
             <svg
@@ -390,28 +348,6 @@ const Setups: React.FC = () => {
             </svg>
             <p className="text-slate-400 text-lg">
               Please select an aircraft model to view the recommended setup.
-            </p>
-          </div>
-        )}
-
-        {/* Empty State 2: Aircraft Selected, No Role Selected */}
-        {selectedAircraft && !selectedRole && (
-          <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-12 text-center max-w-2xl mx-auto">
-            <svg
-              className="w-16 h-16 mx-auto mb-4 text-slate-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-              />
-            </svg>
-            <p className="text-slate-400 text-lg">
-              Please select a role to view the recommended setup.
             </p>
           </div>
         )}

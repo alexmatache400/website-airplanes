@@ -68,6 +68,7 @@ src/
 ### Product System ✅
 - **ProductCard:** Category-colored badges (7 types with gradients), hover overlay with affiliate buttons
 - **Modal:** URL-based state (`?modal=slug`), focus trap, history integration, React Portal, body scroll lock
+- **Affiliate Dropdowns:** Auto-scroll to dropdown menu when expanded in modal (Amazon/Thrustmaster), 250ms delay for animation, respects `prefers-reduced-motion`
 - **Lightbox:** Zoom (1x-5x), pan (mouse/keyboard), click-drag, wheel zoom, z-index layering (z-60 > modal z-50)
 
 ### Pages ✅
@@ -329,6 +330,15 @@ npx serve -s build    # Serve production build
   - Fixed TOC scroll detection logic for accurate section highlighting
   - Improved active section detection with target position calculation (120px from viewport top)
   - Added initialization delay to ensure proper DOM layout before scroll detection
+**2025-12-27:**
+- Modal dropdown auto-scroll implementation (ProductCard.tsx):
+  - Added dropdown menu refs (amazonDropdownMenuRef, thrustmasterDropdownMenuRef) to target actual menu elements
+  - Updated AffiliateDropdown component to accept optional dropdownMenuRef prop
+  - Implemented auto-scroll effect that triggers when dropdowns expand in modal context
+  - Scrolls dropdown menu into view after 250ms animation delay (200ms slide + 50ms buffer)
+  - Uses scrollIntoView with `block: 'nearest'` for minimal scroll
+  - Respects `prefers-reduced-motion` accessibility setting (auto vs smooth behavior)
+  - Fixed issue where dropdown button was visible but country flag options were clipped below viewport
 
 ---
 

@@ -89,14 +89,26 @@ const Products: React.FC = () => {
     ];
   }, [allProducts, selectedCategories]);
 
-  // Handle search query from URL
+  // Handle search query or highlight from URL
   useEffect(() => {
     const query = searchParams.get('q');
-    if (!query) return;
+    const highlightSlug = searchParams.get('highlight');
 
-    // Find matching product in all products
-    const matchedProduct = findProductByName(allProducts, query);
-    if (!matchedProduct) return;
+    // Determine which parameter to use (highlight takes precedence)
+    const searchTerm = highlightSlug || query;
+    if (!searchTerm) {
+      setHighlightedId(null);
+      return;
+    }
+
+    // Find matching product
+    const matchedProduct = highlightSlug
+      ? allProducts.find(p => p.slug === highlightSlug)
+      : findProductByName(allProducts, query!);
+    if (!matchedProduct) {
+      setHighlightedId(null);
+      return;
+    }
 
     // Reset category filter to show the matched product
     setSelectedCategories([]);
@@ -110,9 +122,16 @@ const Products: React.FC = () => {
 
       // Highlight for 5 seconds
       setHighlightedId(matchedProduct.id);
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         setHighlightedId(null);
       }, 5000);
+
+      // Cleanup function: Clear timeout when effect re-runs or unmounts
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    } else {
+      setHighlightedId(null);
     }
   }, [searchParams, allProducts]);
 
@@ -154,45 +173,25 @@ const Products: React.FC = () => {
           </p>
         </div>
 
-        {/* Filter Section - Category and Role */}
+        {/* Filter Section - Category */}
         <div className="mb-8 max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Select Flight Gear Dropdown */}
-            <div>
-              <label
-                id="category-select-label"
-                htmlFor="category-select"
-                className="block text-lg font-medium text-dropdown-text mb-3"
-              >
-                Select Flight Gear
-              </label>
-              <CustomDropdown
-                id="category-select"
-                value={selectedCategories}
-                onChange={(value) => setSelectedCategories(value as string[])}
-                options={categoryOptions}
-                placeholder="-- Select categories --"
-                multiSelect={true}
-              />
-            </div>
-
-            {/* Your Role Dropdown */}
-            <div>
-              <label
-                id="role-select-label"
-                htmlFor="role-select"
-                className="block text-lg font-medium text-dropdown-text mb-3"
-              >
-                Your Role
-              </label>
-              <CustomDropdown
-                id="role-select"
-                value={selectedRole}
-                onChange={(value) => setSelectedRole(value as RoleType)}
-                options={roleOptions}
-                placeholder="-- Select a role --"
-              />
-            </div>
+          {/* Select Flight Gear Dropdown */}
+          <div>
+            <label
+              id="category-select-label"
+              htmlFor="category-select"
+              className="block text-lg font-medium text-dropdown-text mb-3"
+            >
+              Select Flight Gear
+            </label>
+            <CustomDropdown
+              id="category-select"
+              value={selectedCategories}
+              onChange={(value) => setSelectedCategories(value as string[])}
+              options={categoryOptions}
+              placeholder="-- Select categories --"
+              multiSelect={true}
+            />
           </div>
         </div>
 
@@ -216,13 +215,9 @@ const Products: React.FC = () => {
         <div className="mt-8 text-center">
           <p className="text-sm text-slate-400">
             Showing {products.length} {
-              selectedCategories.length === 0 && selectedRole === 'All'
+              selectedCategories.length === 0
                 ? 'products'
-                : selectedCategories.length === 0
-                ? `products for ${selectedRole}`
-                : selectedRole === 'All'
-                ? `products (${selectedCategories.length} ${selectedCategories.length === 1 ? 'category' : 'categories'})`
-                : `products (${selectedCategories.length} ${selectedCategories.length === 1 ? 'category' : 'categories'}, ${selectedRole})`
+                : `products (${selectedCategories.length} ${selectedCategories.length === 1 ? 'category' : 'categories'})`
             }
           </p>
         </div>

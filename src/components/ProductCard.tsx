@@ -9,12 +9,14 @@ interface ProductCardProps {
   product: Product;
   className?: string;
   context?: 'hover' | 'modal' | 'grid';
+  fromCarousel?: boolean;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
   product,
   className = '',
-  context = 'hover'
+  context = 'hover',
+  fromCarousel = false
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -25,6 +27,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const didPushStateRef = useRef(false);
   const amazonDropdownRef = useRef<HTMLDivElement>(null);
   const thrustmasterDropdownRef = useRef<HTMLDivElement>(null);
+  const amazonDropdownMenuRef = useRef<HTMLDivElement>(null);
+  const thrustmasterDropdownMenuRef = useRef<HTMLDivElement>(null);
 
   // Helper function to truncate text to specified length
   const truncateText = (text: string, maxLength: number = 100): string => {
@@ -52,8 +56,16 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   // Open modal by adding query param
   const handleOpenModal = () => {
+    // Carousel context: Navigate to Products page with highlight + modal
+    if (fromCarousel) {
+      navigate(`/products?highlight=${product.slug}&modal=${product.slug}`, { replace: false });
+      return;
+    }
+
+    // Standard context: Open modal with query param on current page
     const newParams = new URLSearchParams(searchParams);
     newParams.set('modal', product.slug);
+    newParams.set('highlight', product.slug); // Sync highlight with modal to ensure pulse follows current modal
     navigate(`?${newParams.toString()}`, { replace: false });
     didPushStateRef.current = true;
   };
@@ -65,9 +77,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
       navigate(-1);
       didPushStateRef.current = false;
     } else {
-      // Just remove the modal param
+      // Remove both modal and highlight params
       const newParams = new URLSearchParams(searchParams);
       newParams.delete('modal');
+      newParams.delete('highlight');
       const newSearch = newParams.toString();
       navigate(newSearch ? `?${newSearch}` : window.location.pathname, { replace: true });
     }
@@ -108,6 +121,34 @@ const ProductCard: React.FC<ProductCardProps> = ({
     };
   }, [openDropdown]);
 
+  // Auto-scroll to dropdown options when expanded in modal
+  useEffect(() => {
+    // Only auto-scroll when a dropdown is open AND we're in modal context
+    if (openDropdown !== null && isModalOpen) {
+      // Get the modal's scrollable body container
+      const modalBody = document.querySelector('[role="dialog"] .overflow-y-auto');
+
+      // Get the active dropdown menu ref (not the button ref)
+      const activeDropdownMenuRef = openDropdown === 'amazon'
+        ? amazonDropdownMenuRef
+        : thrustmasterDropdownMenuRef;
+
+      if (modalBody && activeDropdownMenuRef.current) {
+        // Check if user prefers reduced motion
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // Wait for dropdown animation to complete (200ms + 50ms buffer)
+        setTimeout(() => {
+          activeDropdownMenuRef.current?.scrollIntoView({
+            behavior: prefersReducedMotion ? 'auto' : 'smooth',
+            block: 'nearest',
+            inline: 'nearest'
+          });
+        }, 250);
+      }
+    }
+  }, [openDropdown, isModalOpen]);
+
   const formatPrice = (price: number | null | undefined) => {
     if (!price) return null;
     return new Intl.NumberFormat('en-EU', {
@@ -141,6 +182,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       eu?: string;
     };
     dropdownRef: React.RefObject<HTMLDivElement | null>;
+    dropdownMenuRef?: React.RefObject<HTMLDivElement | null>;
     context?: 'hover' | 'modal' | 'grid';
   }
 
@@ -150,6 +192,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
     onToggle,
     links,
     dropdownRef,
+    dropdownMenuRef,
     context = 'hover',
   }) => {
     // All hooks must be called before any conditional returns
@@ -162,7 +205,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
     const visibleLinksCount = Object.values(links).filter(Boolean).length;
     const estimatedDropdownWidth = visibleLinksCount * 88 + 32; // ~88px per button + padding
 
-    // Smart positioning logic
+    // Smart positioning logic - recalculates dropdown position based on viewport and card boundaries
+    // Runs when dropdown opens or layout changes
+    // Note: 'dropdownRef' and 'type' intentionally excluded from dependencies:
+    // - dropdownRef: stable ref object (only .current value changes)
+    // - type: prop value never changes during component lifetime
     useEffect(() => {
       if (!isOpen || !buttonRef.current || !dropdownRef.current) return;
 
@@ -212,9 +259,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
         : (spaceBelow < 150 && spaceAbove > 150 ? 'above' : 'center');
 
       setPosition(verticalPos === 'above' ? 'above' : horizontalPos);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen, estimatedDropdownWidth, context]);
 
     // ResizeObserver for live updates on window resize
+    // Note: 'dropdownRef' intentionally excluded from dependencies - stable ref object
     useEffect(() => {
       if (!dropdownRef.current) return;
 
@@ -230,6 +279,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       resizeObserver.observe(dropdownRef.current);
 
       return () => resizeObserver.disconnect();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen]);
 
     // Position class mapping
@@ -278,6 +328,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
         {isOpen && (
           <div
+            ref={dropdownMenuRef}
             className={`absolute ${position === 'above' ? '' : 'top-full mt-2'} ${positionClasses[position]} flex gap-2 z-20 bg-dark-800/95 backdrop-blur-sm p-3 rounded-lg border border-dark-700/50 shadow-xl ${type === 'amazon' ? 'animate-slide-left' : 'animate-slide-right'}`}
             role="menu"
             aria-label={`${label} regions`}
@@ -525,6 +576,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                   de: product.affiliate_urls.de,
                 }}
                 dropdownRef={amazonDropdownRef}
+                dropdownMenuRef={amazonDropdownMenuRef}
                 context="modal"
               />
               <AffiliateDropdown
@@ -537,6 +589,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                   eu: product.affiliate_urls.theu,
                 }}
                 dropdownRef={thrustmasterDropdownRef}
+                dropdownMenuRef={thrustmasterDropdownMenuRef}
                 context="modal"
               />
             </div>
