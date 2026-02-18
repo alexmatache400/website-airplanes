@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { listProducts, searchProducts, highlightMatch, type Product } from '../lib/products';
+import { CategoryIcon } from './CategoryIcon';
 
 const HeaderNav: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -230,7 +231,7 @@ const HeaderNav: React.FC = () => {
               {showSuggestions && suggestions.length > 0 && (
                 <div
                   ref={suggestionsRef}
-                  className="absolute top-full mt-2 w-full bg-slate-800 border border-slate-700 rounded-lg shadow-lg max-h-[280px] overflow-y-auto z-50"
+                  className="absolute top-full mt-2 w-full bg-dark-800 border border-dark-700 rounded-lg shadow-lg max-h-[280px] overflow-y-auto z-50"
                 >
                   {suggestions.map((product, index) => (
                     <button
@@ -238,15 +239,24 @@ const HeaderNav: React.FC = () => {
                       ref={(el) => { suggestionButtonRefs.current[index] = el; }}
                       type="button"
                       onClick={() => handleSuggestionClick(product)}
-                      className={`w-full text-left px-4 py-3 text-sm transition-colors border-b border-slate-700/50 last:border-0 ${
+                      className={`w-full text-left px-4 py-3 text-sm flex items-center gap-3 transition-colors border-b border-dark-700/50 last:border-0 ${
                         index === selectedIndex
-                          ? 'bg-slate-700 text-slate-100'
-                          : 'text-slate-300 hover:bg-slate-700/70'
+                          ? 'bg-dark-700 text-dark-100'
+                          : 'text-dark-300 hover:bg-dark-700/70'
                       }`}
                     >
-                      <div className="font-medium !text-black dark:!text-inherit">{highlightMatch(product.name, searchQuery)}</div>
-                      <div className="text-xs text-slate-500 mt-1">
-                        {product.brand} · {product.category}
+                      <div className="w-10 h-10 flex-shrink-0 rounded bg-dark-700/40 flex items-center justify-center overflow-hidden">
+                        {product.images[0] ? (
+                          <img src={product.images[0]} alt="" className="w-full h-full object-contain p-1" />
+                        ) : (
+                          <CategoryIcon category={product.category} className="w-5 h-5 opacity-40" />
+                        )}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="font-medium text-dark-100 truncate">{highlightMatch(product.name, searchQuery)}</div>
+                        <div className="text-xs text-dark-400 mt-0.5">
+                          {product.brand} · {product.category}
+                        </div>
                       </div>
                     </button>
                   ))}
@@ -317,7 +327,7 @@ const HeaderNav: React.FC = () => {
 
                 {/* Mobile Suggestions Dropdown */}
                 {showSuggestions && suggestions.length > 0 && (
-                  <div ref={mobileSuggestionsRef} className="absolute top-full mt-2 w-full bg-slate-800 border border-slate-700 rounded-lg shadow-lg max-h-[280px] overflow-y-auto z-[60]">
+                  <div ref={mobileSuggestionsRef} className="absolute top-full mt-2 w-full bg-dark-800 border border-dark-700 rounded-lg shadow-lg max-h-[280px] overflow-y-auto z-[60]">
                     {suggestions.map((product, index) => (
                       <button
                         key={product.id}
@@ -327,14 +337,14 @@ const HeaderNav: React.FC = () => {
                           handleSuggestionClick(product);
                           setIsMenuOpen(false);
                         }}
-                        className={`w-full text-left px-4 py-3 text-sm transition-colors border-b border-slate-700/50 last:border-0 ${
+                        className={`w-full text-left px-4 py-3 text-sm transition-colors border-b border-dark-700/50 last:border-0 ${
                           index === selectedIndex
-                            ? 'bg-slate-700 text-slate-100'
-                            : 'text-slate-300 hover:bg-slate-700/70'
+                            ? 'bg-dark-700 text-dark-100'
+                            : 'text-dark-300 hover:bg-dark-700/70'
                         }`}
                       >
-                        <div className="font-medium !text-black dark:!text-inherit">{highlightMatch(product.name, searchQuery)}</div>
-                        <div className="text-xs text-slate-500 mt-1">
+                        <div className="font-medium text-dark-100">{highlightMatch(product.name, searchQuery)}</div>
+                        <div className="text-xs text-dark-400 mt-1">
                           {product.brand} · {product.category}
                         </div>
                       </button>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useReducedMotion } from '../hooks/useReducedMotion';
 
 // Carousel images configuration - Easy to add more images!
 const CAROUSEL_IMAGES = [
@@ -78,14 +79,10 @@ export const HeroImageCarousel: React.FC = () => {
   }, []);
 
   // Respect prefers-reduced-motion
+  const prefersReducedMotion = useReducedMotion();
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setIsPaused(mediaQuery.matches);
-
-    const handleChange = (e: MediaQueryListEvent) => setIsPaused(e.matches);
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
+    setIsPaused(prefersReducedMotion);
+  }, [prefersReducedMotion]);
 
   // Calculate translateX to center each image
   const translateX = -(currentIndex * (100 / clonedImages.length));

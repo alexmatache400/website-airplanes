@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Lottie from 'lottie-react';
+import { useReducedMotion } from '../hooks/useReducedMotion';
 
 /**
  * AirplaneAnimation - Lottie animation for Setups page
@@ -16,7 +17,7 @@ const AirplaneAnimation: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const lottieRef = useRef<any>(null);
   const [isPaused, setIsPaused] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
   const [animationData, setAnimationData] = useState<any>(null);
 
   // Load Lottie animation data
@@ -25,16 +26,6 @@ const AirplaneAnimation: React.FC = () => {
       .then(response => response.json())
       .then(data => setAnimationData(data))
       .catch(error => console.error('Failed to load airplane animation:', error));
-  }, []);
-
-  // Check for reduced motion preference
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
-
-    const handleChange = () => setPrefersReducedMotion(mediaQuery.matches);
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
   // Pause animation when off-screen

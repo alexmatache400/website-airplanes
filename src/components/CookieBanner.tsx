@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { X, Settings, Check } from 'lucide-react';
 import { useConsent } from '../lib/consent';
 import { COOKIE_CATEGORIES } from '../config/compliance';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 interface PreferencesModalProps {
   isOpen: boolean;
@@ -22,41 +23,20 @@ const PreferencesModal: React.FC<PreferencesModalProps> = ({
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   // Focus trap
+  useFocusTrap(modalRef, isOpen);
+
+  // ESC key + initial focus
   useEffect(() => {
     if (!isOpen) return;
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-
-      if (e.key === 'Tab') {
-        if (!modalRef.current) return;
-
-        const focusableElements = modalRef.current.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-        const firstElement = focusableElements[0] as HTMLElement;
-        const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
-
-        if (e.shiftKey) {
-          if (document.activeElement === firstElement) {
-            e.preventDefault();
-            lastElement?.focus();
-          }
-        } else {
-          if (document.activeElement === lastElement) {
-            e.preventDefault();
-            firstElement?.focus();
-          }
-        }
-      }
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
     };
 
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keydown', handleEscape);
     closeButtonRef.current?.focus();
 
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleEscape);
   }, [isOpen, onClose]);
 
   const handleSave = () => {

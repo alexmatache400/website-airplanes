@@ -115,3 +115,10 @@ export const DEFAULT_CONSENT: ConsentState = {
   affiliate: false,
   timestamp: new Date().toISOString(),
 };
+
+/** Pre-formatted last-updated date string for legal pages */
+export const formattedLastUpdated = new Date(COMPLIANCE.site.lastUpdatedISO).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});

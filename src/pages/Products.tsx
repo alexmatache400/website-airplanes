@@ -3,35 +3,17 @@ import { useSearchParams } from 'react-router-dom';
 import { listProducts, findProductByName, type Product } from '../lib/products';
 import ProductCard from '../components/ProductCard';
 import { CustomDropdown, type DropdownOption } from '../components/CustomDropdown';
-
-type Category = 'All' | 'HOTAS' | 'Throttle' | 'Joystick' | 'Pedals' | 'Panel' | 'Bundle' | 'MCDU' | 'Rudder' | 'Base' | 'Accessories';
-type RoleType = 'All' | 'Pilot' | 'Copilot';
+import { useData } from '../lib/DataProvider';
+import { PageBackground } from '../components/PageBackground';
 
 const Products: React.FC = () => {
   const [searchParams] = useSearchParams();
   const [allProducts] = useState<Product[]>(listProducts());
+  const { categories, roleTypes } = useData();
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedRole, setSelectedRole] = useState<RoleType>('All');
+  const [selectedRole, setSelectedRole] = useState<string>('All');
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
   const productRefs = useRef<Map<string, HTMLDivElement>>(new Map());
-  const [isLightMode, setIsLightMode] = useState(false);
-
-  // Track theme for conditional background image
-  useEffect(() => {
-    const checkTheme = () => {
-      setIsLightMode(document.documentElement.classList.contains('light'));
-    };
-
-    checkTheme();
-
-    const observer = new MutationObserver(checkTheme);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-
-    return () => observer.disconnect();
-  }, []);
 
   // Filter products by category and role
   // Universal products always show regardless of role selection
@@ -44,27 +26,23 @@ const Products: React.FC = () => {
     return matchesCategory && matchesRole;
   });
 
-  // Category dropdown options with icons
+  // Category dropdown options — built dynamically from DB categories
   const categoryOptions: DropdownOption[] = useMemo(() => {
-    const allOptions = [
+    const dynamicOptions = categories.map(cat => ({
+      value: cat.name,
+      label: cat.name,
+      icon: cat.name.toLowerCase(),
+      count: allProducts.filter(p => p.category === cat.name).length,
+    }));
+
+    // Filter out categories with 0 products, prepend "All" option
+    return [
       { value: 'All', label: 'All Products', count: allProducts.length },
-      { value: 'HOTAS', label: 'HOTAS', icon: 'hotas', count: allProducts.filter(p => p.category === 'HOTAS').length },
-      { value: 'Throttle', label: 'Throttle', icon: 'throttle', count: allProducts.filter(p => p.category === 'Throttle').length },
-      { value: 'Joystick', label: 'Joystick', icon: 'joystick', count: allProducts.filter(p => p.category === 'Joystick').length },
-      { value: 'Pedals', label: 'Pedals', icon: 'pedals', count: allProducts.filter(p => p.category === 'Pedals').length },
-      { value: 'Panel', label: 'Panel', icon: 'panel', count: allProducts.filter(p => p.category === 'Panel').length },
-      { value: 'MCDU', label: 'MCDU', icon: 'mcdu', count: allProducts.filter(p => p.category === 'MCDU').length },
-      { value: 'Rudder', label: 'Rudder', icon: 'rudder', count: allProducts.filter(p => p.category === 'Rudder').length },
-      { value: 'Base', label: 'Base', icon: 'base', count: allProducts.filter(p => p.category === 'Base').length },
-      { value: 'Accessories', label: 'Accessories', icon: 'accessories', count: allProducts.filter(p => p.category === 'Accessories').length },
-      { value: 'Bundle', label: 'Bundle', icon: 'bundles', count: allProducts.filter(p => p.category === 'Bundle').length },
+      ...dynamicOptions.filter(opt => opt.count > 0),
     ];
+  }, [allProducts, categories]);
 
-    // Filter out categories with 0 products (keep "All" option)
-    return allOptions.filter(opt => opt.value === 'All' || (opt.count && opt.count > 0));
-  }, [allProducts]);
-
-  // Role dropdown options with icons
+  // Role dropdown options — built dynamically from DB role_types
   const roleOptions: DropdownOption[] = useMemo(() => {
     const categoryFilter = (p: Product) => selectedCategories.length === 0 || selectedCategories.includes(p.category);
 
@@ -74,20 +52,16 @@ const Products: React.FC = () => {
         label: 'All Roles',
         count: allProducts.filter(categoryFilter).length
       },
-      {
-        value: 'Pilot',
-        label: 'Pilot',
-        icon: 'pilot',
-        count: allProducts.filter(p => categoryFilter(p) && (p.roleType === 'Pilot' || p.roleType === 'Universal')).length
-      },
-      {
-        value: 'Copilot',
-        label: 'Copilot',
-        icon: 'copilot',
-        count: allProducts.filter(p => categoryFilter(p) && (p.roleType === 'Copilot' || p.roleType === 'Universal')).length
-      },
+      ...roleTypes
+        .filter(rt => rt.name !== 'Universal')
+        .map(rt => ({
+          value: rt.name,
+          label: rt.name,
+          icon: rt.name.toLowerCase(),
+          count: allProducts.filter(p => categoryFilter(p) && (p.roleType === rt.name || p.roleType === 'Universal')).length
+        })),
     ];
-  }, [allProducts, selectedCategories]);
+  }, [allProducts, selectedCategories, roleTypes]);
 
   // Handle search query or highlight from URL
   useEffect(() => {
@@ -146,20 +120,7 @@ const Products: React.FC = () => {
 
   return (
     <div className="relative min-h-screen">
-      {/* Background */}
-      <div
-        className="fixed inset-0 z-0"
-        style={{
-          backgroundImage: `url(/backgroundPhoto/${isLightMode ? 'backgrounLight.png' : 'background.png'})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed',
-        }}
-      >
-        {/* Overlay for better text readability - only in dark mode */}
-        {!isLightMode && <div className="absolute inset-0 bg-dark-900/80"></div>}
-      </div>
+      <PageBackground />
 
       {/* Content */}
       <div className="relative z-10 py-12 px-4 sm:px-6 lg:px-8">
@@ -173,25 +134,45 @@ const Products: React.FC = () => {
           </p>
         </div>
 
-        {/* Filter Section - Category */}
+        {/* Filter Section - Category + Role */}
         <div className="mb-8 max-w-4xl mx-auto">
-          {/* Select Flight Gear Dropdown */}
-          <div>
-            <label
-              id="category-select-label"
-              htmlFor="category-select"
-              className="block text-lg font-medium text-dropdown-text mb-3"
-            >
-              Select Flight Gear
-            </label>
-            <CustomDropdown
-              id="category-select"
-              value={selectedCategories}
-              onChange={(value) => setSelectedCategories(value as string[])}
-              options={categoryOptions}
-              placeholder="-- Select categories --"
-              multiSelect={true}
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Select Flight Gear Dropdown */}
+            <div>
+              <label
+                id="category-select-label"
+                htmlFor="category-select"
+                className="block text-lg font-medium text-dropdown-text mb-3"
+              >
+                Select Flight Gear
+              </label>
+              <CustomDropdown
+                id="category-select"
+                value={selectedCategories}
+                onChange={(value) => setSelectedCategories(value as string[])}
+                options={categoryOptions}
+                placeholder="-- Select categories --"
+                multiSelect={true}
+              />
+            </div>
+
+            {/* Your Role Dropdown */}
+            <div>
+              <label
+                id="role-select-label"
+                htmlFor="role-select"
+                className="block text-lg font-medium text-dropdown-text mb-3"
+              >
+                Your Role
+              </label>
+              <CustomDropdown
+                id="role-select"
+                value={selectedRole}
+                onChange={(value) => setSelectedRole(Array.isArray(value) ? value[0] : value)}
+                options={roleOptions}
+                placeholder="-- Select role --"
+              />
+            </div>
           </div>
         </div>
 

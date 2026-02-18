@@ -1,5 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { CategoryIcon } from './CategoryIcon';
+import { useClickOutside } from '../hooks/useClickOutside';
 
 export interface DropdownOption {
   value: string;
@@ -82,22 +83,11 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
   })();
 
   // Handle click outside to close dropdown
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-        setFocusedIndex(-1);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen]);
+  useClickOutside(
+    useCallback(() => [dropdownRef.current], []),
+    useCallback(() => { setIsOpen(false); setFocusedIndex(-1); }, []),
+    isOpen
+  );
 
   // Scroll focused item into view (keyboard navigation only)
   useEffect(() => {

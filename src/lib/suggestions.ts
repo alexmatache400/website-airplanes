@@ -4,21 +4,19 @@ import type { Product, Tier } from './products';
 import type { AircraftPreset, CategoryNeed } from './aircraft';
 
 /**
- * Category equivalence map for combo products
- * e.g., HOTAS satisfies both Joystick and Throttle needs
+ * Category equivalence cache — populated by DataProvider from category_equivalences table
+ * Only non-trivial equivalences are stored (e.g., HOTAS → [Joystick, Throttle, HOTAS]).
+ * Categories not in the cache default to [self].
  */
-export const CATEGORY_EQUIVALENCE: Record<Product['category'], Product['category'][]> = {
-  HOTAS: ['Joystick', 'Throttle', 'HOTAS'],
-  Bundle: ['Bundle'], // Bundles should be evaluated case-by-case
-  Joystick: ['Joystick'],
-  Throttle: ['Throttle'],
-  Pedals: ['Pedals', 'Rudder'], // Pedals can satisfy Rudder needs and vice versa
-  Panel: ['Panel'],
-  MCDU: ['MCDU'],
-  Rudder: ['Rudder', 'Pedals'], // Rudder can satisfy Pedals needs and vice versa
-  Base: ['Base'],
-  Accessories: ['Accessories'],
-};
+let categoryEquivalenceCache: Record<string, string[]> = {};
+
+export function setCategoryEquivalenceCache(data: Record<string, string[]>) {
+  categoryEquivalenceCache = data;
+}
+
+export function getCategoryEquivalence(category: string): string[] {
+  return categoryEquivalenceCache[category] || [category];
+}
 
 /**
  * Input for generating product suggestions
@@ -90,8 +88,8 @@ function shuffleArray<T>(array: T[], random: () => number): T[] {
  * @param product - Product to evaluate
  * @returns Array of categories this product satisfies
  */
-function getSatisfiedCategories(product: Product): Product['category'][] {
-  return CATEGORY_EQUIVALENCE[product.category] || [product.category];
+export function getSatisfiedCategories(product: Product): Product['category'][] {
+  return getCategoryEquivalence(product.category);
 }
 
 /**

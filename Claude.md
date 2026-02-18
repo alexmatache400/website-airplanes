@@ -1,41 +1,55 @@
 # Flight Sim Setups — Project Documentation
 
-> Complete reference for architecture, features, and implementation history.
+> Complete reference for architecture, data flow, and implementation.
 
 ---
 
 ## Project Overview
 
-**Goal:** Modern affiliate site for flight sim pilots to discover desk setups and components (HOTAS, pedals, panels, mounts) for MSFS 2020/2024 and X-Plane 11/12.
+**Goal:** Affiliate site for flight sim pilots to discover desk setups and components (HOTAS, throttles, joysticks, pedals, panels, mounts) for MSFS 2020/2024 and X-Plane 11/12.
 
-**Tech Stack:** React 18 + TypeScript + React Router v6 + Tailwind CSS + Static JSON (CRA/webpack)
+**Monetization:** Affiliate links (Amazon, Winwing, Thrustmaster, 2Performant, Impact)
 
-**Monetization:** Affiliate links (Amazon, Winwing manufacturer programs)
+**Legal Entity:** Pilot Setups | contact@pilotsetup.com | Romania
 
 ---
 
-## Data Model
+## Tech Stack
 
-```ts
-{
-  id: string
-  brand: 'Winwing' | 'Thrustmaster' | 'Honeycomb' | 'Logitech' | 'Other'
-  name: string
-  slug: string
-  category: 'HOTAS' | 'Throttle' | 'Joystick' | 'Pedals' | 'Panel' | 'Mount' | 'Accessory'
-  tier: 'First' | 'Business' | 'Economy'
-  sim_support: Array<'MSFS2020'|'MSFS2024'|'XPL11'|'XPL12'>
-  price_eur?: number
-  images: string[]
-  affiliate_urls: { eu?: string; us?: string }
-  key_specs: Record<string, string | number>
-  description?: string
-  pros?: string[]
-  cons?: string[]
-}
+| Layer | Technology |
+|-------|-----------|
+| Framework | React 19 + TypeScript |
+| Routing | React Router v6 |
+| Styling | Tailwind CSS + CSS variables |
+| Database | Supabase (PostgreSQL) |
+| Icons | lucide-react |
+| Animations | lottie-react |
+| Build | Create React App (webpack) |
+| Fonts | Inter (sans) + JetBrains Mono (mono) via Google Fonts |
+
+**Key Dependencies** (from `package.json`):
+- `@supabase/supabase-js` ^2.96.0
+- `react` ^19.2.0 / `react-dom` ^19.2.0
+- `react-router-dom` ^6.28.0
+- `lucide-react` ^0.545.0
+- `lottie-react` ^2.4.1
+- `typescript` ^4.9.5
+
+---
+
+## Commands
+
+```bash
+npm start      # Dev server (localhost:3000)
+npm test       # Run unit tests
+npm run build  # Production build
 ```
 
-**Data Files:** `/src/data/products.json` (18 products), `/src/data/aircraft-presets.json` (4 aircraft)
+**Environment Variables** (`.env`):
+```
+REACT_APP_SUPABASE_URL=...
+REACT_APP_SUPABASE_ANON_KEY=...
+```
 
 ---
 
@@ -43,306 +57,687 @@
 
 ```
 src/
-├─ components/
-│  ├─ HeaderNav.tsx, HeroDesk.tsx, HeroPlanes.tsx
-│  ├─ ProductCard.tsx, Modal.tsx, Lightbox.tsx
-│  ├─ CookieBanner.tsx, AffiliateDisclosure.tsx, Footer.tsx
-│  └─ carousel/InfiniteCarousel.tsx
-├─ hooks/
-│  └─ useRafMarquee.ts
-├─ sections/home/
-│  └─ FeaturedProductsCarousel.tsx
-├─ pages/
-│  ├─ Home.tsx, Products.tsx, Setups.tsx, CompleteSetup.tsx
-│  └─ legal/ (Terms, Privacy, Cookie)
-├─ lib/
-│  ├─ products.ts, aircraft.ts, suggestions.ts, consent.ts
-├─ config/compliance.ts
-└─ App.tsx
+├── App.tsx                          # Router + DataProvider wrapper + routes
+├── App.css                          # Legacy CRA styles (mostly unused)
+├── index.tsx                        # Entry point
+├── index.css                        # Global styles, CSS variables, light mode overrides
+├── react-app-env.d.ts
+├── reportWebVitals.ts
+├── setupTests.ts
+│
+├── components/
+│   ├── AffiliateDisclosure.tsx      # Amber affiliate banner (dismissible, localStorage)
+│   ├── AffiliateDropdown.tsx        # Per-program dropdown with region flags
+│   ├── AirplaneAnimation.tsx        # Lottie airplane animation (Setups page)
+│   ├── CategoryIcon.tsx             # SVG icons for categories/tiers/roles
+│   ├── CookieBanner.tsx             # GDPR 3-category consent banner
+│   ├── CustomDropdown.tsx           # Reusable dropdown (single/multi, groups, keyboard nav)
+│   ├── Footer.tsx                   # 3-column footer with legal links + cookie settings
+│   ├── HeaderNav.tsx                # Global nav, search system, theme toggle, hamburger
+│   ├── HeroDesk.tsx                 # Desktop hero section with plane animation
+│   ├── HeroImageCarousel.tsx        # Hero image carousel component
+│   ├── HeroPlanes.tsx               # CSS motion-path plane animation (6 planes)
+│   ├── LegalPageLayout.tsx          # Shared layout for legal pages (TOC + content)
+│   ├── Lightbox.tsx                 # Image viewer (zoom 1-5x, pan, click-drag)
+│   ├── Modal.tsx                    # Product detail modal (URL state, focus trap, portal)
+│   ├── PageBackground.tsx           # Theme-aware background image (used by all pages)
+│   ├── ProductAvatar.tsx            # Product thumbnail/avatar component
+│   ├── ProductCard.tsx              # Product card (badges, hover overlay, affiliate buttons)
+│   └── carousel/
+│       └── InfiniteCarousel.tsx     # Infinite scrolling carousel (rAF, drag, responsive)
+│
+├── config/
+│   └── compliance.ts                # Legal config (site info, cookie categories, disclosures)
+│
+├── hooks/
+│   ├── useClickOutside.ts           # Detect clicks outside element refs
+│   ├── useFocusTrap.ts              # Tab/Shift+Tab focus trap for modals
+│   ├── useRafMarquee.ts             # rAF-based carousel animation engine
+│   ├── useReducedMotion.ts          # Detect prefers-reduced-motion
+│   ├── useThemeMode.ts              # Track dark/light mode via MutationObserver
+│   └── __tests__/
+│       └── useRafMarquee.test.ts
+│
+├── lib/
+│   ├── DataProvider.tsx             # Supabase data fetching + React Context provider
+│   ├── aircraft.ts                  # AircraftPreset type, cache, getters
+│   ├── category-config.ts           # Category badge colors (static Tailwind map)
+│   ├── consent.ts                   # Consent manager (GDPR, analytics, affiliate)
+│   ├── products.ts                  # Product type, cache, search, getters
+│   ├── setup-filters.ts             # Setup wizard helpers (auto-select, tier options)
+│   ├── setups.ts                    # SetupData type, cache, getters
+│   ├── suggestions.ts               # PRNG suggestion engine + category equivalences
+│   ├── supabaseClient.ts            # Supabase client initialization
+│   ├── tier-config.ts               # Tier visual styling (static Tailwind map)
+│   └── __tests__/
+│       ├── products.test.ts
+│       └── suggestions.test.ts
+│
+├── pages/
+│   ├── AboutUs.tsx                  # About page with TOC, JSON-LD structured data
+│   ├── CompleteSetup.tsx            # 4-step setup wizard with suggestion engine
+│   ├── Home.tsx                     # Hero + featured products carousel
+│   ├── Products.tsx                 # Product grid with category + role filters
+│   ├── Setups.tsx                   # Pre-configured aircraft bundles (tiered)
+│   ├── __tests__/
+│   │   └── CompleteSetup.test.tsx
+│   └── legal/
+│       ├── CookiePolicy.tsx
+│       ├── PrivacyPolicy.tsx
+│       └── Terms.tsx
+│
+└── sections/
+    └── home/
+        └── FeaturedProductsCarousel.tsx  # Home page carousel section
 ```
 
 ---
 
-## Core Features
+## Routing
 
-### Product System ✅
-- **ProductCard:** Category-colored badges (7 types with gradients), hover overlay with affiliate buttons
-- **Modal:** URL-based state (`?modal=slug`), focus trap, history integration, React Portal, body scroll lock
-- **Affiliate Dropdowns:** Auto-scroll to dropdown menu when expanded in modal (Amazon/Thrustmaster), 250ms delay for animation, respects `prefers-reduced-motion`
-- **Lightbox:** Zoom (1x-5x), pan (mouse/keyboard), click-drag, wheel zoom, z-index layering (z-60 > modal z-50)
+Defined in `App.tsx`. All routes wrapped in `<DataProvider>`:
 
-### Pages ✅
-- **Home:** Hero with 6-plane animation, infinite carousel, theme-aware backgrounds
-- **Products:** 2-col grid, search via URL (`?q=term`), auto-scroll to match
-- **Setups:** Aircraft dropdown (F-16, F/A-18, 737, GA) with preset lists
-- **CompleteSetup:** 4-step wizard (aircraft → gear → tier → suggestions) with PRNG engine, 14 unit tests
+| Path | Component | Description |
+|------|-----------|-------------|
+| `/` | `Home` | Hero + featured carousel |
+| `/products` | `Products` | Product grid with filters |
+| `/setups` | `Setups` | Pre-built aircraft bundles |
+| `/complete-setup` | `CompleteSetup` | 4-step setup wizard |
+| `/about` | `AboutUs` | About page with TOC |
+| `/legal/terms` | `Terms` | Terms of service |
+| `/legal/privacy` | `PrivacyPolicy` | Privacy policy |
+| `/legal/cookies` | `CookiePolicy` | Cookie policy |
 
-### Infinite Carousel ✅ (v2.0 Mobile-Optimized)
-**Implementation:** `/src/components/carousel/InfiniteCarousel.tsx` + `/src/hooks/useRafMarquee.ts`
-
-**Features:**
-- Seamless infinite loop (triple slide array with clones)
-- Autoplay 70px/s with pause on hover/blur
-- Manual controls: Prev/Next buttons, drag/touch, keyboard (←/→)
-- Exact 1-item navigation (index-based with snap unit)
-- Responsive: 3 (xl), 2.5 (md), 1.5 (sm), 1 (mobile) slides visible
-- Accessibility: ARIA labels, screen reader announcements, reduced motion support
-- Performance: rAF loop, GPU acceleration (`translate3d`), lazy loading, no CLS
-
-**Key Optimizations (v2.0):**
-- Time-based rAF with delta clamping (max 32ms, prevents tab refocus jank)
-- `Math.fround()` prevents sub-pixel accumulation
-- easeOutQuad easing for manual navigation (250ms smooth)
-- Direct DOM manipulation during drag (bypasses React re-renders)
-- IntersectionObserver pauses when <20% visible
-- Visibility API pauses when tab hidden
-- ResizeObserver handles window resize (debounced 150ms)
-- Paint containment (`contain: layout paint size style`)
-- First 2 images eager, rest lazy (`fetchpriority="high"` vs `"low"`)
-- Reduced shadows on mobile (`shadow-sm` vs `shadow-lg`)
-
-**Bundle:** 105.58 KB gzipped (-81 bytes from v1.0 despite 200+ new lines)
-
-**Fix Applied (2025-10-14):**
-- Problem: Carousel not displaying (chicken-and-egg cloning issue)
-- Solution: Fallback rendering `(clonedItems.length > 0 ? clonedItems : items)` + retry mechanism
-
-### Aircraft Animation ✅ (v2.0 Simplified)
-**Rebuild (2025-10-14):** Replaced 20 complex aircraft with 6 streamlined planes
-
-**Features:**
-- 6 planes on semi-oval CSS motion path: `M 2% 70% A 46% 32% 0 0 1 98% 70%`
-- Constant 24s linear loop (evenly spaced 4s apart)
-- Low opacity (0.35), small size (22px), subtle shadow
-- GPU-accelerated `offset-path` animation
-- IntersectionObserver pauses when <20% visible
-- Static fallback for `prefers-reduced-motion`
-
-**Code Reduction:** 1,202 lines deleted → 157 lines added (87% reduction)
-
-**Old System Removed:**
-- 20 individual SVG aircraft with complex animations
-- 862 lines of CSS keyframes (20 flight routes, navigation lights, radar effects)
-- 340 lines of HTML
-
-### Navigation & Theme ✅
-- **HeaderNav:** Global search (autosuggest, keyboard nav), theme toggle, hamburger menu
-- **Search System (v2.0):** Progressive prefix matching (3-4 char prefixes), prioritized results, 10-item limit
-- **Theme System:** Dark/light toggle, localStorage persistence, dynamic backgrounds, MutationObserver
-
-### Compliance (GDPR + FTC) ✅
-- **CookieBanner:** 3-category consent (necessary/analytics/affiliate), preferences modal
-- **AffiliateDisclosure:** Amber banner, dismissible, localStorage persistence
-- **Footer:** 3-column, legal links, "Cookie Settings" button
-- **Legal Pages:** AboutUs (JSON-LD structured data), Terms, Privacy, Cookie
+**Global Layout:** AffiliateDisclosure → CookieBanner → HeaderNav → Routes → Footer
 
 ---
 
-## Component Specifications
+## Data Architecture
 
-### InfiniteCarousel (v2.0)
-**Props:**
-```ts
-{
-  slides: React.ReactNode[]
-  speed?: number (default: 70px/s)
-  pauseOnHover?: boolean (default: true)
-  gap?: number (default: 16px)
+### Flow: Supabase → DataProvider → Module Caches → Components
+
+```
+Supabase PostgreSQL
+        ↓  (13 parallel queries on mount)
+DataProvider.tsx
+        ↓  (maps snake_case → camelCase, reconstructs nested structures)
+   ┌────┼────────────────┬──────────────────┐
+   ↓    ↓                ↓                  ↓
+Module Caches        React Context       Reference Tables
+(products.ts)        (useData() hook)    (tiers, categories,
+(aircraft.ts)                             brands, families,
+(setups.ts)                               affiliatePrograms,
+(suggestions.ts)                          roleTypes)
+```
+
+### DataProvider (`src/lib/DataProvider.tsx`)
+
+Fetches all 13 tables via `Promise.all` on mount. No per-page API calls — data refreshes only on page reload.
+
+**Context shape** (via `useData()` hook):
+```typescript
+interface DataContextType {
+  products: Product[];
+  aircraftPresets: AircraftPreset[];
+  setups: SetupData[];
+  tiers: TierRef[];           // { name, label, sort_order }
+  categories: CategoryRef[];   // { name, sort_order }
+  brands: BrandRef[];          // { name, sort_order }
+  aircraftFamilies: AircraftFamilyRef[];  // { name, label, sort_order }
+  affiliatePrograms: AffiliateProgramRef[];  // { name, label, sort_order, regions }
+  roleTypes: RoleTypeRef[];    // { name, sort_order }
+  isLoading: boolean;
 }
 ```
 
-**State:** Triple array (original + 2 clones), smooth position reset at boundaries
+**Module-level caches** are populated before children render:
+- `setProductsCache(products)` → `products.ts`
+- `setAircraftCache(aircraftPresets)` → `aircraft.ts`
+- `setSetupsCache(setups)` → `setups.ts`
+- `setCategoryEquivalenceCache(equivalences)` → `suggestions.ts`
 
-**Animation:** `useRafMarquee` hook
-- Time-based rAF loop with delta clamping
-- easeOutQuad for manual nav: `t * (2 - t)`
-- Direct transform updates: `translate3d(${offset}px, 0, 0)`
+---
 
-**Navigation:**
-```ts
-const navigateToIndex = (index: number) => {
-  const normalizedIndex = ((index % totalItems) + totalItems) % totalItems;
-  const targetOffset = -(normalizedIndex * getSnapUnit());
-  animateToOffset(targetOffset, 250);
+## Database Tables
+
+### Lookup Tables (Primary Keys)
+
+| Table | PK | Columns | Notes |
+|-------|----|---------|-------|
+| `brands` | `name` | name, sort_order | Thrustmaster, Logitech, WingFlex, etc. |
+| `categories` | `name` | name, sort_order | HOTAS, Throttle, Joystick, Pedals, Panel, Bundle, MCDU, Rudder, Base, Accessories |
+| `tiers` | `name` | name, label, sort_order | First/Business/Economy with display labels |
+| `aircraft_families` | `name` | name, label, sort_order | airbus-a32f, boeing-737, f16-viper, fa18-hornet, general |
+| `role_types` | `name` | name, sort_order | Pilot (0), Copilot (1), Universal (2) |
+| `affiliate_programs` | `name` | name, label, sort_order, regions (jsonb) | amazon, thrustmaster, winwing, etc. |
+
+### Core Tables
+
+**`products`** — Main product catalog
+| Column | Type | FK |
+|--------|------|-----|
+| id | uuid (PK) | |
+| brand | text | → brands.name |
+| name | text | |
+| slug | text (unique) | |
+| category | text | → categories.name |
+| role_type | text | → role_types.name |
+| tier | text | → tiers.name |
+| aircraft_family | text | → aircraft_families.name |
+| sim_support | text[] | enum: MSFS2020, MSFS2024, XPL11, XPL12 |
+| price_label | text | |
+| images | text[] | |
+| affiliate_urls | jsonb | `{program: {region: url}}` |
+| description | text | |
+| key_specs | jsonb | |
+| source_url | text | |
+
+**`aircraft_presets`** — Aircraft configurations for CompleteSetup wizard
+| Column | Type |
+|--------|------|
+| id | text (PK) | e.g., "airbus-a32f", "f16-viper" |
+| name | text |
+| slug | text |
+| notes | text |
+
+**`setups`** — Pre-built aircraft bundles for Setups page
+| Column | Type | FK |
+|--------|------|-----|
+| id | uuid (PK) | |
+| aircraft | text (unique) | Display name |
+| description | text | |
+| family | text | → aircraft_families.name |
+| sort_order | integer | |
+
+### Bridge Tables
+
+**`setup_products`** — Links products to setups per tier
+| Column | FK |
+|--------|-----|
+| setup_id | → setups.id |
+| tier | → tiers.name |
+| product_id | → products.id |
+| sort_order | |
+
+**`aircraft_tier_needs`** — Hardware needs per aircraft/tier
+| Column | FK |
+|--------|-----|
+| aircraft_id | → aircraft_presets.id |
+| tier | → tiers.name |
+| category | → categories.name |
+| count | integer |
+
+**`aircraft_preferred_products`** — Curated suggestions per aircraft/tier
+| Column | FK |
+|--------|-----|
+| aircraft_id | → aircraft_presets.id |
+| tier | → tiers.name |
+| product_slug | text |
+| sort_order | |
+
+**`category_equivalences`** — Category substitution rules
+| Column | FK |
+|--------|-----|
+| source_category | → categories.name |
+| satisfies_category | → categories.name |
+
+Current rules:
+- HOTAS → satisfies Joystick, Throttle, HOTAS
+- Pedals ↔ Rudder (bidirectional)
+
+---
+
+## Data Model
+
+### Product (from `src/lib/products.ts`)
+
+```typescript
+type Product = {
+  id: string;
+  brand: string;
+  name: string;
+  slug: string;
+  category: string;
+  roleType: string;          // 'Pilot' | 'Copilot' | 'Universal'
+  sim_support: string[];     // ['MSFS2020', 'MSFS2024', 'XPL11', 'XPL12']
+  tier?: string;             // 'First' | 'Business' | 'Economy'
+  aircraftFamily?: string;   // 'airbus-a32f' | 'general' | etc.
+  price_label?: string;
+  images: string[];
+  affiliate_urls: Record<string, Record<string, string>>;  // {program: {region: url}}
+  description: string;
+  key_specs?: Record<string, string | number>;
+  source_url?: string;
 };
 ```
 
-**Drag Handling:**
-- Pointer capture for smooth tracking
-- Direct DOM manipulation (no React re-renders)
-- Snap-to-card on release (260ms)
-- Auto-resume after 2s
+### Other Types
 
-**Responsive Breakpoints:**
-```ts
-w-full                             // Mobile: 1 full
-sm:w-[calc((100%-1.5rem)/1.25)]   // 640px+: 1.25 with peek
-lg:w-[calc((100%-1.5rem)/2)]      // 1024px+: 2 cards
-xl:w-[calc((100%-2rem)/3)]        // 1280px+: 3 cards
+```typescript
+// aircraft.ts
+interface AircraftPreset {
+  id: string; name: string; slug: string; notes?: string;
+  tiers: Record<string, TierPreset>;
+}
+interface TierPreset { needs: CategoryNeed[]; preferredProducts?: string[]; }
+interface CategoryNeed { category: string; count: number; }
+
+// setups.ts
+interface SetupData {
+  aircraft: string; description: string; family: string;
+  sort_order: number; tiers: Record<string, string[]>;  // tier → product IDs
+}
 ```
 
-### HeroPlanes (v2.0)
-**Motion Path:** Semi-oval arc 46% horizontal × 32% vertical radius
-**Timing:** 6 planes with staggered delays: -0s, -4s, -8s, -12s, -16s, -20s
-**Styling:** `will-change: transform`, `translate3d`, `contain: layout paint style`
-**Fallback:** Static positions when `prefers-reduced-motion: reduce`
+---
 
-### ProductCard
-- Visual: Glassmorphism, category badges (7 types)
-- Hover: Image overlay with EU/US affiliate buttons
-- Content: Name, description (2-line clamp), platform badges, "More details"
+## Pages
 
-### Modal
-- Portal: `document.body` level, z-50
-- Layout: `max-h-[85vh]`, `max-w-3xl`, `rounded-2xl`
-- Scroll: Body lock (calculates scrollbar width), internal scroll only
-- Accessibility: Focus trap, ESC/overlay close, return focus
+### Home (`src/pages/Home.tsx`)
+- `PageBackground` (theme-aware background image)
+- `HeroDesk` (hero section with `HeroPlanes` animation — 6 planes on CSS motion path)
+- `FeaturedProductsCarousel` (infinite carousel of featured products)
 
-### Lightbox
-- Portal: Above modal (z-60)
-- Viewing: 92vw × 92vh, professional dark panel
-- Zoom: 1x-5x, +/- buttons, wheel, keyboard (+/-/0)
-- Pan: Click-drag when zoomed, arrows (50px)
+### Products (`src/pages/Products.tsx`)
 
-### Search System (v2.0)
-**Implementation:** `/src/lib/products.ts` (searchProducts) + `/src/components/HeaderNav.tsx`
+**Layout:**
+```
+┌──────────────────────┬──────────────────────┐
+│  Select Flight Gear  │     Your Role        │
+│  [multi-select]      │  [single-select]     │
+└──────────────────────┴──────────────────────┘
+        (2-column grid: md:grid-cols-2)
 
-**Features:**
-- Progressive prefix matching (3-4 char based on query length)
-- Prioritized results: prefix matches first, then substring matches
-- 10-item limit for performance
-- Real-time suggestions with keyboard navigation (↑/↓/Enter/Esc)
-- Highlight matching text in orange
-- Mobile-responsive dropdown
-
-**Algorithm:**
-```ts
-// 2-char query: substring only (most filtered)
-searchProducts(products, 'or')
-
-// 3-char query: 3-char prefix + substring
-searchProducts(products, 'ori') // "Ori"on first, then others with "ori"
-
-// 4+ char query: 4-char prefix + substring
-searchProducts(products, 'orio') // "Orio"n first, then others with "orio"
+┌──────────────────────┬──────────────────────┐
+│   Product Card       │   Product Card       │  (2-col grid)
+│   Product Card       │   Product Card       │
+└──────────────────────┴──────────────────────┘
 ```
 
-**UX Improvements:**
-- Click outside to close dropdown
-- Auto-close on product selection (CompleteSetup)
-- Focus return to search input after selection
-- Clear search query after navigation
+**Filters:**
+- **Category** (multi-select): Built from DB `categories` table. OR logic. Shows product counts per category.
+- **Role** (single-select): "All Roles", "Pilot", "Copilot". Counts update based on category selection.
 
----
-
-## Performance Metrics
-
-### Carousel v2.0
-| Metric | Target | Actual | Status |
-|--------|--------|--------|--------|
-| Bundle Size | <110 KB | 105.58 KB | ✅ |
-| FPS Desktop | 60fps | 60fps (rAF) | ✅ |
-| FPS Mobile | ~60fps | Pending test | ⏳ |
-| Main Thread | <16ms/frame | GPU-accelerated | ✅ |
-| CLS | 0 | 0 | ✅ |
-| Nav Accuracy | Exact 1 item | Exact 1 item | ✅ |
-| Image Loading | Lazy | First 2 eager, rest lazy | ✅ |
-
-### Planes v2.0
-- Code: 87% reduction (1,202 → 157 lines)
-- Animation: CSS motion path (GPU-accelerated)
-- Visual weight: Low (opacity 0.35, size 22px)
-- Performance: 60fps constant
-
----
-
-## Development
-
-### Commands
-```bash
-npm start              # Dev server (localhost:3000)
-npm test              # Run unit tests
-npm run build         # Production build
-npx serve -s build    # Serve production build
+**Filtering logic:**
+```typescript
+const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(p.category);
+const matchesRole = selectedRole === 'All' || p.roleType === selectedRole || p.roleType === 'Universal';
 ```
 
-### Testing Checklist
-**Carousel:**
-- [x] Products display immediately
-- [x] Autoplay works (70px/s)
-- [x] Hover pauses, leave resumes
-- [x] Arrow buttons move exactly 1 card
-- [x] Keyboard ←/→ works
-- [x] Drag smooth, snap-to-card on release
-- [x] ResizeObserver handles window resize
+**URL Integration:**
+- `?q=searchterm` — finds product by name, scrolls to it
+- `?highlight=slug` — highlights product by slug
+- 5-second pulse animation on matched product
 
-**Planes:**
-- [x] 6 planes visible on hero
-- [ ] Smooth arc motion (left→right)
-- [ ] Constant speed (24s loop)
-- [ ] IntersectionObserver pauses when off-screen
+**State:** No localStorage persistence.
 
-**Accessibility:**
-- [x] Screen reader announcements
-- [x] Keyboard navigation
-- [x] Focus ring visible
-- [x] `prefers-reduced-motion` respected
+### Setups (`src/pages/Setups.tsx`)
+
+**Layout (Dark Mode):**
+```
+┌──────────────────────┬──────────────────────┐
+│ Choose Aircraft Model│   Equipment Tier     │  (row 1: 2-col grid)
+├──────────────────────┼──────────────────────┤
+│     Your Role        │  AirplaneAnimation   │  (row 2: 2-col grid)
+└──────────────────────┴──────────────────────┘
+```
+
+**Layout (Light Mode):**
+```
+┌──────────────────────┬──────────────────────┐
+│ Choose Aircraft Model│   Equipment Tier     │  (row 1: 2-col grid)
+├──────────────────────┴──────────────────────┤
+│      Your Role (centered, half-width)       │  (row 2: centered)
+└─────────────────────────────────────────────┘
+```
+
+**Dropdowns:**
+1. **Aircraft** — grouped by `aircraft_families` labels
+2. **Equipment Tier** — "All Tiers" + First/Business/Economy
+3. **Your Role** — "All Roles" + Pilot/Copilot
+
+**Product Display:**
+- "All Tiers": shows all tier sections with colored headers (amber/blue/emerald)
+- Single tier: shows only that tier section
+- Products filtered by role (Universal always included)
+
+**localStorage Persistence:**
+- `setups_selectedAircraft`, `setups_selectedTier`, `setups_selectedRole`
+- Tier and role reset to "All" when aircraft changes
+
+### CompleteSetup (`src/pages/CompleteSetup.tsx`)
+
+**4-Step Wizard:**
+```
+1. Add your current gear        (search + chips)
+2. Choose your aircraft family   (dropdown, disabled until step 1)
+3. Choose your role              (dropdown, disabled until step 1)
+4. Select class tier (budget)    (dropdown, disabled until step 1)
+   [Generate button]
+```
+
+**Step 1 — Gear Search:**
+- Real-time product search using `searchProducts()` with progressive prefix matching
+- Family filter applied based on selected aircraft
+- Role filter applied if role selected (shows matching + Universal)
+- Added products shown as removable chips
+
+**Steps 2-4 — Auto-Selection:**
+- When first product added:
+  - Aircraft: filters to families containing that product, auto-selects if only 1 match
+  - Role: auto-selects if product has specific roleType (Pilot/Copilot), not Universal
+  - Tier: auto-selects based on product's tier tag, defaults to Business
+- Shows "(Auto-selected)" green badge when auto-selected
+- All reset when last product removed
+
+**Generate Button:**
+- Disabled until aircraft is selected
+- Calls `generateSuggestions()` with PRNG engine
+
+**Results:**
+- Owned gear shown with "Owned" badge
+- Suggestions shown with lock/dice buttons
+- Lock: freezes suggestion across shuffles
+- Dice: replaces single suggestion with next candidate
+- "Shuffle All": replaces all unlocked suggestions
+- "Clear Results": resets everything
+
+### AboutUs (`src/pages/AboutUs.tsx`)
+- Table of contents with scroll-aware section highlighting
+- JSON-LD structured data for SEO
+- Sections: Mission, What We Do, Independence, More Sites
+
+### Legal Pages (`src/pages/legal/`)
+- **Terms.tsx** — 10 sections (acceptance, not a retailer, content accuracy, affiliate, liability, etc.)
+- **PrivacyPolicy.tsx** — 5 sections (data collected, usage, GDPR rights, third parties, contact)
+- **CookiePolicy.tsx** — Cookie categories from `compliance.ts` config (necessary, analytics, affiliate)
 
 ---
 
-## Next Steps
+## Key Components
 
-**Immediate:**
-- Add product images to `/public/photoForProductPage/`
-- Update prices in `products.json`
-- Manual mobile testing for 60fps verification
+### ProductCard (`src/components/ProductCard.tsx`)
+- **Props:** `product: Product`, `context: 'hover' | 'modal' | 'grid'`, `fromCarousel?: boolean`
+- Category-colored badges (10 categories with gradient Tailwind classes)
+- Hover overlay with affiliate buttons
+- Opens `Modal` for details → `Lightbox` for images
+- `AffiliateDropdown` per program with region flags
 
-**Future (v0.2):**
-- Individual `/product/[slug]` detail pages
-- Compare functionality (side-by-side up to 4)
-- Advanced filters (price, category, platform)
-- Save/share setup links
+### CustomDropdown (`src/components/CustomDropdown.tsx`)
+- **Props:** `id, value, onChange, options, multiSelect?, disabled?, placeholder?`
+- Single-select or multi-select modes
+- Option groups (via `group` field), dividers, disabled options
+- Full keyboard navigation (arrow keys, Enter, Escape, type-to-search)
+- Theme-aware via CSS variables (`--dropdown-*`)
+- `CategoryIcon` integration for option icons
+
+### Modal (`src/components/Modal.tsx`)
+- React Portal to `document.body` (z-50)
+- URL-based state (`?modal=slug`)
+- Focus trap via `useFocusTrap` hook
+- Body scroll lock (calculates scrollbar width)
+- ESC/overlay close with focus return
+- Affiliate dropdown auto-scroll (250ms delay for animation)
+
+### Lightbox (`src/components/Lightbox.tsx`)
+- Portal above modal (z-60)
+- Zoom: 1x–5x via buttons, mouse wheel, or keyboard (+/-/0)
+- Pan: click-drag when zoomed, arrow keys (50px steps)
+- Viewport: 92vw × 92vh
+
+### InfiniteCarousel (`src/components/carousel/InfiniteCarousel.tsx`)
+- `useRafMarquee` hook for animation (70px/s autoplay)
+- Triple slide array (original + 2 clones) for seamless loop
+- Drag/touch support with snap-to-card on release
+- Keyboard (←/→) and arrow button navigation (exact 1-item)
+- Responsive: 1 (mobile) → 1.25 (sm) → 2 (lg) → 3 (xl) slides visible
+- Pauses on hover/blur, IntersectionObserver, Visibility API
+- GPU-accelerated `translate3d`, `contain: layout paint size style`
+
+### HeroPlanes (`src/components/HeroPlanes.tsx`)
+- 6 planes on semi-oval CSS motion path
+- 24s linear loop, staggered 4s apart
+- Low opacity (0.35–0.4), small size (22–32px)
+- IntersectionObserver pauses when off-screen
+- Static fallback for `prefers-reduced-motion`
+- Light mode: black planes. Dark mode: white planes.
+
+### HeaderNav (`src/components/HeaderNav.tsx`)
+- Global search with autosuggest (progressive prefix matching)
+- Keyboard navigation (↑/↓/Enter/Esc) in search dropdown
+- Theme toggle (dark/light) with localStorage persistence
+- Mobile hamburger menu
+- Navigation links: Products, Setups, Complete Setup
+
+### PageBackground (`src/components/PageBackground.tsx`)
+- Fixed background image, theme-aware (dark: `background.png`, light: `backgrounLight.png`)
+- Dark overlay in dark mode (`bg-dark-900/80`)
+- Used by all pages
+
+### Other Components
+- **AffiliateDropdown** — Per-program region selector with flag icons
+- **AffiliateDisclosure** — Amber banner, dismissible, localStorage ack
+- **CookieBanner** — 3-category GDPR consent (necessary/analytics/affiliate)
+- **CategoryIcon** — SVG icons for categories, tiers, roles
+- **Footer** — 3-column layout, legal links, "Cookie Settings" button
+- **LegalPageLayout** — Shared layout with left TOC + right content
+- **ProductAvatar** — Product thumbnail fallback component
+- **HeroDesk** — Hero section wrapper with HeroPlanes
 
 ---
 
-## Changelog
+## Hooks
 
-**2025-10-06:** Initial spec, aircraft animation (20 planes)
-**2025-10-08:** Product card redesign (category badges), modal, global search
-**2025-10-09:** Lightbox, React Portal, body scroll lock fixes
-**2025-10-11:** CompleteSetup wizard, theme toggle, dynamic backgrounds
-**2025-10-13:** GDPR/FTC compliance (banners, legal pages, consent manager)
-**2025-10-14:**
-- Infinite carousel v1.0 (rAF animation, drag, keyboard, pause-on-hover)
-- Carousel fix (fallback rendering for chicken-and-egg cloning issue)
-- Carousel v2.0 mobile optimization (exact 1-item nav, delta clamping, GPU acceleration, 60fps)
-- Hero planes rebuild v2.0 (6 planes on CSS motion path, 87% code reduction, constant speed)
-**2025-10-15:** Code cleanup (removed unused clip-path files)
-**2025-11-21:**
-- Search system v2.0 (progressive prefix matching, improved filtering, CompleteSetup dropdown UX)
-- Company information update: Changed legal name from "Pilot Setup SRL" to "Pilot Setups"
-- Removed Tax ID and physical address from all pages (Footer, About Us, Terms, Privacy Policy)
-- Updated contact email to "contact@pilotsetup.com" throughout the app
-- About Us page restructure:
-  - Removed "Who We Are" section
-  - Moved mission statement to page header
-  - Added "More Sites" section with "Coming soon..." placeholder
-  - Fixed TOC scroll detection logic for accurate section highlighting
-  - Improved active section detection with target position calculation (120px from viewport top)
-  - Added initialization delay to ensure proper DOM layout before scroll detection
-**2025-12-27:**
-- Modal dropdown auto-scroll implementation (ProductCard.tsx):
-  - Added dropdown menu refs (amazonDropdownMenuRef, thrustmasterDropdownMenuRef) to target actual menu elements
-  - Updated AffiliateDropdown component to accept optional dropdownMenuRef prop
-  - Implemented auto-scroll effect that triggers when dropdowns expand in modal context
-  - Scrolls dropdown menu into view after 250ms animation delay (200ms slide + 50ms buffer)
-  - Uses scrollIntoView with `block: 'nearest'` for minimal scroll
-  - Respects `prefers-reduced-motion` accessibility setting (auto vs smooth behavior)
-  - Fixed issue where dropdown button was visible but country flag options were clipped below viewport
+### useRafMarquee (`src/hooks/useRafMarquee.ts`)
+Carousel animation engine using requestAnimationFrame.
+- **Input:** `speed` (px/s), `autoplay`, `onCycleComplete`, `laneRef`
+- **Output:** `offset`, `isPlaying`, `play()`, `pause()`, `setOffset()`, `reset()`, `setCycleWidth()`, `animateToOffset(target, duration)`
+- Time-based rAF with delta clamping (max 32ms)
+- `Math.fround()` prevents sub-pixel accumulation
+- easeOutQuad easing: `t * (2 - t)`
+- Respects `prefers-reduced-motion`
+
+### useThemeMode (`src/hooks/useThemeMode.ts`)
+- Returns `boolean` (true = light mode)
+- MutationObserver on `document.documentElement` class changes
+
+### useClickOutside (`src/hooks/useClickOutside.ts`)
+- Detects clicks outside specified element refs
+- `getElements()` callback for dynamic refs
+- Listens on `mousedown`
+
+### useFocusTrap (`src/hooks/useFocusTrap.ts`)
+- Traps Tab/Shift+Tab within container
+- Used by Modal component
+- Targets: `button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])`
+
+### useReducedMotion (`src/hooks/useReducedMotion.ts`)
+- Returns `boolean` (true = prefers reduced motion)
+- MediaQuery: `(prefers-reduced-motion: reduce)`
 
 ---
 
-**Total Lines of Code:**
-- Core carousel: ~850 lines
-- Hero planes v2.0: 157 lines (1,045 lines net reduction)
-- Bundle: 105.58 KB gzipped (production-ready)
+## Lib Modules
+
+### products.ts
+- `Product` type definition
+- Module-level cache (`setProductsCache`)
+- `listProducts(params?)` — filter by tier and/or search query
+- `searchProducts(products, query)` — progressive prefix matching (3-4 char prefixes), 10-item limit
+- `findProductByName(products, query)` — find single product
+- `getProductsByIds(ids)` — batch lookup
+
+### aircraft.ts
+- `AircraftPreset`, `TierPreset`, `CategoryNeed` types
+- Module-level cache (`setAircraftCache`)
+- `listAircraft()`, `getAircraftBySlug(slug)`, `getAircraftById(id)`
+- `getNeeds(aircraftId, tier)`, `getPreferredProducts(aircraftId, tier)`
+
+### setups.ts
+- `SetupData` type
+- Module-level cache (`setSetupsCache`)
+- `listSetups()`, `getSetupByAircraft(aircraft)`
+
+### suggestions.ts — Suggestion Engine
+- **PRNG:** `createSeededRandom(seed)` using mulberry32 algorithm for reproducible results
+- **Category equivalences:** `getCategoryEquivalence(category)` from DB `category_equivalences` table
+  - HOTAS owned → satisfies Joystick + Throttle + HOTAS needs
+  - Pedals ↔ Rudder bidirectional
+- **`generateSuggestions(input)`:**
+  1. Get tier needs from aircraft preset
+  2. Calculate missing categories after subtracting owned gear
+  3. For each missing category, filter candidates by: category match (unidirectional), tier match, role match, family match
+  4. Prioritize preferred products, shuffle with PRNG
+  5. Return suggestions + warnings
+- **`replaceSuggestion()`:** Replace single suggestion with next candidate
+- **`hasReplacementOptions()`:** Check if alternatives exist (controls lock/dice button visibility)
+
+**Key filtering rules:**
+- Unidirectional category matching: HOTAS can only satisfy "HOTAS" needs, NOT separate Joystick/Throttle needs
+- But owned HOTAS can satisfy both (bidirectional via `getSatisfiedCategories`)
+- Role filtering: exclude products not matching `roleType` (Universal always passes)
+- Family filtering: exclude products not matching aircraft family (unless "general")
+
+### setup-filters.ts
+- `shouldAutoSelectRole(product)` — returns 'Pilot'/'Copilot'/null based on roleType
+- `getFirstOwnedProduct(ownedGear)` — first product in owned list
+- `shouldEnableNextSteps(ownedGear)` — true if ≥1 product selected
+- `findAircraftFamiliesWithProduct(slug, presets)` — which aircraft families contain a product
+- `findTiersWithProduct(aircraftId, slug, presets, products)` — match vs downgrade tiers
+
+### consent.ts
+- `ConsentManager` class (singleton) with localStorage persistence
+- `getConsent()`, `setConsent()`, `acceptAll()`, `rejectAll()`, `clearConsent()`
+- Event-based: `subscribe(listener)` for consent change notifications
+- `useConsent()` React hook
+- `hasConsentFor('analytics' | 'affiliate')` — check specific category
+- `loadAnalytics(measurementId)` — conditionally load Google Analytics
+- `hasAcknowledgedAffiliateDisclosure()`, `acknowledgeAffiliateDisclosure()`
+
+### tier-config.ts
+Static Tailwind class map for tier styling:
+- First → amber-400, "Premium tier"
+- Business → blue-400, "Mid-tier"
+- Economy → emerald-400, "Entry-level"
+
+### category-config.ts
+Static Tailwind gradient map for category badges (10 categories):
+HOTAS, Throttle, Joystick, Pedals, Panel, MCDU, Rudder, Base, Accessories, Bundle
+
+### supabaseClient.ts
+```typescript
+const supabase = createClient(
+  process.env.REACT_APP_SUPABASE_URL!,
+  process.env.REACT_APP_SUPABASE_ANON_KEY!
+);
+```
+
+---
+
+## Role System
+
+### Database: `role_types` table
+| name | sort_order |
+|------|-----------|
+| Pilot | 0 |
+| Copilot | 1 |
+| Universal | 2 |
+
+### Core Rule
+**Universal products always show**, regardless of role selection.
+
+### Per-Page Behavior
+
+**Products page:** Role dropdown with dynamic counts. No localStorage.
+```typescript
+const matchesRole = selectedRole === 'All' || p.roleType === selectedRole || p.roleType === 'Universal';
+```
+
+**Setups page:** Role dropdown with localStorage persistence. Resets to "All" on aircraft change.
+```typescript
+const filterProductsByRole = (products: Product[]): Product[] => {
+  if (selectedRole === 'All') return products;
+  return products.filter(p => p.roleType === selectedRole || p.roleType === 'Universal');
+};
+```
+
+**CompleteSetup page:** Role as wizard step 3. Auto-selects from first owned product. Filters search results and suggestions.
+```typescript
+// Search filtering
+const roleFiltered = selectedRole
+  ? familyFiltered.filter(p => p.roleType === selectedRole || p.roleType === 'Universal')
+  : familyFiltered;
+
+// Suggestion engine
+if (roleType && product.roleType !== roleType && product.roleType !== 'Universal') return false;
+```
+
+---
+
+## Search System
+
+**Implementation:** `searchProducts()` in `src/lib/products.ts` + `HeaderNav.tsx`
+
+**Algorithm:** Progressive prefix matching with prioritized results:
+- 2-char query → substring matches only
+- 3-char query → 3-char prefix matches first, then substring
+- 4+ char query → 4-char prefix matches first, then substring
+
+**Limit:** 10 results max. Real-time suggestions with keyboard nav (↑/↓/Enter/Esc).
+
+---
+
+## Theme System
+
+- **Toggle:** In HeaderNav, persisted to `localStorage`
+- **Detection:** `useThemeMode()` hook via MutationObserver on `<html>` class
+- **CSS Strategy:** Dark mode is default. Light mode via `.light` class on `<html>`:
+  - CSS variables in `index.css` (dropdown colors, backgrounds, text)
+  - `.light` class overrides for all dark-mode Tailwind utilities
+- **Background:** `PageBackground` component switches image per theme
+- **Planes:** Dark = white (brightness invert), Light = black (brightness 0)
+
+---
+
+## Compliance (GDPR + FTC)
+
+### Config: `src/config/compliance.ts`
+- Site info, legal name, contact email
+- Cookie categories: necessary (required), analytics (optional), affiliate (optional)
+- Disclosure text templates
+
+### Components
+- **CookieBanner:** Shows on first visit. Accept All / Reject All / Customize (3-category modal)
+- **AffiliateDisclosure:** Amber banner at top. Dismissible, ack stored in localStorage
+- **Footer:** "Cookie Settings" button re-opens consent preferences
+
+### Legal Pages
+- Terms, Privacy Policy, Cookie Policy — all use `LegalPageLayout` with TOC sidebar
+
+---
+
+## Tailwind Config (`tailwind.config.js`)
+
+### Custom Colors
+- **`dark`** — slate scale (50–950) for backgrounds/text
+- **`accent`** — sky blue scale (50–950) for interactive elements
+- **`dropdown`** — CSS variable-based colors for theme-aware dropdowns
+
+### Fonts
+- `sans`: Inter, system-ui, sans-serif
+- `mono`: JetBrains Mono, monospace
+
+### Font Sizes
+xs(12), sm(14), base(16), lg(18), xl(24), 2xl(32), 3xl(40), 4xl(56)
+
+---
+
+## CSS Highlights (`src/index.css`)
+
+- **Glass effects:** `.glass`, `.glass-light` with backdrop-blur
+- **Hero plane animations:** 10 upward + 10 inverted arc paths, 10 RTL variants (CSS keyframes)
+- **Plane styling:** `.hero-plane` (32px dark, 24px mobile), `.hero-plane-static` (reduced motion fallback)
+- **Product pulse:** `.pulse-5s` — 5s scale animation for search highlights
+- **Affiliate slides:** `.animate-slide-left/right` — 200ms slide-in for dropdown regions
+- **Light mode overrides:** Comprehensive `.light` scoped overrides for text, bg, border, hover, focus, buttons, links
+- **Dropdown CSS variables:** `--dropdown-bg`, `--dropdown-text`, `--dropdown-border`, etc. (dark default + light override)

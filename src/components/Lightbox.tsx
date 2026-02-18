@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 interface LightboxProps {
   isOpen: boolean;
@@ -159,28 +160,7 @@ const Lightbox: React.FC<LightboxProps> = ({
   );
 
   // Focus trap
-  const handleTab = useCallback((e: KeyboardEvent) => {
-    if (e.key !== 'Tab' || !lightboxRef.current) return;
-
-    const focusableElements = lightboxRef.current.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
-
-    const firstElement = focusableElements[0];
-    const lastElement = focusableElements[focusableElements.length - 1];
-
-    if (e.shiftKey) {
-      if (document.activeElement === firstElement) {
-        e.preventDefault();
-        lastElement?.focus();
-      }
-    } else {
-      if (document.activeElement === lastElement) {
-        e.preventDefault();
-        firstElement?.focus();
-      }
-    }
-  }, []);
+  useFocusTrap(lightboxRef, isOpen);
 
   // Effect for event listeners
   useEffect(() => {
@@ -199,7 +179,6 @@ const Lightbox: React.FC<LightboxProps> = ({
 
     // Add event listeners
     document.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('keydown', handleTab);
     document.addEventListener('wheel', currentWheelHandler, { passive: false });
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
@@ -212,7 +191,6 @@ const Lightbox: React.FC<LightboxProps> = ({
     return () => {
       // Remove event listeners with the captured function references
       document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('keydown', handleTab);
       document.removeEventListener('wheel', currentWheelHandler);
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
@@ -225,7 +203,7 @@ const Lightbox: React.FC<LightboxProps> = ({
         previousFocusRef.current.focus();
       }
     };
-  }, [isOpen, handleKeyDown, handleTab, handleWheel, handleMouseMove, handleMouseUp]);
+  }, [isOpen, handleKeyDown, handleWheel, handleMouseMove, handleMouseUp]);
 
   // Safety cleanup: Force remove any lingering wheel listeners on unmount
   useEffect(() => {

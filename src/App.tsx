@@ -12,11 +12,13 @@ import AboutUs from './pages/AboutUs';
 import Terms from './pages/legal/Terms';
 import PrivacyPolicy from './pages/legal/PrivacyPolicy';
 import CookiePolicy from './pages/legal/CookiePolicy';
+import { DataProvider } from './lib/DataProvider';
 import './App.css';
 
 function App() {
   return (
     <Router>
+      <DataProvider>
       <div className="min-h-screen flex flex-col">
         {/* Compliance Banners */}
         <AffiliateDisclosure />
@@ -42,6 +44,7 @@ function App() {
         {/* Footer */}
         <Footer />
       </div>
+      </DataProvider>
     </Router>
   );
 }

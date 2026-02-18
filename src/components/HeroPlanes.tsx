@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useReducedMotion } from '../hooks/useReducedMotion';
 
 /**
  * HeroPlanes - Multi-arc bi-directional airplane animation with dynamic path switching
@@ -73,7 +74,7 @@ export const HeroPlanes: React.FC<HeroplanesProps> = ({ className = '', style })
   const containerRef = useRef<HTMLDivElement>(null);
   const planeRefs = useRef<(HTMLImageElement | null)[]>([]);
   const [isPaused, setIsPaused] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
   const [planeStates, setPlaneStates] = useState<PlaneState[]>(() =>
     PLANES.map(() => ({
       pathIdx: Math.floor(Math.random() * TOTAL_PATHS),
@@ -81,14 +82,6 @@ export const HeroPlanes: React.FC<HeroplanesProps> = ({ className = '', style })
       animationKey: 0,
     }))
   );
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
-    const handleChange = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
 
   useEffect(() => {
     if (!containerRef.current || prefersReducedMotion) return;

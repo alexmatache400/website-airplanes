@@ -1,29 +1,30 @@
-// Future-proof data access layer
-// Currently reads from static JSON, can be swapped for API/DB calls later
+// Data access layer — reads from module-level cache populated by DataProvider
 
 import React from 'react';
-import productsData from '../data/products.json';
 
-export type Tier = 'First' | 'Business' | 'Economy';
+export type Tier = string;
 
 export type Product = {
   id: string;
-  brand: 'Thrustmaster' | 'Honeycomb' | 'Logitech' | 'WingFlex' | 'Other';
+  brand: string;
   name: string;
   slug: string;
-  category: 'HOTAS' | 'Throttle' | 'Joystick' | 'Pedals' | 'Panel' | 'Bundle' | 'MCDU' | 'Rudder' | 'Base' | 'Accessories';
-  roleType: 'Pilot' | 'Copilot' | 'Universal';
-  sim_support: Array<'MSFS2020' | 'MSFS2024' | 'XPL11' | 'XPL12'>;
+  category: string;
+  roleType: string;
+  sim_support: string[];
   tier?: Tier;
-  aircraftFamily?: 'airbus-a32f' | 'boeing-737' | 'f16-viper' | 'fa18-hornet' | 'general';
-  price_eur?: number;
+  aircraftFamily?: string;
   price_label?: string;
   images: string[];
-  affiliate_urls: { thuk?: string; thus?: string; theu?: string; de?: string; uk?: string; us?: string };
+  affiliate_urls: Record<string, Record<string, string>>;
   description: string;
   key_specs?: Record<string, string | number>;
   source_url?: string;
 };
+
+// Module-level cache populated by DataProvider before any component renders
+let productsCache: Product[] = [];
+export function setProductsCache(products: Product[]) { productsCache = products; }
 
 interface ListProductsParams {
   q?: string;
@@ -40,7 +41,7 @@ interface ListProductsParams {
  * Example: const response = await fetch(`/api/products?q=${params.q}&tier=${params.tier}`);
  */
 export function listProducts(params: ListProductsParams = {}): Product[] {
-  let products = productsData as unknown as Product[];
+  let products = productsCache;
 
   // Filter by tier if specified
   if (params.tier) {
@@ -195,7 +196,7 @@ export function findProductByName(products: Product[], query: string): Product |
  * Example: const response = await fetch(`/api/products/${slug}`);
  */
 export function getProductBySlug(slug: string): Product | null {
-  const products = productsData as unknown as Product[];
+  const products = productsCache;
   return products.find(product => product.slug === slug) || null;
 }
 
@@ -209,7 +210,7 @@ export function getProductBySlug(slug: string): Product | null {
  * Example: const response = await fetch(`/api/products?ids=${ids.join(',')}`);
  */
 export function getProductsByIds(ids: string[]): Product[] {
-  const products = productsData as unknown as Product[];
+  const products = productsCache;
   const productMap = new Map(products.map(p => [p.id, p]));
 
   return ids

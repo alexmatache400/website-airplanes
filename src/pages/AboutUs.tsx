@@ -1,28 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, ExternalLink, CheckCircle2 } from 'lucide-react';
-import { COMPLIANCE, DISCLOSURE_TEXT } from '../config/compliance';
+import { COMPLIANCE, DISCLOSURE_TEXT, formattedLastUpdated } from '../config/compliance';
+import { PageBackground } from '../components/PageBackground';
 
 const AboutUs: React.FC = () => {
   const [activeSection, setActiveSection] = useState('');
-  const [isLightMode, setIsLightMode] = useState(false);
-
-  // Track theme for conditional background image
-  useEffect(() => {
-    const checkTheme = () => {
-      setIsLightMode(document.documentElement.classList.contains('light'));
-    };
-
-    checkTheme();
-
-    const observer = new MutationObserver(checkTheme);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-
-    return () => observer.disconnect();
-  }, []);
 
   // Structured data for SEO
   useEffect(() => {
@@ -156,20 +139,7 @@ const AboutUs: React.FC = () => {
 
   return (
     <div className="relative min-h-screen">
-      {/* Background */}
-      <div
-        className="fixed inset-0 z-0"
-        style={{
-          backgroundImage: `url(/backgroundPhoto/${isLightMode ? 'backgrounLight.png' : 'background.png'})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed',
-        }}
-      >
-        {/* Overlay for better text readability - only in dark mode */}
-        {!isLightMode && <div className="absolute inset-0 bg-dark-900/80"></div>}
-      </div>
+      <PageBackground />
 
       {/* Content */}
       <div className="relative z-10 py-12 px-4 sm:px-6 lg:px-8">
@@ -322,11 +292,7 @@ const AboutUs: React.FC = () => {
             {/* Footer */}
             <footer className="border-t border-dark-700 pt-6">
               <p className="text-sm text-dark-400">
-                <strong>Last updated:</strong> {new Date(COMPLIANCE.site.lastUpdatedISO).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}
+                <strong>Last updated:</strong> {formattedLastUpdated}
               </p>
             </footer>
           </main>

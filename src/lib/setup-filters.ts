@@ -10,22 +10,11 @@
 
 import { Product, Tier } from './products';
 import { AircraftPreset } from './aircraft';
-import { CATEGORY_EQUIVALENCE } from './suggestions';
+import { getSatisfiedCategories } from './suggestions';
 
 export interface TierSplit {
   match: Tier[];
   downgrade: Tier[];
-}
-
-/**
- * Calculate which categories a product satisfies based on equivalence rules
- * Imported logic from suggestions.ts for consistency
- *
- * @param product - Product to evaluate
- * @returns Array of categories this product satisfies
- */
-function getSatisfiedCategories(product: Product): Product['category'][] {
-  return CATEGORY_EQUIVALENCE[product.category] || [product.category];
 }
 
 /**
@@ -107,7 +96,7 @@ export function findTiersWithProduct(
   }
 
   const normalizedSlug = productSlug.toLowerCase().trim();
-  const allTiers: Tier[] = ['First', 'Business', 'Economy'];
+  const allTiers = Object.keys(aircraft.tiers) as Tier[];
   const matchTiers: Tier[] = [];
   const downgradeTiers: Tier[] = [];
 
@@ -180,67 +169,6 @@ export function findTiersWithProduct(
  * //   { value: 'Economy', label: 'Economy (without your product)' }
  * // ]
  */
-export interface TierDropdownOption {
-  value: string;
-  label: string;
-  isGroupHeader?: boolean;
-  isDivider?: boolean;
-  disabled?: boolean;
-}
-
-export function getTierOptionsForDropdown(
-  matchTiers: Tier[],
-  downgradeTiers: Tier[]
-): TierDropdownOption[] {
-  const options: TierDropdownOption[] = [];
-
-  // Add Match section if there are matching tiers
-  if (matchTiers.length > 0) {
-    options.push({
-      value: '',
-      label: 'Match Your Product Tier',
-      isGroupHeader: true,
-      disabled: true
-    });
-
-    matchTiers.forEach(tier => {
-      options.push({
-        value: tier,
-        label: tier
-      });
-    });
-  }
-
-  // Add divider if both sections exist
-  if (matchTiers.length > 0 && downgradeTiers.length > 0) {
-    options.push({
-      value: '',
-      label: '',
-      isDivider: true,
-      disabled: true
-    });
-  }
-
-  // Add Downgrade section if there are downgrade tiers
-  if (downgradeTiers.length > 0) {
-    options.push({
-      value: '',
-      label: 'Downgrade Options',
-      isGroupHeader: true,
-      disabled: true
-    });
-
-    downgradeTiers.forEach(tier => {
-      options.push({
-        value: tier,
-        label: `${tier} (without your product)`
-      });
-    });
-  }
-
-  return options;
-}
-
 /**
  * Determines if a product should trigger automatic role selection
  *

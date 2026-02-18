@@ -1,9 +1,12 @@
-// Aircraft preset data model and utilities
+// Aircraft preset data model and utilities — reads from module-level cache populated by DataProvider
 
 import type { Product, Tier } from './products';
-import aircraftData from '../data/aircraft-presets.json';
 
 export type AircraftId = string;
+
+// Module-level cache populated by DataProvider before any component renders
+let aircraftCache: AircraftPreset[] = [];
+export function setAircraftCache(presets: AircraftPreset[]) { aircraftCache = presets; }
 
 /**
  * Represents a category requirement for a complete setup
@@ -41,7 +44,7 @@ export interface AircraftPreset {
  * @returns Array of all aircraft presets
  */
 export function listAircraft(): AircraftPreset[] {
-  return aircraftData as unknown as AircraftPreset[];
+  return aircraftCache;
 }
 
 /**
@@ -51,7 +54,7 @@ export function listAircraft(): AircraftPreset[] {
  * @returns Aircraft preset if found, null otherwise
  */
 export function getAircraftBySlug(slug: string): AircraftPreset | null {
-  const aircraft = aircraftData as unknown as AircraftPreset[];
+  const aircraft = aircraftCache;
   return aircraft.find(a => a.slug === slug) || null;
 }
 
@@ -62,7 +65,7 @@ export function getAircraftBySlug(slug: string): AircraftPreset | null {
  * @returns Aircraft preset if found, null otherwise
  */
 export function getAircraftById(id: string): AircraftPreset | null {
-  const aircraft = aircraftData as unknown as AircraftPreset[];
+  const aircraft = aircraftCache;
   return aircraft.find(a => a.id === id) || null;
 }
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 interface ModalProps {
   isOpen: boolean;
@@ -41,31 +42,8 @@ const Modal: React.FC<ModalProps> = ({
     [onClose]
   );
 
-  // Focus trap implementation
-  const handleTab = useCallback((e: KeyboardEvent) => {
-    if (e.key !== 'Tab' || !modalRef.current) return;
-
-    const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
-
-    const firstElement = focusableElements[0];
-    const lastElement = focusableElements[focusableElements.length - 1];
-
-    if (e.shiftKey) {
-      // Shift + Tab
-      if (document.activeElement === firstElement) {
-        e.preventDefault();
-        lastElement?.focus();
-      }
-    } else {
-      // Tab
-      if (document.activeElement === lastElement) {
-        e.preventDefault();
-        firstElement?.focus();
-      }
-    }
-  }, []);
+  // Focus trap
+  useFocusTrap(modalRef, isOpen);
 
   // Lock/unlock body scroll when modal opens/closes
   useEffect(() => {
@@ -111,7 +89,6 @@ const Modal: React.FC<ModalProps> = ({
 
     // Add event listeners
     document.addEventListener('keydown', handleEscape);
-    document.addEventListener('keydown', handleTab);
 
     // Focus the close button when modal opens
     setTimeout(() => {
@@ -121,14 +98,13 @@ const Modal: React.FC<ModalProps> = ({
     return () => {
       // Remove event listeners
       document.removeEventListener('keydown', handleEscape);
-      document.removeEventListener('keydown', handleTab);
 
       // Return focus to the element that opened the modal
       if (previousFocusRef.current) {
         previousFocusRef.current.focus();
       }
     };
-  }, [isOpen, handleEscape, handleTab]);
+  }, [isOpen, handleEscape]);
 
   // Safety cleanup: Ensure scroll is unlocked when component unmounts
   useEffect(() => {

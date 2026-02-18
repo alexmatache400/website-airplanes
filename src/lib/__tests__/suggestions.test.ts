@@ -1,6 +1,6 @@
 // Unit tests for suggestion engine
 
-import { generateSuggestions, replaceSuggestion, CATEGORY_EQUIVALENCE } from '../suggestions';
+import { generateSuggestions, replaceSuggestion, getCategoryEquivalence, setCategoryEquivalenceCache } from '../suggestions';
 import type { Product } from '../products';
 import type { AircraftPreset } from '../aircraft';
 
@@ -145,15 +145,23 @@ const mockAircraft: AircraftPreset = {
   },
 };
 
-describe('CATEGORY_EQUIVALENCE', () => {
+// Populate the category equivalence cache before tests (mirrors DB data)
+beforeAll(() => {
+  setCategoryEquivalenceCache({
+    HOTAS: ['HOTAS', 'Joystick', 'Throttle'],
+    Pedals: ['Pedals', 'Rudder'],
+    Rudder: ['Rudder', 'Pedals'],
+  });
+});
+
+describe('getCategoryEquivalence', () => {
   it('should define HOTAS as satisfying both Joystick and Throttle', () => {
-    expect(CATEGORY_EQUIVALENCE.HOTAS).toContain('Joystick');
-    expect(CATEGORY_EQUIVALENCE.HOTAS).toContain('Throttle');
+    expect(getCategoryEquivalence('HOTAS')).toContain('Joystick');
+    expect(getCategoryEquivalence('HOTAS')).toContain('Throttle');
   });
 
-  it('should define single categories as only satisfying themselves', () => {
-    expect(CATEGORY_EQUIVALENCE.Pedals).toEqual(['Pedals']);
-    expect(CATEGORY_EQUIVALENCE.Panel).toEqual(['Panel']);
+  it('should default single categories to only satisfying themselves', () => {
+    expect(getCategoryEquivalence('Panel')).toEqual(['Panel']);
   });
 });
 

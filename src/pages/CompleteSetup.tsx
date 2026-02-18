@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { Search, X, Dice5, Lock, Unlock, Shuffle } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { listProducts, searchProducts, highlightMatch, filterProductsByFamily, type Product, type Tier } from '../lib/products';
@@ -10,6 +10,11 @@ import {
   shouldAutoSelectRole,
   getFirstOwnedProduct
 } from '../lib/setup-filters';
+import { useData } from '../lib/DataProvider';
+import { getTierStyle } from '../lib/tier-config';
+import { PageBackground } from '../components/PageBackground';
+import { useClickOutside } from '../hooks/useClickOutside';
+import { CategoryIcon } from '../components/CategoryIcon';
 
 type RoleType = '' | 'Pilot' | 'Copilot';
 
@@ -17,7 +22,7 @@ const CompleteSetup: React.FC = () => {
   // State management
   const [selectedAircraft, setSelectedAircraft] = useState<AircraftPreset | null>(null);
   const [selectedRole, setSelectedRole] = useState<RoleType>('');
-  const [selectedTier, setSelectedTier] = useState<Tier>('Business');
+  const [selectedTier, setSelectedTier] = useState<Tier>('');
   const [ownedGear, setOwnedGear] = useState<Product[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchSuggestions, setSearchSuggestions] = useState<Product[]>([]);
@@ -36,25 +41,16 @@ const CompleteSetup: React.FC = () => {
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
   // Load data
+  const { tiers, roleTypes } = useData();
+  const defaultTier = tiers.length > 1 ? tiers[1].name : tiers[0]?.name || 'Business';
   const allAircraft = listAircraft();
   const allProducts = listProducts();
 
   // Close suggestions when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        suggestionsRef.current &&
-        !suggestionsRef.current.contains(event.target as Node) &&
-        searchInputRef.current &&
-        !searchInputRef.current.contains(event.target as Node)
-      ) {
-        setShowSuggestions(false);
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  useClickOutside(
+    useCallback(() => [suggestionsRef.current, searchInputRef.current], []),
+    useCallback(() => setShowSuggestions(false), [])
+  );
 
   // Handlers
   const handleAddGear = (product: Product) => {
@@ -107,7 +103,7 @@ const CompleteSetup: React.FC = () => {
         setSelectedTier(product.tier);
       } else {
         // Default to Business if product has no tier tag
-        setSelectedTier('Business');
+        setSelectedTier(defaultTier);
       }
 
       setResult(null);
@@ -170,7 +166,7 @@ const CompleteSetup: React.FC = () => {
         setSelectedTier(firstProduct.tier);
       } else {
         // Default to Business if product has no tier tag
-        setSelectedTier('Business');
+        setSelectedTier(defaultTier);
       }
 
       setResult(null);
@@ -295,40 +291,19 @@ const CompleteSetup: React.FC = () => {
     return lockedProducts.get(product.category)?.id === product.id;
   };
 
-  // Track theme for conditional background image
-  const [isLightMode, setIsLightMode] = useState(false);
-
-  useEffect(() => {
-    // Check initial theme
-    const checkTheme = () => {
-      setIsLightMode(document.documentElement.classList.contains('light'));
-    };
-
-    checkTheme();
-
-    // Listen for theme changes
-    const observer = new MutationObserver(checkTheme);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  // Role dropdown options with icons
+  // Role dropdown options — built dynamically from DB role_types
   const roleOptions: DropdownOption[] = useMemo(() => {
-    // When wizard is disabled (no owned gear), show only placeholder
     if (ownedGear.length === 0) {
       return [{ value: '', label: '-- Select a role --' }];
     }
 
     return [
       { value: '', label: '-- Select a role --' },
-      { value: 'Pilot', label: 'Pilot', icon: 'pilot' },
-      { value: 'Copilot', label: 'Copilot', icon: 'copilot' },
+      ...roleTypes
+        .filter(rt => rt.name !== 'Universal')
+        .map(rt => ({ value: rt.name, label: rt.name, icon: rt.name.toLowerCase() })),
     ];
-  }, [ownedGear.length]);
+  }, [ownedGear.length, roleTypes]);
 
   /**
    * Memoized map of product category to whether replacement options exist
@@ -367,43 +342,40 @@ const CompleteSetup: React.FC = () => {
 
   /**
    * Helper function to generate tier dropdown options based on owned product's tier
-   * Always returns exactly 3 options with appropriate upgrade/downgrade labels
+   * Uses sort_order to determine upgrade/downgrade labels
    */
   const getTierDropdownOptions = (productTier: Tier | undefined): DropdownOption[] => {
-    // Default case: no owned product, show all 3 tiers with standard labels
+    // Default case: no owned product, show all tiers with standard labels
     if (!productTier) {
-      return [
-        { value: 'First', label: 'First class (Premium)', icon: 'first' },
-        { value: 'Business', label: 'Business class (Mid-tier)', icon: 'business' },
-        { value: 'Economy', label: 'Economy (Budget-friendly)', icon: 'economy' },
-      ];
+      return tiers.map(t => ({
+        value: t.name,
+        label: `${t.label} (${getTierStyle(t.name).sublabel || t.label})`,
+        icon: t.name.toLowerCase(),
+      }));
     }
 
-    // Based on product tier, generate options with upgrade/downgrade labels
-    const options: DropdownOption[] = [];
-
-    if (productTier === 'Economy') {
-      // Product is Economy tier: Show Economy first, then upgrade options
-      options.push(
-        { value: 'Economy', label: 'Economy (Budget-friendly)', icon: 'economy' },
-        { value: 'Business', label: 'Upgrade to Business class tier', icon: 'business' },
-        { value: 'First', label: 'Upgrade to First class tier', icon: 'first' }
-      );
-    } else if (productTier === 'Business') {
-      // Product is Business tier: Show Business first, then upgrade and downgrade
-      options.push(
-        { value: 'Business', label: 'Business class (Mid-tier)', icon: 'business' },
-        { value: 'First', label: 'Upgrade to First class tier', icon: 'first' },
-        { value: 'Economy', label: 'Downgrade to Economy tier', icon: 'economy' }
-      );
-    } else if (productTier === 'First') {
-      // Product is First tier: Show First first, then downgrade options
-      options.push(
-        { value: 'First', label: 'First class (Premium)', icon: 'first' },
-        { value: 'Business', label: 'Downgrade to Business tier', icon: 'business' },
-        { value: 'Economy', label: 'Downgrade to Economy tier', icon: 'economy' }
-      );
+    const matchTier = tiers.find(t => t.name === productTier);
+    if (!matchTier) {
+      return tiers.map(t => ({ value: t.name, label: t.label, icon: t.name.toLowerCase() }));
     }
+
+    // Show matching tier first, then others with upgrade/downgrade labels
+    const options: DropdownOption[] = [
+      {
+        value: matchTier.name,
+        label: `${matchTier.label} (${getTierStyle(matchTier.name).sublabel})`,
+        icon: matchTier.name.toLowerCase(),
+      },
+    ];
+
+    tiers.filter(t => t.name !== productTier).forEach(t => {
+      const isUpgrade = t.sort_order < matchTier.sort_order;
+      options.push({
+        value: t.name,
+        label: `${isUpgrade ? 'Upgrade' : 'Downgrade'} to ${t.label} tier`,
+        icon: t.name.toLowerCase(),
+      });
+    });
 
     return options;
   };
@@ -415,7 +387,7 @@ const CompleteSetup: React.FC = () => {
     const productTier = firstProduct?.tier;
 
     return getTierDropdownOptions(productTier);
-  }, [ownedGear]);
+  }, [ownedGear, tiers]);
 
   // Aircraft dropdown options (filtered based on owned product)
   const aircraftOptions: DropdownOption[] = useMemo(() => {
@@ -454,6 +426,13 @@ const CompleteSetup: React.FC = () => {
     }
   };
 
+  // Role change handler
+  const handleRoleChange = (value: string | string[]) => {
+    const stringValue = Array.isArray(value) ? value[0] : value;
+    setSelectedRole(stringValue as RoleType);
+    setResult(null); // Reset results when role changes
+  };
+
   // Tier change handler
   const handleTierChange = (value: string | string[]) => {
     const stringValue = Array.isArray(value) ? value[0] : value;
@@ -463,20 +442,7 @@ const CompleteSetup: React.FC = () => {
 
   return (
     <div className="relative min-h-screen">
-      {/* Background */}
-      <div
-        className="fixed inset-0 z-0"
-        style={{
-          backgroundImage: `url(/backgroundPhoto/${isLightMode ? 'backgrounLight.png' : 'background.png'})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed',
-        }}
-      >
-        {/* Overlay for better text readability - only in dark mode */}
-        {!isLightMode && <div className="absolute inset-0 bg-dark-900/80"></div>}
-      </div>
+      <PageBackground />
 
       {/* Content */}
       <div className="relative z-10 py-12 px-4 sm:px-6 lg:px-8">
@@ -530,8 +496,12 @@ const CompleteSetup: React.FC = () => {
                       selectedAircraft?.id || null
                     );
 
-                    // NOTE: Role filtering temporarily disabled - showing all products
-                    const results = searchProducts(familyFiltered, value);
+                    // Apply role filter if a role is selected
+                    const roleFiltered = selectedRole
+                      ? familyFiltered.filter(p => p.roleType === selectedRole || p.roleType === 'Universal')
+                      : familyFiltered;
+
+                    const results = searchProducts(roleFiltered, value);
 
                     setSearchSuggestions(results);
                     setShowSuggestions(results.length > 0);
@@ -551,16 +521,21 @@ const CompleteSetup: React.FC = () => {
                       <button
                         key={product.id}
                         onClick={() => handleAddGear(product)}
-                        className="w-full px-4 py-3 text-left hover:bg-dark-700/60 transition-colors focus:outline-none focus:bg-dark-700/60 border-b border-dark-700/50 last:border-0"
+                        className="w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-dark-700/60 transition-colors focus:outline-none focus:bg-dark-700/60 border-b border-dark-700/50 last:border-0"
                       >
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <div className="text-sm font-medium text-dark-100">
-                              {highlightMatch(product.name, searchQuery)}
-                            </div>
-                            <div className="text-xs text-dark-400">
-                              {product.brand} • {product.category}
-                            </div>
+                        <div className="w-10 h-10 flex-shrink-0 rounded bg-dark-700/40 flex items-center justify-center overflow-hidden">
+                          {product.images[0] ? (
+                            <img src={product.images[0]} alt="" className="w-full h-full object-contain p-1" />
+                          ) : (
+                            <CategoryIcon category={product.category} className="w-5 h-5 opacity-40" />
+                          )}
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-sm font-medium text-dark-100 truncate">
+                            {highlightMatch(product.name, searchQuery)}
+                          </div>
+                          <div className="text-xs text-dark-400">
+                            {product.brand} • {product.category}
                           </div>
                         </div>
                       </button>
@@ -624,14 +599,39 @@ const CompleteSetup: React.FC = () => {
               />
             </div>
 
-            {/* Step 3: Class Tier Selector (Disabled until step 1 complete) */}
+            {/* Step 3: Role Selector (Disabled until step 1 complete) */}
+            <div className={`mb-6 ${ownedGear.length === 0 ? 'opacity-50' : ''}`}>
+              <label
+                id="role-select-label"
+                htmlFor="role-select"
+                className="block text-sm font-medium text-dark-200 mb-2"
+              >
+                3. Choose your role
+                {ownedGear.length === 0 && (
+                  <span className="ml-2 text-xs text-dark-400 italic">(Complete step 1 first)</span>
+                )}
+                {isRoleAutoSelected && ownedGear.length > 0 && (
+                  <span className="ml-2 text-xs text-green-400 italic">(Auto-selected)</span>
+                )}
+              </label>
+              <CustomDropdown
+                id="role-select"
+                value={selectedRole}
+                onChange={handleRoleChange}
+                options={roleOptions}
+                placeholder="-- Select a role --"
+                disabled={ownedGear.length === 0}
+              />
+            </div>
+
+            {/* Step 4: Class Tier Selector (Disabled until step 1 complete) */}
             <div className={`mb-6 ${ownedGear.length === 0 ? 'opacity-50' : ''}`}>
               <label
                 id="tier-select-label"
                 htmlFor="tier-select"
                 className="block text-sm font-medium text-dark-200 mb-2"
               >
-                3. Select class tier (budget)
+                4. Select class tier (budget)
                 {ownedGear.length === 0 && (
                   <span className="ml-2 text-xs text-dark-400 italic">(Complete step 1 first)</span>
                 )}

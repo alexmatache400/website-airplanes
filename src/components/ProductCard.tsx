@@ -1,9 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Product } from '../lib/products';
+import { useData } from '../lib/DataProvider';
 import Modal from './Modal';
 import Lightbox from './Lightbox';
 import { CategoryIcon } from './CategoryIcon';
+import { getCategoryColor } from '../lib/category-config';
+import { useClickOutside } from '../hooks/useClickOutside';
+import { AffiliateDropdown } from './AffiliateDropdown';
 
 interface ProductCardProps {
   product: Product;
@@ -21,34 +25,38 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const [isHovered, setIsHovered] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState<'amazon' | 'thrustmaster' | null>(null);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const didPushStateRef = useRef(false);
-  const amazonDropdownRef = useRef<HTMLDivElement>(null);
-  const thrustmasterDropdownRef = useRef<HTMLDivElement>(null);
-  const amazonDropdownMenuRef = useRef<HTMLDivElement>(null);
-  const thrustmasterDropdownMenuRef = useRef<HTMLDivElement>(null);
+  const dropdownRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  const dropdownMenuRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  const { affiliatePrograms } = useData();
+
+  // Programs that have at least one link for this product
+  const activePrograms = useMemo(() =>
+    affiliatePrograms.filter(prog => {
+      const links = product.affiliate_urls[prog.name];
+      return links && Object.values(links).some(Boolean);
+    }),
+    [affiliatePrograms, product.affiliate_urls]
+  );
+
+  // Callback ref helpers for dynamic ref maps
+  const setDropdownRef = useCallback((name: string) => (el: HTMLDivElement | null) => {
+    if (el) dropdownRefs.current.set(name, el);
+    else dropdownRefs.current.delete(name);
+  }, []);
+
+  const setDropdownMenuRef = useCallback((name: string) => (el: HTMLDivElement | null) => {
+    if (el) dropdownMenuRefs.current.set(name, el);
+    else dropdownMenuRefs.current.delete(name);
+  }, []);
 
   // Helper function to truncate text to specified length
   const truncateText = (text: string, maxLength: number = 100): string => {
     if (text.length <= maxLength) return text;
     return text.slice(0, maxLength).trim() + '...';
-  };
-
-  // Category-based colors (with light mode support)
-  const categoryColors = {
-    HOTAS: 'from-sky-500/20 to-blue-600/20 border-sky-500/30 text-sky-200\n' +
-        'dark:from-sky-500/70 dark:to-blue-600/70 dark:border-sky-700 dark:text-sky-650\n',
-    Throttle: 'from-emerald-300/40 to-emerald-500/80 border-emerald-600 text-slate-900 dark:from-emerald-500/30 dark:to-emerald-700/70 dark:border-emerald-400 dark:text-slate-50',
-    Joystick: 'from-violet-400/40 to-fuchsia-500/80 border-violet-600 text-slate-900 dark:from-violet-500/40 dark:to-fuchsia-600/70 dark:border-violet-400 dark:text-slate-50',
-    Pedals: 'from-amber-200/60 to-amber-400/90 border-amber-500 text-slate-900 dark:from-amber-400/30 dark:to-amber-600/70 dark:border-amber-300 dark:text-slate-50',
-    Panel: 'from-rose-300/50 to-rose-500/90 border-rose-600 text-slate-900 dark:from-rose-500/30 dark:to-rose-700/70 dark:border-rose-400 dark:text-slate-50',
-    MCDU: 'from-cyan-300/40 to-cyan-500/80 border-cyan-600 text-slate-900 dark:from-cyan-500/30 dark:to-cyan-700/70 dark:border-cyan-400 dark:text-slate-50',
-    Rudder: 'from-orange-300/40 to-orange-500/80 border-orange-600 text-slate-900 dark:from-orange-500/30 dark:to-orange-700/70 dark:border-orange-400 dark:text-slate-50',
-    Base: 'from-teal-300/40 to-teal-500/80 border-teal-600 text-slate-900 dark:from-teal-500/30 dark:to-teal-700/80 dark:border-teal-400 dark:text-slate-50',
-    Accessories: 'from-indigo-300/40 to-indigo-500/80 border-indigo-600 text-slate-900 dark:from-indigo-500/30 dark:to-indigo-700/70 dark:border-indigo-400 dark:text-slate-50',
-    Bundle: 'from-slate-200/80 to-slate-400/90 border-slate-500 text-slate-900 dark:from-slate-600/40 dark:to-slate-800/80 dark:border-slate-500 dark:text-slate-50\n',
   };
 
   // Check if this product's modal should be open based on URL
@@ -100,26 +108,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
   }, [isModalOpen]);
 
   // Click outside to close dropdowns
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node;
-
-      if (
-        amazonDropdownRef.current && !amazonDropdownRef.current.contains(target) &&
-        thrustmasterDropdownRef.current && !thrustmasterDropdownRef.current.contains(target)
-      ) {
-        setOpenDropdown(null);
-      }
-    };
-
-    if (openDropdown !== null) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [openDropdown]);
+  useClickOutside(
+    useCallback(() => Array.from(dropdownRefs.current.values()), []),
+    useCallback(() => setOpenDropdown(null), []),
+    openDropdown !== null
+  );
 
   // Auto-scroll to dropdown options when expanded in modal
   useEffect(() => {
@@ -128,18 +121,16 @@ const ProductCard: React.FC<ProductCardProps> = ({
       // Get the modal's scrollable body container
       const modalBody = document.querySelector('[role="dialog"] .overflow-y-auto');
 
-      // Get the active dropdown menu ref (not the button ref)
-      const activeDropdownMenuRef = openDropdown === 'amazon'
-        ? amazonDropdownMenuRef
-        : thrustmasterDropdownMenuRef;
+      // Get the active dropdown menu element from the ref map
+      const activeMenuEl = dropdownMenuRefs.current.get(openDropdown);
 
-      if (modalBody && activeDropdownMenuRef.current) {
+      if (modalBody && activeMenuEl) {
         // Check if user prefers reduced motion
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         // Wait for dropdown animation to complete (200ms + 50ms buffer)
         setTimeout(() => {
-          activeDropdownMenuRef.current?.scrollIntoView({
+          activeMenuEl.scrollIntoView({
             behavior: prefersReducedMotion ? 'auto' : 'smooth',
             block: 'nearest',
             inline: 'nearest'
@@ -149,14 +140,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
     }
   }, [openDropdown, isModalOpen]);
 
-  const formatPrice = (price: number | null | undefined) => {
-    if (!price) return null;
-    return new Intl.NumberFormat('en-EU', {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 0,
-    }).format(price);
-  };
 
   // Fallback SVG for missing images
   const FallbackAvatar = () => (
@@ -169,190 +152,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
       </div>
     </div>
   );
-
-  // Affiliate Dropdown Component
-  interface AffiliateDropdownProps {
-    type: 'amazon' | 'thrustmaster';
-    isOpen: boolean;
-    onToggle: () => void;
-    links: {
-      us?: string;
-      uk?: string;
-      de?: string;
-      eu?: string;
-    };
-    dropdownRef: React.RefObject<HTMLDivElement | null>;
-    dropdownMenuRef?: React.RefObject<HTMLDivElement | null>;
-    context?: 'hover' | 'modal' | 'grid';
-  }
-
-  const AffiliateDropdown: React.FC<AffiliateDropdownProps> = ({
-    type,
-    isOpen,
-    onToggle,
-    links,
-    dropdownRef,
-    dropdownMenuRef,
-    context = 'hover',
-  }) => {
-    // All hooks must be called before any conditional returns
-    const [position, setPosition] = useState<'center' | 'left' | 'right' | 'above'>('center');
-    const buttonRef = useRef<HTMLButtonElement>(null);
-
-    // Calculate values needed for hooks
-    const hasLinks = !!(links.us || links.uk || links.de || links.eu);
-    const label = type === 'amazon' ? 'Amazon' : 'Thrustmaster';
-    const visibleLinksCount = Object.values(links).filter(Boolean).length;
-    const estimatedDropdownWidth = visibleLinksCount * 88 + 32; // ~88px per button + padding
-
-    // Smart positioning logic - recalculates dropdown position based on viewport and card boundaries
-    // Runs when dropdown opens or layout changes
-    // Note: 'dropdownRef' and 'type' intentionally excluded from dependencies:
-    // - dropdownRef: stable ref object (only .current value changes)
-    // - type: prop value never changes during component lifetime
-    useEffect(() => {
-      if (!isOpen || !buttonRef.current || !dropdownRef.current) return;
-
-      const button = buttonRef.current.getBoundingClientRect();
-      const viewport = {
-        width: window.innerWidth,
-        height: window.innerHeight,
-      };
-
-      // Find closest parent card (.glass)
-      const card = dropdownRef.current.closest('.glass');
-      const cardBounds = card?.getBoundingClientRect();
-
-      // Calculate available space
-      const spaceBelow = viewport.height - button.bottom;
-      const spaceAbove = button.top;
-
-      let horizontalPos: 'center' | 'left' | 'right' = 'center';
-
-      if (context === 'modal' || context === 'grid') {
-        // Modal/Grid: align based on button type
-        // Amazon (left button) → left-aligned, Thrustmaster (right button) → right-aligned
-        horizontalPos = type === 'amazon' ? 'left' : 'right';
-      } else {
-        // Hover overlay: check if centered dropdown fits within card bounds
-        const halfDropdownWidth = estimatedDropdownWidth / 2;
-        const buttonCenter = button.left + button.width / 2;
-
-        const leftEdge = buttonCenter - halfDropdownWidth;
-        const rightEdge = buttonCenter + halfDropdownWidth;
-
-        if (cardBounds) {
-          // Check overflow against card boundaries
-          const cardPadding = 16; // Account for card padding
-          if (leftEdge < cardBounds.left + cardPadding) {
-            horizontalPos = 'left'; // Align to left edge of button
-          } else if (rightEdge > cardBounds.right - cardPadding) {
-            horizontalPos = 'right'; // Align to right edge of button
-          }
-        }
-      }
-
-      // Determine vertical position (position above if no space below)
-      // Force below in modal/grid context, smart positioning in hover context
-      const verticalPos = (context === 'modal' || context === 'grid')
-        ? 'center' // Always show below buttons in modal/grid
-        : (spaceBelow < 150 && spaceAbove > 150 ? 'above' : 'center');
-
-      setPosition(verticalPos === 'above' ? 'above' : horizontalPos);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isOpen, estimatedDropdownWidth, context]);
-
-    // ResizeObserver for live updates on window resize
-    // Note: 'dropdownRef' intentionally excluded from dependencies - stable ref object
-    useEffect(() => {
-      if (!dropdownRef.current) return;
-
-      const resizeObserver = new ResizeObserver(() => {
-        if (isOpen) {
-          // Trigger recalculation on resize
-          requestAnimationFrame(() => {
-            // The positioning effect will re-run due to dependency on isOpen
-          });
-        }
-      });
-
-      resizeObserver.observe(dropdownRef.current);
-
-      return () => resizeObserver.disconnect();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isOpen]);
-
-    // Position class mapping
-    const positionClasses = {
-      center: 'left-1/2 -translate-x-1/2',
-      left: 'left-0',
-      right: 'right-0',
-      above: 'bottom-full mb-2 left-1/2 -translate-x-1/2',
-    };
-
-    // Region flags for displaying with country codes
-    const regionFlags: Record<string, string> = {
-      us: '🇺🇸',
-      uk: '🇬🇧',
-      de: '🇩🇪',
-      eu: '🇪🇺',
-    };
-
-    // Early return if no links available (after all hooks)
-    if (!hasLinks) return null;
-
-    return (
-      <div ref={dropdownRef} className="relative">
-        <button
-          ref={buttonRef}
-          onClick={(e) => {
-            e.preventDefault();
-            onToggle();
-          }}
-          className="bg-accent-500 hover:bg-accent-600 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 whitespace-nowrap"
-          aria-expanded={isOpen}
-          aria-haspopup="menu"
-          aria-label={`${label} purchase options`}
-        >
-          {label}
-          <svg
-            className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-            viewBox="0 0 12 12"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path d="M2 4l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
-
-        {isOpen && (
-          <div
-            ref={dropdownMenuRef}
-            className={`absolute ${position === 'above' ? '' : 'top-full mt-2'} ${positionClasses[position]} flex gap-2 z-20 bg-dark-800/95 backdrop-blur-sm p-3 rounded-lg border border-dark-700/50 shadow-xl ${type === 'amazon' ? 'animate-slide-left' : 'animate-slide-right'}`}
-            role="menu"
-            aria-label={`${label} regions`}
-          >
-            {Object.entries(links).map(
-              ([region, url]) =>
-                url && (
-                  <a
-                    key={region}
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    role="menuitem"
-                    className="px-4 py-2 bg-accent-500 hover:bg-accent-600 text-white rounded text-sm font-medium transition-colors whitespace-nowrap"
-                  >
-                    {regionFlags[region]} {region.toUpperCase()}
-                  </a>
-                )
-            )}
-          </div>
-        )}
-      </div>
-    );
-  };
 
   return (
     <div
@@ -377,36 +176,25 @@ const ProductCard: React.FC<ProductCardProps> = ({
         {isHovered && (
           <div className="absolute inset-0 bg-dark-900/80 flex items-center justify-center p-4 transition-opacity duration-200">
             <div className="flex gap-3">
-              <AffiliateDropdown
-                type="amazon"
-                isOpen={openDropdown === 'amazon'}
-                onToggle={() => setOpenDropdown(openDropdown === 'amazon' ? null : 'amazon')}
-                links={{
-                  us: product.affiliate_urls.us,
-                  uk: product.affiliate_urls.uk,
-                  de: product.affiliate_urls.de,
-                }}
-                dropdownRef={amazonDropdownRef}
-                context={context}
-              />
-              <AffiliateDropdown
-                type="thrustmaster"
-                isOpen={openDropdown === 'thrustmaster'}
-                onToggle={() => setOpenDropdown(openDropdown === 'thrustmaster' ? null : 'thrustmaster')}
-                links={{
-                  us: product.affiliate_urls.thus,
-                  uk: product.affiliate_urls.thuk,
-                  eu: product.affiliate_urls.theu,
-                }}
-                dropdownRef={thrustmasterDropdownRef}
-                context={context}
-              />
+              {activePrograms.map((prog, i) => (
+                <AffiliateDropdown
+                  key={prog.name}
+                  program={prog}
+                  index={i}
+                  totalCount={activePrograms.length}
+                  isOpen={openDropdown === prog.name}
+                  onToggle={() => setOpenDropdown(openDropdown === prog.name ? null : prog.name)}
+                  links={product.affiliate_urls[prog.name] || {}}
+                  onDropdownRef={setDropdownRef(prog.name)}
+                  context={context}
+                />
+              ))}
             </div>
           </div>
         )}
 
         {/* Category Badge (top-left) */}
-        <div className={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${categoryColors[product.category]} backdrop-blur-sm border`}>
+        <div className={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${getCategoryColor(product.category)} backdrop-blur-sm border`}>
           <span className="inline-flex items-center gap-1.5">
             <CategoryIcon category={product.category} className="w-3.5 h-3.5 flex-shrink-0" />
             <span>{product.category}</span>
@@ -414,9 +202,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </div>
 
         {/* Price Badge */}
-        {(product.price_eur || product.price_label) && (
+        {product.price_label && (
           <div className="absolute top-3 right-3 bg-white/90 dark:bg-dark-900/80 backdrop-blur-sm text-sky-900 dark:text-accent-400 px-2 py-1 rounded-full text-sm font-semibold border border-slate-300 dark:border-transparent">
-            {product.price_eur ? formatPrice(product.price_eur) : product.price_label}
+            {product.price_label}
           </div>
         )}
       </div>
@@ -468,7 +256,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       >
         {/* Product Header Info */}
         <div className="flex flex-wrap items-center gap-2 mb-6">
-          <span className={`px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${categoryColors[product.category]} backdrop-blur-sm border`}>
+          <span className={`px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${getCategoryColor(product.category)} backdrop-blur-sm border`}>
             <span className="inline-flex items-center gap-1.5">
               <CategoryIcon category={product.category} className="w-3.5 h-3.5 flex-shrink-0" />
               <span>{product.category}</span>
@@ -552,13 +340,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
           )}
 
           {/* Price */}
-          {(product.price_eur || product.price_label) && (
+          {product.price_label && (
             <div className="flex items-baseline gap-2">
-              {product.price_eur ? (
-                <span className="text-3xl font-bold text-accent-400">{formatPrice(product.price_eur)}</span>
-              ) : (
-                <span className="text-xl font-semibold text-dark-300">{product.price_label}</span>
-              )}
+              <span className="text-xl font-semibold text-dark-300">{product.price_label}</span>
             </div>
           )}
 
@@ -566,32 +350,20 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <div className="space-y-3">
             <h3 className="text-lg font-semibold text-dark-100">Purchase</h3>
             <div className="flex gap-3 justify-start">
-              <AffiliateDropdown
-                type="amazon"
-                isOpen={openDropdown === 'amazon'}
-                onToggle={() => setOpenDropdown(openDropdown === 'amazon' ? null : 'amazon')}
-                links={{
-                  us: product.affiliate_urls.us,
-                  uk: product.affiliate_urls.uk,
-                  de: product.affiliate_urls.de,
-                }}
-                dropdownRef={amazonDropdownRef}
-                dropdownMenuRef={amazonDropdownMenuRef}
-                context="modal"
-              />
-              <AffiliateDropdown
-                type="thrustmaster"
-                isOpen={openDropdown === 'thrustmaster'}
-                onToggle={() => setOpenDropdown(openDropdown === 'thrustmaster' ? null : 'thrustmaster')}
-                links={{
-                  us: product.affiliate_urls.thus,
-                  uk: product.affiliate_urls.thuk,
-                  eu: product.affiliate_urls.theu,
-                }}
-                dropdownRef={thrustmasterDropdownRef}
-                dropdownMenuRef={thrustmasterDropdownMenuRef}
-                context="modal"
-              />
+              {activePrograms.map((prog, i) => (
+                <AffiliateDropdown
+                  key={prog.name}
+                  program={prog}
+                  index={i}
+                  totalCount={activePrograms.length}
+                  isOpen={openDropdown === prog.name}
+                  onToggle={() => setOpenDropdown(openDropdown === prog.name ? null : prog.name)}
+                  links={product.affiliate_urls[prog.name] || {}}
+                  onDropdownRef={setDropdownRef(prog.name)}
+                  onDropdownMenuRef={setDropdownMenuRef(prog.name)}
+                  context="modal"
+                />
+              ))}
             </div>
           </div>
         </div>
