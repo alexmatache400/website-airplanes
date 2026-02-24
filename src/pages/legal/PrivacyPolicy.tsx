@@ -2,8 +2,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { COMPLIANCE } from '../../config/compliance';
 import { LegalPageLayout, LegalSection } from '../../components/LegalPageLayout';
+import { useDocumentHead } from '../../hooks/useDocumentHead';
 
 const PrivacyPolicy: React.FC = () => {
+  useDocumentHead({
+    title: 'Privacy Policy | Pilot Setup',
+    description: 'Learn how Pilot Setup collects, uses, and protects your personal data. Full GDPR-compliant privacy policy for EU visitors.',
+    canonical: '/legal/privacy',
+  });
+
   return (
     <LegalPageLayout
       title="Privacy Policy"

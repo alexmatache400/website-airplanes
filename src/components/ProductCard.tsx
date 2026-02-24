@@ -155,7 +155,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <div
-      className={`glass rounded-xl overflow-hidden hover:bg-dark-800/60 transition-all duration-300 group ${className}`}
+      className={`glass rounded-xl overflow-hidden hover:bg-dark-800/60 transition-all duration-300 group flex flex-col h-full ${className}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -210,23 +210,23 @@ const ProductCard: React.FC<ProductCardProps> = ({
       </div>
 
       {/* Content */}
-      <div className="p-4 space-y-3">
+      <div className="p-4 flex flex-col gap-3 flex-1">
         {/* Product Name */}
-        <div>
-          <h3 className="font-semibold text-dark-100 mb-1 line-clamp-2 group-hover:text-accent-400 transition-colors duration-200">
-            {truncateText(product.name, 40)}
+        <div className="min-h-[3rem]">
+          <h3 className="font-semibold text-dark-100 line-clamp-2 group-hover:text-accent-400 transition-colors duration-200">
+            {product.name}
           </h3>
         </div>
 
         {/* Description */}
-        <p className="text-sm text-dark-300 line-clamp-2">
-          {truncateText(product.description, 40)}
+        <p className="text-sm text-dark-300 line-clamp-3 min-h-[3.75rem]">
+          {truncateText(product.description, 150)}
         </p>
 
         {/* Compatible with */}
-        <div className="space-y-2">
-          <p className="text-xs text-dark-400 font-medium">Compatible with:</p>
-          <div className="flex flex-wrap gap-1">
+        <div>
+          <p className="text-xs text-dark-400 font-medium mb-1.5">Compatible with:</p>
+          <div className="flex flex-wrap gap-1 max-h-[1.75rem] overflow-hidden">
             {product.sim_support.map((sim) => (
               <span
                 key={sim}
@@ -241,7 +241,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         {/* More Details Button */}
         <button
           onClick={handleOpenModal}
-          className="w-full mt-4 bg-dark-700/60 hover:bg-dark-700 text-dark-100 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-900"
+          className="w-full mt-auto bg-dark-700/60 hover:bg-dark-700 text-dark-100 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-dark-900"
         >
           More details
         </button>
@@ -365,6 +365,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 />
               ))}
             </div>
+            {activePrograms.length > 0 && (
+              <p className="text-xs text-dark-400">
+                Affiliate links — we may earn a commission at no extra cost to you.
+              </p>
+            )}
           </div>
         </div>
       </Modal>

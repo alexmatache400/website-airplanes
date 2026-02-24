@@ -11,7 +11,7 @@ export const COMPLIANCE = {
     tradeName: 'Pilot Setup',
     regCountry: 'Romania',
     contactEmail: 'contact@pilotsetup.com',
-    baseUrl: 'https://flightsimsetups.com',
+    baseUrl: 'https://pilotsetup.com',
     lastUpdatedISO: '2025-12-27',
     businessHours: 'Monday - Friday, 9:00 - 17:00 EET',
   },

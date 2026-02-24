@@ -2,8 +2,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { COOKIE_CATEGORIES } from '../../config/compliance';
 import { LegalPageLayout, LegalSection } from '../../components/LegalPageLayout';
+import { useDocumentHead } from '../../hooks/useDocumentHead';
 
 const CookiePolicy: React.FC = () => {
+  useDocumentHead({
+    title: 'Cookie Policy | Pilot Setup',
+    description: 'Our cookie policy explains what cookies Pilot Setup uses, why, and how you can manage your preferences for analytics and affiliate tracking.',
+    canonical: '/legal/cookies',
+  });
+
   return (
     <LegalPageLayout
       title="Cookie Policy"

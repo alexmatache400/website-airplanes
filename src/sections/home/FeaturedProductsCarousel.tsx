@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ProductCard from '../../components/ProductCard';
 import InfiniteCarousel from '../../components/carousel/InfiniteCarousel';
@@ -38,6 +38,41 @@ export const FeaturedProductsCarousel: React.FC<FeaturedProductsCarouselProps> =
     const allProducts = listProducts();
     return limit ? allProducts.slice(0, limit) : allProducts;
   }, [limit]);
+
+  // Inject ItemList schema for the featured products carousel
+  useEffect(() => {
+    if (products.length === 0) return;
+    const BASE_URL = 'https://pilotsetup.com';
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'Featured Flight Simulator Hardware',
+      url: BASE_URL,
+      numberOfItems: products.length,
+      itemListElement: products.slice(0, 50).map((p, idx) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        item: {
+          '@type': 'Product',
+          name: p.name,
+          description: p.description,
+          brand: { '@type': 'Brand', name: p.brand },
+          ...(p.images[0] ? { image: p.images[0] } : {}),
+          ...(p.price_label ? { offers: { '@type': 'Offer', priceSpecification: { '@type': 'PriceSpecification', description: p.price_label } } } : {}),
+        },
+      })),
+    };
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.id = 'schema-homepage-itemlist';
+    script.text = JSON.stringify(schema);
+    document.head.appendChild(script);
+
+    return () => {
+      document.getElementById('schema-homepage-itemlist')?.remove();
+    };
+  }, [products]);
 
   // Pre-render ProductCard components
   const productCards = useMemo(

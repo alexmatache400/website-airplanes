@@ -9,8 +9,14 @@ import { CustomDropdown, type DropdownOption } from '../components/CustomDropdow
 import { CategoryIcon } from '../components/CategoryIcon';
 import { useThemeMode } from '../hooks/useThemeMode';
 import { PageBackground } from '../components/PageBackground';
+import { useDocumentHead } from '../hooks/useDocumentHead';
 
 const Setups: React.FC = () => {
+  useDocumentHead({
+    title: 'Pre-Built Flight Sim Setups by Aircraft | Pilot Setup',
+    description: 'Explore complete flight simulator hardware setups organized by aircraft type — Airbus, Boeing, F-16, F/A-18 and more. Economy to First Class tiers.',
+    canonical: '/setups',
+  });
   const [selectedAircraft, setSelectedAircraft] = useState<string>('');
   const [selectedTier, setSelectedTier] = useState<Tier | 'All'>('All');
   const [selectedRole, setSelectedRole] = useState<string>('All');

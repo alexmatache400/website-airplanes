@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { Search, X, Dice5, Lock, Unlock, Shuffle } from 'lucide-react';
+import { useDocumentHead } from '../hooks/useDocumentHead';
 import ProductCard from '../components/ProductCard';
 import { listProducts, searchProducts, highlightMatch, filterProductsByFamily, type Product, type Tier } from '../lib/products';
 import { listAircraft, type AircraftPreset } from '../lib/aircraft';
@@ -19,6 +20,12 @@ import { CategoryIcon } from '../components/CategoryIcon';
 type RoleType = '' | 'Pilot' | 'Copilot';
 
 const CompleteSetup: React.FC = () => {
+  useDocumentHead({
+    title: 'Build Your Flight Sim Setup — Step-by-Step Wizard | Pilot Setup',
+    description: 'Tell us what gear you own, pick your aircraft and budget — our wizard recommends the perfect flight simulator hardware to complete your setup.',
+    canonical: '/complete-setup',
+  });
+
   // State management
   const [selectedAircraft, setSelectedAircraft] = useState<AircraftPreset | null>(null);
   const [selectedRole, setSelectedRole] = useState<RoleType>('');
@@ -705,7 +712,7 @@ const CompleteSetup: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Display Owned Gear First */}
                   {ownedGear.map((product) => (
-                    <div key={`owned-${product.id}`} className="relative">
+                    <div key={`owned-${product.id}`} className="relative h-full">
                       {/* Product Card */}
                       <ProductCard product={product} context="grid" />
 
@@ -720,7 +727,7 @@ const CompleteSetup: React.FC = () => {
 
                   {/* Display Suggestions */}
                   {result.suggestions.map((product) => (
-                    <div key={product.id} className="relative">
+                    <div key={product.id} className="relative h-full">
                       {/* Product Card */}
                       <ProductCard product={product} context="grid" />
 

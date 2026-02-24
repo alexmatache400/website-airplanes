@@ -4,6 +4,9 @@ import { useThemeMode } from '../hooks/useThemeMode';
 /**
  * Shared full-page background with theme-aware image and dark overlay.
  * Used by all page components (Home, Products, Setups, CompleteSetup, AboutUs).
+ *
+ * Note: backgroundAttachment: 'fixed' is intentionally omitted — it causes
+ * severe performance issues on iOS/Android (background repaints on every scroll).
  */
 export const PageBackground: React.FC = () => {
   const isLightMode = useThemeMode();
@@ -16,7 +19,6 @@ export const PageBackground: React.FC = () => {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed',
       }}
     >
       {!isLightMode && <div className="absolute inset-0 bg-dark-900/80"></div>}

@@ -27,7 +27,7 @@ const AffiliateDisclosure: React.FC = () => {
 
   return (
     <div
-      className="fixed top-0 left-0 right-0 z-[60] bg-gradient-to-r from-amber-500/10 to-orange-500/10 border-b border-amber-500/30 backdrop-blur-sm"
+      className="relative z-[60] bg-gradient-to-r from-amber-500/10 to-orange-500/10 border-b border-amber-500/30 backdrop-blur-sm"
       role="region"
       aria-label="Affiliate disclosure notice"
     >

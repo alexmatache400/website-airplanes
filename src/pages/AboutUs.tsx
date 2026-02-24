@@ -3,61 +3,21 @@ import { Link } from 'react-router-dom';
 import { Mail, ExternalLink, CheckCircle2 } from 'lucide-react';
 import { COMPLIANCE, DISCLOSURE_TEXT, formattedLastUpdated } from '../config/compliance';
 import { PageBackground } from '../components/PageBackground';
+import { useDocumentHead } from '../hooks/useDocumentHead';
 
 const AboutUs: React.FC = () => {
+  useDocumentHead({
+    title: 'About Pilot Setup — Flight Sim Hardware Experts',
+    description: 'Learn about Pilot Setup: our mission, affiliate disclosure, editorial standards, and how we help flight sim pilots find the right hardware.',
+    canonical: '/about',
+  });
+
   const [activeSection, setActiveSection] = useState('');
-
-  // Structured data for SEO
-  useEffect(() => {
-    const organizationSchema = {
-      '@context': 'https://schema.org',
-      '@type': 'Organization',
-      name: COMPLIANCE.seo.siteName,
-      legalName: COMPLIANCE.site.legalName,
-      url: COMPLIANCE.site.baseUrl,
-      logo: `${COMPLIANCE.site.baseUrl}${COMPLIANCE.seo.logoUrl}`,
-      description: COMPLIANCE.seo.siteDescription,
-      email: COMPLIANCE.site.contactEmail,
-      sameAs: Object.values(COMPLIANCE.social).filter(Boolean),
-    };
-
-    const websiteSchema = {
-      '@context': 'https://schema.org',
-      '@type': 'WebSite',
-      name: COMPLIANCE.seo.siteName,
-      url: COMPLIANCE.site.baseUrl,
-      potentialAction: {
-        '@type': 'SearchAction',
-        target: {
-          '@type': 'EntryPoint',
-          urlTemplate: `${COMPLIANCE.site.baseUrl}/products?q={search_term_string}`,
-        },
-        'query-input': 'required name=search_term_string',
-      },
-    };
-
-    // Inject structured data
-    const scriptOrg = document.createElement('script');
-    scriptOrg.type = 'application/ld+json';
-    scriptOrg.text = JSON.stringify(organizationSchema);
-    document.head.appendChild(scriptOrg);
-
-    const scriptSite = document.createElement('script');
-    scriptSite.type = 'application/ld+json';
-    scriptSite.text = JSON.stringify(websiteSchema);
-    document.head.appendChild(scriptSite);
-
-    return () => {
-      document.head.removeChild(scriptOrg);
-      document.head.removeChild(scriptSite);
-    };
-  }, []);
 
   // Track active section for TOC
   useEffect(() => {
     const handleScroll = () => {
       const sections = [
-        'more-sites',
         'affiliate-disclosure',
         'scope-and-liability',
         'editorial-standards',
@@ -128,7 +88,6 @@ const AboutUs: React.FC = () => {
   };
 
   const tocSections = [
-    { id: 'more-sites', label: 'More Sites' },
     { id: 'affiliate-disclosure', label: 'Affiliate Disclosure' },
     { id: 'scope-and-liability', label: 'What We Do' },
     { id: 'editorial-standards', label: 'Editorial Integrity' },
@@ -183,16 +142,6 @@ const AboutUs: React.FC = () => {
                 Pilot Setup is a specialized resource for flight simulation enthusiasts seeking expert recommendations on hardware setups for <strong>Microsoft Flight Simulator 2020/2024</strong> and <strong>X-Plane 11/12</strong>.
               </p>
             </header>
-
-            {/* More Sites */}
-            <section id="more-sites" className="scroll-mt-24 space-y-4">
-              <h2 className="text-2xl font-bold text-dark-100 border-b border-dark-700 pb-3">More Sites</h2>
-              <div className="bg-dark-800/40 backdrop-blur-sm rounded-xl border border-dark-700/50 p-6">
-                <p className="text-dark-300 text-center py-8">
-                  Coming soon...
-                </p>
-              </div>
-            </section>
 
             {/* Affiliate Disclosure */}
             <section id="affiliate-disclosure" className="scroll-mt-24 space-y-4">

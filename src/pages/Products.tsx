@@ -5,8 +5,14 @@ import ProductCard from '../components/ProductCard';
 import { CustomDropdown, type DropdownOption } from '../components/CustomDropdown';
 import { useData } from '../lib/DataProvider';
 import { PageBackground } from '../components/PageBackground';
+import { useDocumentHead } from '../hooks/useDocumentHead';
 
 const Products: React.FC = () => {
+  useDocumentHead({
+    title: 'Flight Sim Hardware — HOTAS, Joysticks, Throttles & More | Pilot Setup',
+    description: 'Browse curated flight simulator hardware: HOTAS, joysticks, throttles, pedals, panels and more for MSFS 2020/2024 and X-Plane 11/12.',
+    canonical: '/products',
+  });
   const [searchParams] = useSearchParams();
   const [allProducts] = useState<Product[]>(listProducts());
   const { categories, roleTypes } = useData();
@@ -62,6 +68,40 @@ const Products: React.FC = () => {
         })),
     ];
   }, [allProducts, selectedCategories, roleTypes]);
+
+  // Inject ItemList schema for the currently visible products
+  useEffect(() => {
+    const BASE_URL = 'https://pilotsetup.com';
+    const itemListSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'Flight Simulator Hardware',
+      url: `${BASE_URL}/products`,
+      numberOfItems: allProducts.length,
+      itemListElement: allProducts.slice(0, 50).map((p, idx) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        item: {
+          '@type': 'Product',
+          name: p.name,
+          description: p.description,
+          brand: { '@type': 'Brand', name: p.brand },
+          ...(p.images[0] ? { image: p.images[0] } : {}),
+          ...(p.price_label ? { offers: { '@type': 'Offer', priceSpecification: { '@type': 'PriceSpecification', description: p.price_label } } } : {}),
+        },
+      })),
+    };
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.id = 'schema-products-itemlist';
+    script.text = JSON.stringify(itemListSchema);
+    document.head.appendChild(script);
+
+    return () => {
+      document.getElementById('schema-products-itemlist')?.remove();
+    };
+  }, [allProducts]);
 
   // Handle search query or highlight from URL
   useEffect(() => {
@@ -183,7 +223,7 @@ const Products: React.FC = () => {
               key={product.id}
               id={product.slug}
               ref={setProductRef(product.slug)}
-              className={`transition-all ${
+              className={`transition-all h-full ${
                 highlightedId === product.id ? 'pulse-5s' : ''
               }`}
             >

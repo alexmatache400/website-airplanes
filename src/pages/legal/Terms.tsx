@@ -2,8 +2,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { COMPLIANCE } from '../../config/compliance';
 import { LegalPageLayout, LegalSection } from '../../components/LegalPageLayout';
+import { useDocumentHead } from '../../hooks/useDocumentHead';
 
 const Terms: React.FC = () => {
+  useDocumentHead({
+    title: 'Terms of Use | Pilot Setup',
+    description: 'Read the Terms of Use for Pilot Setup. Understand our policies on affiliate links, content accuracy, liability limitations, and acceptable use.',
+    canonical: '/legal/terms',
+  });
+
   return (
     <LegalPageLayout
       title="Terms of Use"

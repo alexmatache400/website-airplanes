@@ -160,7 +160,7 @@ export const AffiliateDropdown: React.FC<AffiliateDropdownProps> = ({
                 key={region.key}
                 href={url}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="sponsored noopener noreferrer"
                 role="menuitem"
                 className="px-4 py-2 bg-accent-500 hover:bg-accent-600 text-white rounded text-sm font-medium transition-colors whitespace-nowrap"
               >
